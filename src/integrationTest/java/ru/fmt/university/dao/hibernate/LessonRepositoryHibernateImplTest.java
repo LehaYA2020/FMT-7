@@ -6,7 +6,7 @@ import ru.fmt.university.dao.RepositoryTest;
 import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
 import ru.fmt.university.model.LessonType;
-import ru.fmt.university.model.dto.Lesson;
+import ru.fmt.university.model.entity.LessonEntity;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -15,24 +15,24 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(properties = {"daoImpl=hibernate"})
 public class LessonRepositoryHibernateImplTest extends RepositoryTest {
-    private static final Lesson FOR_UPDATE = new Lesson(2, 2, 1, 10,
+    private static final LessonEntity FOR_UPDATE = new LessonEntity(2, testCourseList.get(1), testTeacherList.get(0), 10,
             DayOfWeek.THURSDAY, LocalTime.of(9, 30, 0), LessonType.LECTURE);
 
-    private static final Lesson lesson = new Lesson( testCourseList.get(1).getId(), testTeacherList.get(0).getId(), 10,
+    private static final LessonEntity lesson = new LessonEntity( testCourseList.get(1), testTeacherList.get(0), 10,
             DayOfWeek.THURSDAY, LocalTime.of(9, 30, 0), LessonType.LECTURE);
 
     @Test
     public void create() {
-        lessonRepositoryHibernate.create(lesson);
-        assertNotEquals(testLessonList.size(), lessonRepositoryHibernate.getAll().size());
-        Lesson actual = lessonRepositoryHibernate.getById(4);
+        lessonRepositoryHibernate.save(lesson);
+        assertNotEquals(testLessonList.size(), lessonRepositoryHibernate.findAll().size());
+        LessonEntity actual = lessonRepositoryHibernate.getById(4);
         lesson.setId(4);
         assertEquals(lesson, actual);
     }
 
     @Test
     public void getAll_shouldReturnAllLessonsFromDb() {
-        assertEquals(testLessonList, lessonRepositoryHibernate.getAll());
+        assertEquals(testLessonList, lessonRepositoryHibernate.findAll());
     }
 
     @Test
@@ -50,33 +50,33 @@ public class LessonRepositoryHibernateImplTest extends RepositoryTest {
 
     @Test
     public void update_shouldUpdateLessonInDb() {
-        lessonRepositoryHibernate.update(FOR_UPDATE);
+        lessonRepositoryHibernate.save(FOR_UPDATE);
         assertEquals(FOR_UPDATE, lessonRepositoryHibernate.getById(2));
     }
 
     @Test
     public void delete_shouldDeleteLessonFromDb() {
-        lessonRepositoryHibernate.delete(3);
-        assertEquals(testLessonList.subList(0, 2), lessonRepositoryHibernate.getAll());
+        lessonRepositoryHibernate.deleteById(3);
+        assertEquals(testLessonList.subList(0, 2), lessonRepositoryHibernate.findAll());
     }
 
     @Test
     public void getByTeacher() {
-        assertEquals(testLessonList.subList(0, 2), lessonRepositoryHibernate.getByTeacher(testTeacherList.get(0).getId()));
+        assertEquals(testLessonList.subList(0, 2), lessonRepositoryHibernate.findByTeacher_id(testTeacherList.get(0).getId()));
     }
 
     @Test
     public void getByCourse() {
-        assertEquals(testLessonList.subList(1, 3), lessonRepositoryHibernate.getByCourse(testCourseList.get(1).getId()));
+        assertEquals(testLessonList.subList(1, 3), lessonRepositoryHibernate.findByCourse_id(testCourseList.get(1).getId()));
     }
 
     @Test
     public void getByStudent() {
-        assertEquals(testLessonList.subList(0, 2), lessonRepositoryHibernate.getByStudent(1));
+        assertEquals(testLessonList.subList(0, 2), lessonRepositoryHibernate.findByStudents_id(1));
     }
 
     @Test
     public void getByGroup() {
-        assertEquals(testLessonList.subList(0, 2), lessonRepositoryHibernate.getByGroup(1));
+        assertEquals(testLessonList.subList(0, 2), lessonRepositoryHibernate.findByGroups_id(1));
     }
 }

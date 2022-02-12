@@ -1,10 +1,12 @@
 package ru.fmt.university.model.entity;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Transactional
 @Table(name = "courses")
 public class CourseEntity {
     @Id

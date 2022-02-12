@@ -49,7 +49,7 @@ public class TeacherController {
 
     @DeleteMapping(value = "/teachers/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") int id) {
-        final boolean deleted = teacherService.delete(id);
+        final boolean deleted = teacherService.deleteById(id);
 
         return deleted
                 ? new ResponseEntity<>(HttpStatus.NO_CONTENT)

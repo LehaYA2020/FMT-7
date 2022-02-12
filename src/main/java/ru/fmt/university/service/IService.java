@@ -11,5 +11,5 @@ public interface IService<T, I> {
 
     T update(T toUpdate);
 
-    boolean delete(I id);
+    boolean deleteById(I id);
 }

@@ -19,21 +19,21 @@ public class StudentServiceTest extends ServiceTest {
     @Test
     public void create_shouldCallStudentRepositoryCreatedMethod() {
         studentService.create(expectedStudent);
-        verify(studentRepository).create(expectedStudent);
+        verify(studentRepository).saveAndFlush(studentMapper.toEntity(expectedStudent));
     }
 
     @Test
     public void getAll_shouldCallStudentRepositoryGetAllMethod() {
-        when(studentRepository.getAll()).thenReturn(expectedStudents);
+        when(studentRepository.findAll()).thenReturn(studentMapper.toEntity(expectedStudents));
         List<Student> actualStudents = studentService.getAll();
 
-        verify(studentRepository).getAll();
+        verify(studentRepository).findAll();
         assertEquals(expectedStudents, actualStudents);
     }
 
     @Test
     public void getById_shouldCallStudentRepositoryGetByIdMethod() {
-        when(studentRepository.getById(1)).thenReturn(expectedStudent);
+        when(studentRepository.getById(1)).thenReturn(studentMapper.toEntity(expectedStudent));
         Student actualStudent = studentService.getById(1);
 
         verify(studentRepository).getById(1);
@@ -42,17 +42,18 @@ public class StudentServiceTest extends ServiceTest {
 
     @Test
     public void update_shouldCallStudentRepositoryUpdateMethod() {
-        when(studentRepository.update(expectedStudent)).thenReturn(expectedStudent);
+        when(studentRepository.saveAndFlush(studentMapper.toEntity(expectedStudent)))
+                .thenReturn(studentMapper.toEntity(expectedStudent));
         Student updatedStudent = studentService.update(expectedStudent);
 
-        verify(studentRepository).update(expectedStudent);
+        verify(studentRepository).saveAndFlush(studentMapper.toEntity(expectedStudent));
         assertEquals(expectedStudent, updatedStudent);
     }
 
     @Test
     public void delete_shouldCallStudentRepositoryDeleteMethod() {
-        studentService.delete(1);
-        verify(studentRepository).delete(1);
+        studentService.deleteById(1);
+        verify(studentRepository).deleteById(1);
     }
 
     @Test
@@ -78,10 +79,10 @@ public class StudentServiceTest extends ServiceTest {
 
     @Test
     public void getByGroup_shouldCallStudentRepositoryGetByGroupMethod() {
-        when(studentRepository.getByGroupId(1)).thenReturn(expectedStudents);
+        when(studentRepository.findByGroup_Id(1)).thenReturn(studentMapper.toEntity(expectedStudents));
         List<Student> actualStudents = studentService.getByGroup(1);
 
-        verify(studentRepository).getByGroupId(1);
+        verify(studentRepository).findByGroup_Id(1);
         assertEquals(expectedStudents, actualStudents);
     }
 }

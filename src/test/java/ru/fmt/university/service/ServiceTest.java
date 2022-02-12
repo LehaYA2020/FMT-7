@@ -7,6 +7,7 @@ import ru.fmt.university.dao.interfaces.*;
 import ru.fmt.university.model.LessonType;
 import ru.fmt.university.model.dto.*;
 import ru.fmt.university.service.implementation.*;
+import ru.fmt.university.service.util.*;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -39,6 +40,17 @@ public abstract class ServiceTest {
     protected StudentService studentService;
     @Autowired
     protected TeacherService teacherService;
+
+    @Autowired
+    protected CourseMapper courseMapper;
+    @Autowired
+    protected GroupMapper groupMapper;
+    @Autowired
+    protected LessonMapper lessonMapper;
+    @Autowired
+    protected StudentMapper studentMapper;
+    @Autowired
+    protected TeacherMapper teacherMapper;
 
     @MockBean
     protected ICourseRepository courseRepository;

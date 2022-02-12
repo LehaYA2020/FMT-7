@@ -14,21 +14,21 @@ public class LessonServiceTest extends ServiceTest {
     @Test
     public void create_shouldCallLessonRepositoryCreateMethod() {
         lessonService.create(expectedLesson);
-        verify(lessonRepository).create(expectedLesson);
+        verify(lessonRepository).saveAndFlush(lessonMapper.toEntity(expectedLesson));
     }
 
     @Test
     public void getAll_shouldCallLessonRepositoryGetAllMethod() {
-        when(lessonRepository.getAll()).thenReturn(expectedLessons);
+        when(lessonRepository.findAll()).thenReturn(lessonMapper.toEntity(expectedLessons));
         List<Lesson> actualLessons = lessonService.getAll();
 
-        verify(lessonRepository).getAll();
+        verify(lessonRepository).findAll();
         assertEquals(expectedLessons, actualLessons);
     }
 
     @Test
     public void getById_shouldCallLessonRepositoryGetByIdMethod() {
-        when(lessonRepository.getById(1)).thenReturn(expectedLesson);
+        when(lessonRepository.getById(1)).thenReturn(lessonMapper.toEntity(expectedLesson));
         Lesson actualLesson = lessonService.getById(1);
 
         verify(lessonRepository).getById(1);
@@ -37,52 +37,52 @@ public class LessonServiceTest extends ServiceTest {
 
     @Test
     public void update_shouldCallLessonRepositoryUpdateMethod() {
-        when(lessonRepository.update(expectedLesson)).thenReturn(expectedLesson);
+        when(lessonRepository.saveAndFlush(lessonMapper.toEntity(expectedLesson))).thenReturn(lessonMapper.toEntity(expectedLesson));
         Lesson updatedLesson = lessonService.update(expectedLesson);
 
-        verify(lessonRepository).update(expectedLesson);
+        verify(lessonRepository).saveAndFlush(lessonMapper.toEntity(expectedLesson));
         assertEquals(expectedLesson, updatedLesson);
     }
 
     @Test
     public void delete_shouldCallLessonRepositoryDeleteMethod() {
-        lessonService.delete(1);
-        verify(lessonRepository).delete(1);
+        lessonService.deleteById(1);
+        verify(lessonRepository).deleteById(1);
     }
 
     @Test
     public void getByStudent_shouldCallLessonRepositoryGetByStudentMethod() {
-        when(lessonRepository.getByStudent(expectedStudent.getId())).thenReturn(expectedLessons);
+        when(lessonRepository.findByStudents_id(expectedStudent.getId())).thenReturn(lessonMapper.toEntity(expectedLessons));
         List<Lesson> actualLessons = lessonService.getLessonsByStudent(expectedStudent.getId());
 
-        verify(lessonRepository).getByStudent(expectedStudent.getId());
+        verify(lessonRepository).findByStudents_id(expectedStudent.getId());
         assertEquals(expectedLessons, actualLessons);
     }
 
     @Test
     public void getByCourse_shouldCallLessonRepositoryGetByCourseMethod() {
-        when(lessonRepository.getByCourse(expectedCourse.getId())).thenReturn(expectedLessons);
+        when(lessonRepository.findByCourse_id(expectedCourse.getId())).thenReturn(lessonMapper.toEntity(expectedLessons));
         List<Lesson> actualLessons = lessonService.getLessonsByCourse(expectedCourse.getId());
 
-        verify(lessonRepository).getByCourse(expectedCourse.getId());
+        verify(lessonRepository).findByCourse_id(expectedCourse.getId());
         assertEquals(expectedLessons, actualLessons);
     }
 
     @Test
     public void getByGroup_shouldCallLessonRepositoryGetByGroupMethod() {
-        when(lessonRepository.getByGroup(expectedGroup.getId())).thenReturn(expectedLessons);
+        when(lessonRepository.findByGroups_id(expectedGroup.getId())).thenReturn(lessonMapper.toEntity(expectedLessons));
         List<Lesson> actualLessons = lessonService.getLessonsByGroup(expectedGroup.getId());
 
-        verify(lessonRepository).getByGroup(expectedGroup.getId());
+        verify(lessonRepository).findByGroups_id(expectedGroup.getId());
         assertEquals(expectedLessons, actualLessons);
     }
 
     @Test
     public void getByTeacher_shouldCallLessonRepositoryGetByTeacherMethod() {
-        when(lessonRepository.getByTeacher(expectedTeacher.getId())).thenReturn(expectedLessons);
+        when(lessonRepository.findByTeacher_id(expectedTeacher.getId())).thenReturn(lessonMapper.toEntity(expectedLessons));
         List<Lesson> actualLessons = lessonService.getLessonsByTeacher(expectedTeacher.getId());
 
-        verify(lessonRepository).getByTeacher(expectedTeacher.getId());
+        verify(lessonRepository).findByTeacher_id(expectedTeacher.getId());
         assertEquals(expectedLessons, actualLessons);
     }
 }

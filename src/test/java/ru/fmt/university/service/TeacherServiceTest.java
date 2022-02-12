@@ -19,22 +19,22 @@ public class TeacherServiceTest extends ServiceTest {
     @Test
     public void create_shouldCallTeacherRepositoryCreateMethod() {
         teacherService.create(expectedTeacher);
-        verify(teacherRepository).create(expectedTeacher);
+        verify(teacherRepository).saveAndFlush(teacherMapper.toEntity(expectedTeacher));
     }
 
     @Test
     public void getAll_shouldCallTeacherRepositoryGetAllMethod() {
-        when(teacherRepository.getAll()).thenReturn(expectedTeachers);
+        when(teacherRepository.findAll()).thenReturn(teacherMapper.toEntity(expectedTeachers));
         List<Teacher> actualTeachers = teacherService.getAll();
 
-        verify(teacherRepository).getAll();
+        verify(teacherRepository).findAll();
 
         assertEquals(expectedTeachers, actualTeachers);
     }
 
     @Test
     public void getById_shouldCallTeacherRepositoryGetByIdMethod() {
-        when(teacherRepository.getById(1)).thenReturn(expectedTeacher);
+        when(teacherRepository.getById(1)).thenReturn(teacherMapper.toEntity(expectedTeacher));
         Teacher actualTeacher = teacherService.getById(1);
 
         verify(teacherRepository).getById(1);
@@ -43,25 +43,25 @@ public class TeacherServiceTest extends ServiceTest {
 
     @Test
     public void update_shouldCallTeacherRepositoryUpdateMethod() {
-        when(teacherRepository.update(expectedTeacher)).thenReturn(expectedTeacher);
+        when(teacherRepository.saveAndFlush(teacherMapper.toEntity(expectedTeacher))).thenReturn(teacherMapper.toEntity(expectedTeacher));
         Teacher updatedTeacher = teacherService.update(expectedTeacher);
 
-        verify(teacherRepository).update(expectedTeacher);
+        verify(teacherRepository).saveAndFlush(teacherMapper.toEntity(expectedTeacher));
         assertEquals(expectedTeacher, updatedTeacher);
     }
 
     @Test
     public void delete_shouldCallTeacherRepositoryDeleteMethod() {
-        teacherService.delete(1);
-        verify(teacherRepository).delete(1);
+        teacherService.deleteById(1);
+        verify(teacherRepository).deleteById(1);
     }
 
     @Test
     public void getByCourse_shouldCallTeacherRepositoryGetByCourseMethod() {
-        when(teacherRepository.getByCourse(expectedCourse.getId())).thenReturn(expectedTeachers);
+        when(teacherRepository.findByCourse_id(expectedCourse.getId())).thenReturn(teacherMapper.toEntity(expectedTeachers));
         List<Teacher> actualTeachers = teacherService.getByCourse(expectedCourse.getId());
 
-        verify(teacherRepository).getByCourse(expectedCourse.getId());
+        verify(teacherRepository).findByCourse_id(expectedCourse.getId());
         assertEquals(expectedTeachers, actualTeachers);
     }
 
@@ -76,10 +76,10 @@ public class TeacherServiceTest extends ServiceTest {
 
     @Test
     public void getByLesson_shouldCallTeacherRepositoryGetByLessonMethod() {
-        when(teacherRepository.getByLesson(expectedLesson.getId())).thenReturn(expectedTeacher);
+        when(teacherRepository.findByLessons_id(expectedLesson.getId())).thenReturn(teacherMapper.toEntity(expectedTeacher));
         Teacher actualTeacher = teacherService.getByLesson(expectedLesson.getId());
 
-        verify(teacherRepository).getByLesson(expectedLesson.getId());
+        verify(teacherRepository).findByLessons_id(expectedLesson.getId());
         assertEquals(expectedTeacher, actualTeacher);
     }
 }

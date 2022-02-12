@@ -2,23 +2,23 @@ package ru.fmt.university.dao.interfaces;
 
 import org.springframework.stereotype.Repository;
 import ru.fmt.university.dao.IRepository;
-import ru.fmt.university.model.dto.Group;
+import ru.fmt.university.model.entity.GroupEntity;
 
 import java.util.List;
 
 @Repository
-public interface IGroupRepository extends IRepository<Group, Integer> {
-    boolean assignToCourse(Integer groupId, Integer courseId);
+public interface IGroupRepository extends IRepository<GroupEntity, Integer> {
+    void assignToCourse(Integer groupId, Integer courseId);
 
-    boolean deleteFromCourse(Integer groupId, Integer courseId);
+    void deleteFromCourse(Integer groupId, Integer courseId);
 
-    List<Group> getByLesson(int lessonId);
+    List<GroupEntity> findByLessons_Id(int lessonId);
 
-    Group getByStudent(int studentId);
+    GroupEntity findByStudents_Id(int studentId);
 
-    List<Group> getByCourse(Integer courseId);
+    List<GroupEntity> findByCourses_Id(Integer courseId);
 
-    boolean assignToLesson(Integer lessonId, Integer groupId);
+    void assignToLesson(Integer lessonId, Integer groupId);
 
-    boolean deleteFromLesson(Integer lessonId, Integer groupId);
+    void deleteFromLesson(Integer lessonId, Integer groupId);
 }

@@ -1,16 +1,16 @@
 package ru.fmt.university.dao.interfaces;
 
 import ru.fmt.university.dao.IRepository;
-import ru.fmt.university.model.dto.Student;
+import ru.fmt.university.model.entity.StudentEntity;
 
 import java.util.List;
 
-public interface IStudentRepository extends IRepository<Student, Integer> {
-    boolean assignToGroup(Integer studentId, Integer groupId);
+public interface IStudentRepository extends IRepository<StudentEntity, Integer> {
+    void assignToGroup(Integer studentId, Integer groupId);
 
-    boolean updateGroupAssignment(Integer studentId, Integer groupId);
+    void updateGroupAssignment(Integer studentId, Integer groupId);
 
-    List<Student> getByGroupId(Integer groupId);
+    List<StudentEntity> findByGroup_Id(Integer groupId);
 
-    boolean deleteFromGroup(Integer studentId, Integer groupId);
+    void deleteFromGroup(Integer studentId, Integer groupId);
 }

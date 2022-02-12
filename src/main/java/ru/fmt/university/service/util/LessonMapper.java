@@ -1,4 +1,4 @@
-package ru.fmt.university.dao.util;
+package ru.fmt.university.service.util;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
@@ -28,6 +28,10 @@ public class LessonMapper implements RowMapper<Lesson> {
         return new LessonEntity(lesson.getId(), new CourseEntity(lesson.getCourseId())
                 , new TeacherEntity(lesson.getTeacherId()), lesson.getClassRoom()
                 , lesson.getDay(), lesson.getStartTime(), lesson.getType());
+    }
+
+    public List<LessonEntity> toEntity(List<Lesson> lessons) {
+        return lessons.stream().map(e->toEntity(e)).toList();
     }
 
     public Lesson toLesson(LessonEntity entity) {

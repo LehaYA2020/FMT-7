@@ -1,13 +1,11 @@
 package ru.fmt.university.dao.implementation.hibernate;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
 import ru.fmt.university.dao.interfaces.ILessonRepository;
-import ru.fmt.university.dao.util.LessonMapper;
 import ru.fmt.university.model.dto.Lesson;
 import ru.fmt.university.model.entity.*;
 
@@ -25,15 +23,13 @@ public class LessonRepositoryHibernateImpl implements ILessonRepository {
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
-    @Autowired
-    private LessonMapper lessonMapper;
 
-    public Lesson create(Lesson lesson) {
+    public LessonEntity save(LessonEntity lesson) {
         log.trace("create({}).", lesson);
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            entityManager.persist(lessonMapper.toEntity(lesson));
+            entityManager.persist(lesson);
             entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
@@ -47,14 +43,14 @@ public class LessonRepositoryHibernateImpl implements ILessonRepository {
         return lesson;
     }
 
-    public List<Lesson> getAll() {
+    public List<LessonEntity> findAll() {
         log.trace("getAll().");
-        List<Lesson> lessons;
+        List<LessonEntity> lessons;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            lessons = lessonMapper.toLesson(entityManager.createQuery("FROM LessonEntity", LessonEntity.class)
-                    .getResultList());
+            lessons = entityManager.createQuery("FROM LessonEntity", LessonEntity.class)
+                    .getResultList();
             entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
@@ -68,13 +64,13 @@ public class LessonRepositoryHibernateImpl implements ILessonRepository {
         return lessons;
     }
 
-    public Lesson getById(Integer id) {
+    public LessonEntity getById(Integer id) {
         log.trace("getById({}).", id);
-        Lesson lesson;
+        LessonEntity lesson;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            lesson = lessonMapper.toLesson(entityManager.find(LessonEntity.class, id));
+            lesson = entityManager.find(LessonEntity.class, id);
             entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
@@ -88,7 +84,7 @@ public class LessonRepositoryHibernateImpl implements ILessonRepository {
         return lesson;
     }
 
-    public boolean delete(Integer id) {
+    public void deleteById(Integer id) {
         log.trace("delete({}).", id);
         try {
             entityManager = entityManagerFactory.createEntityManager();
@@ -106,15 +102,14 @@ public class LessonRepositoryHibernateImpl implements ILessonRepository {
             entityManager.close();
         }
         log.debug("Lesson with id={} deleted.", id);
-        return true;
     }
 
-    public Lesson update(Lesson lesson) {
+    public LessonEntity saveAndFlush(LessonEntity lesson) {
         log.trace("delete({})", lesson);
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            entityManager.merge(lessonMapper.toEntity(lesson));
+            entityManager.merge(lesson);
             entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
@@ -128,13 +123,13 @@ public class LessonRepositoryHibernateImpl implements ILessonRepository {
         return lesson;
     }
 
-    public List<Lesson> getByStudent(Integer studentId) {
+    public List<LessonEntity> findByStudents_id(Integer studentId) {
         log.trace("getByStudent({})", studentId);
-        List<Lesson> lessons;
+        List<LessonEntity> lessons;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            lessons = lessonMapper.toLesson(entityManager.find(StudentEntity.class, studentId).getGroup().getLessons());
+            lessons = entityManager.find(StudentEntity.class, studentId).getGroup().getLessons();
             entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
@@ -148,13 +143,13 @@ public class LessonRepositoryHibernateImpl implements ILessonRepository {
         return lessons;
     }
 
-    public List<Lesson> getByTeacher(Integer teacherId) {
+    public List<LessonEntity> findByTeacher_id(Integer teacherId) {
         log.trace("getByTeacher({})", teacherId);
-        List<Lesson> lessons;
+        List<LessonEntity> lessons;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            lessons = lessonMapper.toLesson(entityManager.find(TeacherEntity.class, teacherId).getLessons());
+            lessons = entityManager.find(TeacherEntity.class, teacherId).getLessons();
             entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
@@ -168,13 +163,13 @@ public class LessonRepositoryHibernateImpl implements ILessonRepository {
         return lessons;
     }
 
-    public List<Lesson> getByGroup(Integer groupId) {
+    public List<LessonEntity> findByGroups_id(Integer groupId) {
         log.trace("getByGroup({})", groupId);
-        List<Lesson> lessons;
+        List<LessonEntity> lessons;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            lessons = lessonMapper.toLesson(entityManager.find(GroupEntity.class, groupId).getLessons());
+            lessons = entityManager.find(GroupEntity.class, groupId).getLessons();
             entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
@@ -188,13 +183,13 @@ public class LessonRepositoryHibernateImpl implements ILessonRepository {
         return lessons;
     }
 
-    public List<Lesson> getByCourse(Integer courseId) {
+    public List<LessonEntity> findByCourse_id(Integer courseId) {
         log.trace("getByCourse({})", courseId);
-        List<Lesson> lessons;
+        List<LessonEntity> lessons;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            lessons = lessonMapper.toLesson(entityManager.find(CourseEntity.class, courseId).getLessons());
+            lessons = entityManager.find(CourseEntity.class, courseId).getLessons();
             entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (Exception e) {

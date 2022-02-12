@@ -6,13 +6,13 @@ import java.util.List;
 
 @Repository
 public interface IRepository<T, I> {
-    T create(T toCreate);
+    T save(T toCreate);
 
-    List<T> getAll();
+    List<T> findAll();
 
     T getById(I id);
 
-    T update(T toUpdate);
+    T saveAndFlush(T toUpdate);
 
-    boolean delete(I id);
+    void deleteById(I id);
 }

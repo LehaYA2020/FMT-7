@@ -1,14 +1,11 @@
 package ru.fmt.university.dao.implementation.hibernate;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
 import ru.fmt.university.dao.interfaces.ITeacherRepository;
-import ru.fmt.university.dao.util.TeacherMapper;
-import ru.fmt.university.model.dto.Teacher;
 import ru.fmt.university.model.entity.CourseEntity;
 import ru.fmt.university.model.entity.LessonEntity;
 import ru.fmt.university.model.entity.TeacherEntity;
@@ -26,16 +23,14 @@ import java.util.List;
 public class TeacherRepositoryHibernateImpl implements ITeacherRepository {
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
-    @Autowired
-    private TeacherMapper teacherMapper;
     private EntityManager entityManager;
 
-    public Teacher create(Teacher teacher) {
+    public TeacherEntity saveAndFlush(TeacherEntity teacher) {
         log.trace("create({})", teacher);
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            entityManager.persist(teacherMapper.toEntity(teacher));
+            entityManager.persist(teacher);
             entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (RuntimeException e) {
@@ -48,14 +43,14 @@ public class TeacherRepositoryHibernateImpl implements ITeacherRepository {
         return teacher;
     }
 
-    public List<Teacher> getAll() {
+    public List<TeacherEntity> findAll() {
         log.trace("getAll()");
-        List<Teacher> teachers;
+        List<TeacherEntity> teachers;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            teachers = teacherMapper.toTeacher(entityManager.createQuery("FROM TeacherEntity", TeacherEntity.class)
-                    .getResultList());
+            teachers = entityManager.createQuery("FROM TeacherEntity", TeacherEntity.class)
+                    .getResultList();
             entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
@@ -68,33 +63,31 @@ public class TeacherRepositoryHibernateImpl implements ITeacherRepository {
         return teachers;
     }
 
-    public Teacher getById(Integer id) {
+    public TeacherEntity getById(Integer id) {
         log.trace("getById({})", id);
         TeacherEntity entity;
-        Teacher teacher;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             entity = entityManager.find(TeacherEntity.class, id);
             entityManager.flush();
             entityManager.getTransaction().commit();
-            teacher = teacherMapper.toTeacher(entity);
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_TEACHER_BY_ID, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_TEACHER_BY_ID, e);
         } finally {
             entityManager.close();
         }
-        log.debug("Teacher {} found", teacher);
-        return teacher;
+        log.debug("Teacher {}, {}, {} found", entity.getFirstName(), entity.getLastName(), entity.getCourse().getName());
+        return entity;
     }
 
-    public Teacher update(Teacher teacher) {
+    public TeacherEntity save(TeacherEntity teacher) {
         log.trace("update({})", teacher);
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            entityManager.merge(teacherMapper.toEntity(teacher));
+            entityManager.merge(teacher);
             entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
@@ -107,7 +100,7 @@ public class TeacherRepositoryHibernateImpl implements ITeacherRepository {
         return teacher;
     }
 
-    public boolean delete(Integer id) {
+    public void deleteById(Integer id) {
         log.trace("delete({})", id);
         try {
             entityManager = entityManagerFactory.createEntityManager();
@@ -122,16 +115,15 @@ public class TeacherRepositoryHibernateImpl implements ITeacherRepository {
             entityManager.close();
         }
         log.debug("Teacher with id {} deleted", id);
-        return true;
     }
 
-    public List<Teacher> getByCourse(Integer courseId) {
+    public List<TeacherEntity> findByCourse_id(Integer courseId) {
         log.trace("getByCourse({})", courseId);
-        List<Teacher> teachers;
+        List<TeacherEntity> teachers;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            teachers = teacherMapper.toTeacher(entityManager.find(CourseEntity.class, courseId).getTeachers());
+            teachers = entityManager.find(CourseEntity.class, courseId).getTeachers();
             entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
@@ -144,13 +136,13 @@ public class TeacherRepositoryHibernateImpl implements ITeacherRepository {
         return teachers;
     }
 
-    public Teacher getByLesson(Integer lessonId) {
+    public TeacherEntity findByLessons_id(Integer lessonId) {
         log.trace("getByLesson({})", lessonId);
-        Teacher teacher;
+        TeacherEntity teacher;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            teacher = teacherMapper.toTeacher(entityManager.find(LessonEntity.class, lessonId).getTeacher());
+            teacher = entityManager.find(LessonEntity.class, lessonId).getTeacher();
             entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (Exception e) {

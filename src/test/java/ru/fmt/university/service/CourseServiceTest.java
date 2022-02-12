@@ -15,21 +15,21 @@ public class CourseServiceTest extends ServiceTest {
     @Test
     public void create_shouldCallCourseRepositoryCreateMethod() {
         courseService.create(expectedCourse);
-        verify(courseRepository).create(expectedCourse);
+        verify(courseRepository).saveAndFlush(courseMapper.toEntity(expectedCourse));
     }
 
     @Test
     public void getAll_shouldCallCourseRepositoryGetAllMethod() {
-        when(courseRepository.getAll()).thenReturn(expectedCourses);
+        when(courseRepository.findAll()).thenReturn(courseMapper.toEntity(expectedCourses));
         List<Course> actualCourses = courseService.getAll();
 
-        verify(courseRepository).getAll();
+        verify(courseRepository).findAll();
         assertEquals(expectedCourses, actualCourses);
     }
 
     @Test
     public void getById_shouldCallCourseRepositoryGetByIdMethod() {
-        when(courseRepository.getById(1)).thenReturn(expectedCourse);
+        when(courseRepository.getById(1)).thenReturn(courseMapper.toEntity(expectedCourse));
         Course actualCourse = courseService.getById(1);
 
         verify(courseRepository).getById(1);
@@ -38,25 +38,25 @@ public class CourseServiceTest extends ServiceTest {
 
     @Test
     public void update_shouldCallCourseRepositoryUpdateMethod() {
-        when(courseRepository.update(expectedCourse)).thenReturn(expectedCourse);
+        when(courseRepository.saveAndFlush(courseMapper.toEntity(expectedCourse))).thenReturn(courseMapper.toEntity(expectedCourse));
         Course updatedCourse = courseService.update(expectedCourse);
 
-        verify(courseRepository).update(expectedCourse);
+        verify(courseRepository).saveAndFlush(courseMapper.toEntity(expectedCourse));
         assertEquals(expectedCourse, updatedCourse);
     }
 
     @Test
     public void delete_shouldCallCourseRepositoryDeleteMethod() {
-        courseService.delete(1);
-        verify(courseRepository).delete(1);
+        courseService.deleteById(1);
+        verify(courseRepository).deleteById(1);
     }
 
     @Test
     public void getByGroupId_shouldCallCourseRepositoryGetByGroupIdMethod() {
-        when(courseRepository.getByGroupId(1)).thenReturn(expectedCourses);
+        when(courseRepository.findByGroups_id(1)).thenReturn(courseMapper.toEntity(expectedCourses));
         List<Course> actualCourses = courseService.getByGroupId(1);
 
-        verify(courseRepository).getByGroupId(1);
+        verify(courseRepository).findByGroups_id(1);
         assertEquals(expectedCourses, actualCourses);
     }
 }

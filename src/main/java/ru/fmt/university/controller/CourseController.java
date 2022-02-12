@@ -57,7 +57,7 @@ public class CourseController {
 
     @DeleteMapping(value = "/courses/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") int id) {
-        final boolean deleted = courseService.delete(id);
+        final boolean deleted = courseService.deleteById(id);
 
         return deleted
                 ? new ResponseEntity<>(HttpStatus.NO_CONTENT)

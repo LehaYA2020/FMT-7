@@ -1,4 +1,4 @@
-package ru.fmt.university.dao.util;
+package ru.fmt.university.service.util;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
@@ -30,5 +30,9 @@ public class StudentMapper implements RowMapper<Student> {
 
     public StudentEntity toEntity(Student student) {
         return new StudentEntity(student.getId(), student.getFirstName(), student.getLastName(), new GroupEntity(student.getGroupId()));
+    }
+
+    public List<StudentEntity> toEntity(List<Student> students) {
+        return students.stream().map(e->toEntity(e)).toList();
     }
 }

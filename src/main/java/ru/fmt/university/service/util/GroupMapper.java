@@ -1,4 +1,4 @@
-package ru.fmt.university.dao.util;
+package ru.fmt.university.service.util;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
@@ -21,6 +21,9 @@ public class GroupMapper implements RowMapper<Group> {
     }
     public GroupEntity toEntity(Group group) {
         return new GroupEntity(group.getId(), group.getName());
+    }
+    public List<GroupEntity> toEntity(List<Group> groups) {
+        return groups.stream().map(e->toEntity(e)).toList();
     }
 
     public List<Group> toGroup(List<GroupEntity> entities) {

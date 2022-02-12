@@ -1,15 +1,12 @@
 package ru.fmt.university.dao.implementation.hibernate;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
 import ru.fmt.university.dao.interfaces.IGroupRepository;
 import ru.fmt.university.dao.sources.Query;
-import ru.fmt.university.dao.util.GroupMapper;
-import ru.fmt.university.model.dto.Group;
 import ru.fmt.university.model.entity.CourseEntity;
 import ru.fmt.university.model.entity.GroupEntity;
 import ru.fmt.university.model.entity.LessonEntity;
@@ -29,15 +26,13 @@ public class GroupRepositoryHibernateImpl implements IGroupRepository {
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
-    @Autowired
-    private GroupMapper groupMapper;
 
-    public Group create(Group group) {
+    public GroupEntity saveAndFlush(GroupEntity group) {
         log.trace("create({}).", group);
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            entityManager.persist(groupMapper.toEntity(group));
+            entityManager.persist(group);
             entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (RuntimeException e) {
@@ -50,13 +45,13 @@ public class GroupRepositoryHibernateImpl implements IGroupRepository {
         return group;
     }
 
-    public List<Group> getAll() {
+    public List<GroupEntity> findAll() {
         log.trace("getAll()");
-        List<Group> groups;
+        List<GroupEntity> groups;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            groups = groupMapper.toGroup(entityManager.createQuery("FROM GroupEntity", GroupEntity.class).getResultList());
+            groups = entityManager.createQuery("FROM GroupEntity", GroupEntity.class).getResultList();
             entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
@@ -69,13 +64,13 @@ public class GroupRepositoryHibernateImpl implements IGroupRepository {
         return groups;
     }
 
-    public Group getById(Integer id) {
+    public GroupEntity getById(Integer id) {
         log.trace("getById({})", id);
-        Group group;
+        GroupEntity group;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            group = groupMapper.toGroup(entityManager.find(GroupEntity.class, id));
+            group = entityManager.find(GroupEntity.class, id);
             entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
@@ -88,7 +83,7 @@ public class GroupRepositoryHibernateImpl implements IGroupRepository {
         return group;
     }
 
-    public boolean delete(Integer id) {
+    public void deleteById(Integer id) {
         log.trace("delete({})", id);
         try {
             entityManager = entityManagerFactory.createEntityManager();
@@ -103,10 +98,9 @@ public class GroupRepositoryHibernateImpl implements IGroupRepository {
             entityManager.close();
         }
         log.debug("Group with id={}.", id);
-        return true;
     }
 
-    public boolean assignToCourse(Integer groupId, Integer courseId) {
+    public void assignToCourse(Integer groupId, Integer courseId) {
         log.trace("assignToCourse({},{})", groupId, courseId);
         try {
             entityManager = entityManagerFactory.createEntityManager();
@@ -123,10 +117,9 @@ public class GroupRepositoryHibernateImpl implements IGroupRepository {
             entityManager.close();
         }
         log.debug("Group {} assigned to course {}", groupId, courseId);
-        return true;
     }
 
-    public boolean deleteFromCourse(Integer groupId, Integer courseId) {
+    public void deleteFromCourse(Integer groupId, Integer courseId) {
         log.trace("deleteFromCourse({}, {})", groupId, courseId);
         try {
             entityManager = entityManagerFactory.createEntityManager();
@@ -143,16 +136,15 @@ public class GroupRepositoryHibernateImpl implements IGroupRepository {
             entityManager.close();
         }
         log.debug("Course {} deleted from Course {}", groupId, courseId);
-        return true;
     }
 
-    public List<Group> getByLesson(int lessonId) {
+    public List<GroupEntity> findByLessons_Id(int lessonId) {
         log.trace("getByLesson({})", lessonId);
-        List<Group> groups;
+        List<GroupEntity> groups;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            groups = groupMapper.toGroup(entityManager.find(LessonEntity.class, lessonId).getGroups());
+            groups = entityManager.find(LessonEntity.class, lessonId).getGroups();
             entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
@@ -165,13 +157,13 @@ public class GroupRepositoryHibernateImpl implements IGroupRepository {
         return groups;
     }
 
-    public Group getByStudent(int studentId) {
+    public GroupEntity findByStudents_Id(int studentId) {
         log.trace("getByStudent({})", studentId);
-        Group group;
+        GroupEntity group;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            group = groupMapper.toGroup(entityManager.find(StudentEntity.class, studentId).getGroup());
+            group = entityManager.find(StudentEntity.class, studentId).getGroup();
             entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
@@ -184,13 +176,13 @@ public class GroupRepositoryHibernateImpl implements IGroupRepository {
         return group;
     }
 
-    public List<Group> getByCourse(Integer courseId) {
+    public List<GroupEntity> findByCourses_Id(Integer courseId) {
         log.trace("getByCourse({})", courseId);
-        List<Group> groups;
+        List<GroupEntity> groups;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            groups = groupMapper.toGroup(entityManager.find(CourseEntity.class, courseId).getGroups());
+            groups = entityManager.find(CourseEntity.class, courseId).getGroups();
             entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
@@ -203,12 +195,12 @@ public class GroupRepositoryHibernateImpl implements IGroupRepository {
         return groups;
     }
 
-    public Group update(Group group) {
+    public GroupEntity save(GroupEntity group) {
         log.trace("update({}).", group);
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            entityManager.merge(groupMapper.toEntity(group));
+            entityManager.merge(group);
             entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
@@ -221,7 +213,7 @@ public class GroupRepositoryHibernateImpl implements IGroupRepository {
         return group;
     }
 
-    public boolean assignToLesson(Integer lessonId, Integer groupId) {
+    public void assignToLesson(Integer lessonId, Integer groupId) {
         log.trace("assignToLesson({}, {})", lessonId, groupId);
         try {
             entityManager = entityManagerFactory.createEntityManager();
@@ -238,10 +230,9 @@ public class GroupRepositoryHibernateImpl implements IGroupRepository {
             entityManager.close();
         }
         log.debug("Groups {} assigned to lesson {})", groupId, lessonId);
-        return true;
     }
 
-    public boolean deleteFromLesson(Integer lessonId, Integer groupId) {
+    public void deleteFromLesson(Integer lessonId, Integer groupId) {
         log.trace("deleteFromLesson({}, {})", lessonId, groupId);
         try {
             entityManager = entityManagerFactory.createEntityManager();
@@ -258,6 +249,5 @@ public class GroupRepositoryHibernateImpl implements IGroupRepository {
             entityManager.close();
         }
         log.debug("Group {} deleted from lesson {})", groupId, lessonId);
-        return true;
     }
 }

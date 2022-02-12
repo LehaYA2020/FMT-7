@@ -1,9 +1,11 @@
 package ru.fmt.university.model.entity;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.Objects;
 
 @Entity
+@Transactional
 @Table(name = "students")
 public class StudentEntity {
     @Id

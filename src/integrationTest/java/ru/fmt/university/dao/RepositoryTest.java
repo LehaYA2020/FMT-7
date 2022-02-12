@@ -9,11 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import ru.fmt.university.dao.implementation.hibernate.*;
-import ru.fmt.university.dao.implementation.jdbcTemplate.*;
+import ru.fmt.university.dao.implementation.jpa.CourseJpa;
 import ru.fmt.university.model.LessonType;
 import ru.fmt.university.model.dto.*;
+import ru.fmt.university.model.entity.CourseEntity;
+import ru.fmt.university.model.entity.GroupEntity;
+import ru.fmt.university.model.entity.StudentEntity;
+import ru.fmt.university.model.entity.TeacherEntity;
 
 import javax.sql.DataSource;
+import javax.transaction.Transactional;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.Reader;
@@ -23,24 +28,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 @SpringBootTest
+@Transactional
 public abstract class RepositoryTest {
-    protected static final List<Course> testCourseList = new LinkedList<>();
-    protected static final List<Group> testGroupList = new LinkedList<>();
-    protected static final List<Student> testStudentList = new LinkedList<>();
-    protected static final List<Teacher> testTeacherList = new LinkedList<>();
+    protected static final List<CourseEntity> testCourseList = new LinkedList<>();
+    protected static final List<GroupEntity> testGroupList = new LinkedList<>();
+    protected static final List<StudentEntity> testStudentList = new LinkedList<>();
+    protected static final List<TeacherEntity> testTeacherList = new LinkedList<>();
     protected static final List<Lesson> testLessonList = new LinkedList<>();
-
-    @Autowired(required = false)
-    protected CourseRepositoryJdbcTemplateImpl courseRepository;
-    @Autowired(required = false)
-    protected GroupRepositoryJdbcTemplateImpl groupRepository;
-    @Autowired(required = false)
-    protected LessonRepositoryJdbcTemplateImpl lessonRepository;
-    @Autowired(required = false)
-    protected StudentRepositoryJdbcTemplateImpl studentRepository;
-    @Autowired(required = false)
-    protected TeacherRepositoryJdbcTemplateImpl teacherRepository;
-
+    
     @Autowired(required = false)
     protected CourseRepositoryHibernateImpl courseRepositoryHibernate;
     @Autowired(required = false)
@@ -52,6 +47,9 @@ public abstract class RepositoryTest {
     @Autowired(required = false)
     protected TeacherRepositoryHibernateImpl teacherRepositoryHibernate;
 
+    @Autowired(required = false)
+    protected CourseJpa courseJpa;
+
     @Autowired
     protected DataSource dataSource;
     protected ScriptRunner scriptRunner;
@@ -62,19 +60,19 @@ public abstract class RepositoryTest {
     protected static void prepareLists() {
 
         for (int i = 1; i <= 3; i++) {
-            testCourseList.add(new Course(i, "Course-" + i, "forTest"));
-            testGroupList.add(new Group(i, "Group-" + i));
+            testCourseList.add(new CourseEntity(i, "Course-" + i, "forTest"));
+            testGroupList.add(new GroupEntity(i, "Group-" + i));
         }
         for (int i = 1; i <= 4; i++) {
-            testStudentList.add(new Student(i, "S-0" + i, "Student", 1));
+            testStudentList.add(new StudentEntity(i, "S-0" + i, "Student", testGroupList.get(0)));
         }
 
-        testStudentList.get(2).setGroupId(2);
-        testStudentList.get(3).setGroupId(0);
+        testStudentList.get(2).setGroup(testGroupList.get(1));
+        testStudentList.get(3).setGroup(testGroupList.get(2));
 
-        testTeacherList.add(new Teacher(1, "T-" + 1, "Teacher", testCourseList.get(0).getId()));
-        testTeacherList.add(new Teacher(2, "T-" + 2, "Teacher", testCourseList.get(0).getId()));
-        testTeacherList.add(new Teacher(3, "T-" + 3, "Teacher", testCourseList.get(1).getId()));
+        testTeacherList.add(new TeacherEntity(1, "T-" + 1, "Teacher", testCourseList.get(0)));
+        testTeacherList.add(new TeacherEntity(2, "T-" + 2, "Teacher", testCourseList.get(0)));
+        testTeacherList.add(new TeacherEntity(3, "T-" + 3, "Teacher", testCourseList.get(1)));
 
         testLessonList.add(new Lesson(1, testCourseList.get(0).getId(), new Teacher(1).getId(), 10,
                 DayOfWeek.MONDAY, LocalTime.of(9, 30, 0), LessonType.LECTURE));

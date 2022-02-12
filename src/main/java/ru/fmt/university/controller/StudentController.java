@@ -48,7 +48,7 @@ public class StudentController {
 
     @DeleteMapping(value = "/students/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") int id) {
-        final boolean deleted = studentService.delete(id);
+        final boolean deleted = studentService.deleteById(id);
 
         return deleted
                 ? new ResponseEntity<>(HttpStatus.NO_CONTENT)

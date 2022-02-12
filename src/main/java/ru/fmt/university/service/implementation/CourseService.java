@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import ru.fmt.university.dao.interfaces.ICourseRepository;
 import ru.fmt.university.model.dto.Course;
 import ru.fmt.university.service.ICourseService;
+import ru.fmt.university.service.util.CourseMapper;
 
 import java.util.List;
 
@@ -14,34 +15,37 @@ import java.util.List;
 public class CourseService implements ICourseService {
     @Autowired
     private ICourseRepository courseRepository;
+    @Autowired
+    private CourseMapper courseMapper;
 
     public void create(Course course) {
         log.debug("CourseService calls courseRepository.create({}).", course.getId());
-        courseRepository.create(course);
+        courseRepository.saveAndFlush(courseMapper.toEntity(course));
     }
 
     public List<Course> getAll() {
         log.debug("CourseService calls courseRepository.getAll().");
-        return courseRepository.getAll();
+        return courseMapper.toCourse(courseRepository.findAll());
     }
 
     public Course getById(Integer id) {
         log.debug("CourseService calls courseRepository.getById({}).", id);
-        return courseRepository.getById(id);
+        return courseMapper.toCourse(courseRepository.getById(id));
     }
 
     public Course update(Course forUpdate) {
         log.debug("CourseService calls courseRepository.update({}).", forUpdate.getId());
-        return courseRepository.update(forUpdate);
+        return courseMapper.toCourse(courseRepository.saveAndFlush(courseMapper.toEntity(forUpdate)));
     }
 
-    public boolean delete(Integer id) {
+    public boolean deleteById(Integer id) {
         log.debug("CourseService calls courseRepository.delete({}).", id);
-        return courseRepository.delete(id);
+        courseRepository.deleteById(id);
+        return true;
     }
 
     public List<Course> getByGroupId(Integer id) {
         log.debug("CourseService calls courseRepository.getByGroupId({}).", id);
-        return courseRepository.getByGroupId(id);
+        return courseMapper.toCourse(courseRepository.findByGroups_id(id));
     }
 }

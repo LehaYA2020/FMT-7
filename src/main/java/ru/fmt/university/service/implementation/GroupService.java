@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import ru.fmt.university.dao.interfaces.IGroupRepository;
 import ru.fmt.university.model.dto.Group;
 import ru.fmt.university.service.IGroupService;
+import ru.fmt.university.service.util.GroupMapper;
 
 import java.util.List;
 
@@ -14,63 +15,70 @@ import java.util.List;
 public class GroupService implements IGroupService {
     @Autowired
     private IGroupRepository groupRepository;
+    @Autowired
+    private GroupMapper groupMapper;
 
     public void create(Group group) {
         log.debug("GroupService calls groupRepository.create({}).", group.getId());
-        groupRepository.create(group);
+        groupRepository.saveAndFlush(groupMapper.toEntity(group));
     }
 
     public Group getById(Integer id) {
         log.debug("GroupService calls groupRepository.getById({}).", id);
-        return groupRepository.getById(id);
+        return groupMapper.toGroup(groupRepository.getById(id));
     }
 
     public List<Group> getAll() {
         log.debug("GroupService calls groupRepository.getAll().");
-        return groupRepository.getAll();
+        return groupMapper.toGroup(groupRepository.findAll());
     }
 
     public Group update(Group forUpdate) {
         log.debug("GroupService calls groupRepository.update({}).", forUpdate);
-        return groupRepository.update(forUpdate);
+        return groupMapper.toGroup(groupRepository.saveAndFlush(groupMapper.toEntity(forUpdate)));
     }
 
-    public boolean delete(Integer id) {
+    public boolean deleteById(Integer id) {
         log.debug("GroupService calls groupRepository.delete({}).", id);
-        return groupRepository.delete(id);
+        groupRepository.deleteById(id);
+        return true;
     }
 
     public boolean assignToCourse(Integer groupId, Integer courseId) {
         log.debug("GroupService calls groupRepository.assignToCourse({}, {}).", groupId, courseId);
-        return groupRepository.assignToCourse(groupId, courseId);
+        groupRepository.assignToCourse(groupId, courseId);
+        return true;
     }
 
     public boolean deleteFromCourse(Integer groupId, Integer courseId) {
         log.debug("GroupService calls groupRepository.deleteFromCourse({}, {}).", groupId, courseId);
-        return groupRepository.deleteFromCourse(groupId, courseId);
+        groupRepository.deleteFromCourse(groupId, courseId);
+        return true;
     }
 
     public List<Group> getByCourse(Integer courseId) {
         log.debug("GroupService calls groupRepository.getByCourse({}).", courseId);
-        return groupRepository.getByCourse(courseId);
+        return groupMapper.toGroup(groupRepository.findByCourses_Id(courseId));
     }
 
     public boolean assignToLesson(Integer lessonId, Integer groupId) {
         log.debug("GroupService calls groupRepository.deleteFromLesson({}, {}).", lessonId, groupId);
-        return groupRepository.assignToLesson(lessonId, groupId);
+        groupRepository.assignToLesson(lessonId, groupId);
+        return true;
     }
 
     public boolean deleteFromLesson(Integer lessonId, Integer groupId) {
         log.debug("GroupService calls groupRepository.deleteFromLesson({}, {}).", lessonId, groupId);
-        return groupRepository.deleteFromLesson(lessonId, groupId);
+        groupRepository.deleteFromLesson(lessonId, groupId);
+        return true;
     }
 
     public List<Group> getByLesson(Integer lessonId) {
         log.debug("GroupService calls groupRepository.getByCourse({}).", lessonId);
-        return groupRepository.getByLesson(lessonId);
+        return groupMapper.toGroup(groupRepository.findByLessons_Id(lessonId));
     }
 
     public Group getByStudent(Integer studentId) {
-        return groupRepository.getByStudent(studentId);
+        return groupMapper.toGroup(groupRepository.findByStudents_Id(studentId));
     }
 }

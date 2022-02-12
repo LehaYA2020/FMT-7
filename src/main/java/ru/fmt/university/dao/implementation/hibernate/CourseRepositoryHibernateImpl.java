@@ -1,14 +1,11 @@
 package ru.fmt.university.dao.implementation.hibernate;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
 import ru.fmt.university.dao.interfaces.ICourseRepository;
-import ru.fmt.university.dao.util.CourseMapper;
-import ru.fmt.university.model.dto.Course;
 import ru.fmt.university.model.entity.CourseEntity;
 import ru.fmt.university.model.entity.GroupEntity;
 
@@ -26,15 +23,13 @@ public class CourseRepositoryHibernateImpl implements ICourseRepository {
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
-    @Autowired
-    private CourseMapper courseMapper;
 
-    public Course create(Course course) {
+    public CourseEntity saveAndFlush(CourseEntity course) {
         log.trace("create({}).", course);
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            entityManager.persist(courseMapper.toEntity(course));
+            entityManager.persist(course);
             entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
@@ -47,14 +42,14 @@ public class CourseRepositoryHibernateImpl implements ICourseRepository {
         return course;
     }
 
-    public List<Course> getAll() {
+    public List<CourseEntity> findAll() {
         log.trace("getAll().");
-        List<Course> courses;
+        List<CourseEntity> courses;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            courses = courseMapper.toCourse(entityManager.createQuery("FROM CourseEntity", CourseEntity.class)
-                    .getResultList());
+            courses = entityManager.createQuery("FROM CourseEntity", CourseEntity.class)
+                    .getResultList();
             entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
@@ -67,14 +62,13 @@ public class CourseRepositoryHibernateImpl implements ICourseRepository {
         return courses;
     }
 
-    public Course getById(Integer id) {
+    public CourseEntity getById(Integer id) {
         log.trace("getById({}).", id);
-        Course course;
+        CourseEntity course;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            CourseEntity entity = entityManager.find(CourseEntity.class, id);
-            course = courseMapper.toCourse(entity);
+            course = entityManager.find(CourseEntity.class, id);
             entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
@@ -83,16 +77,16 @@ public class CourseRepositoryHibernateImpl implements ICourseRepository {
         } finally {
             entityManager.close();
         }
-        log.debug("Found {}.", course);
+        log.debug("Found {}.", course.getName());
         return course;
     }
 
-    public Course update(Course course) {
+    public CourseEntity save(CourseEntity course) {
         log.trace("update({}).", course);
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            entityManager.merge(courseMapper.toEntity(course));
+            entityManager.merge(course);
             entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (Exception e) {
@@ -105,7 +99,7 @@ public class CourseRepositoryHibernateImpl implements ICourseRepository {
         return course;
     }
 
-    public boolean delete(Integer id) {
+    public void deleteById(Integer id) {
         log.trace("delete({}).", id);
         try {
             entityManager = entityManagerFactory.createEntityManager();
@@ -120,16 +114,15 @@ public class CourseRepositoryHibernateImpl implements ICourseRepository {
             entityManager.close();
         }
         log.debug("Course with id={} deleted.", id);
-        return true;
     }
 
-    public List<Course> getByGroupId(Integer groupId) {
-        List<Course> courses;
+    public List<CourseEntity> findByGroups_id(Integer groupId) {
+        List<CourseEntity> courses;
         log.trace("getByGroupIa({}).", groupId);
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            courses = courseMapper.toCourse(entityManager.find(GroupEntity.class, groupId).getCourses());
+            courses = entityManager.find(GroupEntity.class, groupId).getCourses();
             entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (Exception e) {

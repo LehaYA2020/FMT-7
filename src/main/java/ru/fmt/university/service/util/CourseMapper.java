@@ -1,4 +1,4 @@
-package ru.fmt.university.dao.util;
+package ru.fmt.university.service.util;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
@@ -21,6 +21,9 @@ public class CourseMapper implements RowMapper<Course> {
     }
     public CourseEntity toEntity(Course course) {
         return new CourseEntity(course.getId(), course.getName(), course.getDescription());
+    }
+    public List<CourseEntity> toEntity(List<Course> courses) {
+        return courses.stream().map(e->toEntity(e)).toList();
     }
 
     public List<Course> toCourse(List<CourseEntity> entities) {

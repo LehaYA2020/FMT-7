@@ -8,6 +8,7 @@ import ru.fmt.university.model.dto.Lesson;
 import ru.fmt.university.model.dto.Student;
 import ru.fmt.university.service.ILessonService;
 import ru.fmt.university.service.IStudentService;
+import ru.fmt.university.service.util.StudentMapper;
 
 import java.util.List;
 
@@ -18,50 +19,56 @@ public class StudentService implements IStudentService {
     private IStudentRepository studentRepository;
     @Autowired
     private ILessonService lessonService;
+    @Autowired
+    private StudentMapper studentMapper;
 
     public void create(Student student) {
         log.debug("StudentService calls studentRepository.create({}).", student.getId());
-        studentRepository.create(student);
+        studentRepository.saveAndFlush(studentMapper.toEntity(student));
     }
 
     public Student getById(Integer id) {
         log.debug("StudentService calls studentRepository.getById({}).", id);
-        return studentRepository.getById(id);
+        return studentMapper.toStudent(studentRepository.getById(id));
     }
 
     public List<Student> getAll() {
         log.debug("StudentService calls studentRepository.getAll().");
-        return studentRepository.getAll();
+        return studentMapper.toStudent(studentRepository.findAll());
     }
 
-    public boolean delete(Integer id) {
+    public boolean deleteById(Integer id) {
         log.debug("StudentService calls studentRepository.delete({}).", id);
-        return studentRepository.delete(id);
+        studentRepository.deleteById(id);
+        return true;
     }
 
     public Student update(Student forUpdate) {
         log.debug("StudentService calls studentRepository.update({}).", forUpdate.getId());
-        return studentRepository.update(forUpdate);
+        return studentMapper.toStudent(studentRepository.saveAndFlush(studentMapper.toEntity(forUpdate)));
     }
 
     public boolean assignStudentToGroup(Integer studentId, Integer groupId) {
         log.debug("StudentService calls studentRepository.assignToGroup({},{}).", studentId, groupId);
-        return studentRepository.assignToGroup(studentId, groupId);
+        studentRepository.assignToGroup(studentId, groupId);
+        return true;
     }
 
     public boolean updateGroupAssignment(Integer studentId, Integer groupId) {
         log.debug("StudentService calls studentRepository.updateGroupAssignment({},{}).", studentId, groupId);
-        return studentRepository.updateGroupAssignment(studentId, groupId);
+        studentRepository.updateGroupAssignment(studentId, groupId);
+        return true;
     }
 
     public List<Student> getByGroup(Integer groupId) {
         log.debug("StudentService calls studentRepository.getByGroupId({}).", groupId);
-        return studentRepository.getByGroupId(groupId);
+        return studentMapper.toStudent(studentRepository.findByGroup_Id(groupId));
     }
 
     public boolean deleteFromGroup(Integer studentId, Integer groupId) {
         log.debug("StudentService calls studentRepository.deleteFromGroup({},{}).", studentId, groupId);
-        return studentRepository.deleteFromGroup(studentId, groupId);
+        studentRepository.deleteFromGroup(studentId, groupId);
+        return true;
     }
 
     public List<Lesson> getSchedule(Integer studentId) {

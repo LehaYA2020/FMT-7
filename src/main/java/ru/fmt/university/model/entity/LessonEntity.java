@@ -3,12 +3,14 @@ package ru.fmt.university.model.entity;
 import ru.fmt.university.model.LessonType;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Transactional
 @Table(name = "lessons")
 public class LessonEntity {
     @Id
