@@ -1,12 +1,13 @@
 package ru.fmt.university.model.entity;
 
+import org.hibernate.annotations.OnDelete;
+
 import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Transactional
 @Table(name = "groups")
 public class GroupEntity {
     @Id
@@ -26,7 +27,7 @@ public class GroupEntity {
     private List<LessonEntity> lessons;
 
     @OneToMany(mappedBy = "group")
-    List<StudentEntity> students;
+    private List<StudentEntity> students;
 
     public GroupEntity() {
     }
@@ -42,6 +43,13 @@ public class GroupEntity {
 
     public GroupEntity(int id) {
         this.id = id;
+    }
+
+    public GroupEntity(String name, List<CourseEntity> courses, List<LessonEntity> lessons, List<StudentEntity> students) {
+        this.name = name;
+        this.courses = courses;
+        this.lessons = lessons;
+        this.students = students;
     }
 
     public int getId() {
@@ -95,5 +103,16 @@ public class GroupEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, name);
+    }
+
+    @Override
+    public String toString() {
+        return "GroupEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", courses=" + courses +
+                ", lessons=" + lessons +
+                ", students=" + students +
+                '}';
     }
 }

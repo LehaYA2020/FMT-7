@@ -19,7 +19,7 @@ public class StudentServiceTest extends ServiceTest {
     @Test
     public void create_shouldCallStudentRepositoryCreatedMethod() {
         studentService.create(expectedStudent);
-        verify(studentRepository).saveAndFlush(studentMapper.toEntity(expectedStudent));
+        verify(studentRepository).save(studentMapper.toEntity(expectedStudent));
     }
 
     @Test
@@ -42,11 +42,11 @@ public class StudentServiceTest extends ServiceTest {
 
     @Test
     public void update_shouldCallStudentRepositoryUpdateMethod() {
-        when(studentRepository.saveAndFlush(studentMapper.toEntity(expectedStudent)))
+        when(studentRepository.save(studentMapper.toEntity(expectedStudent)))
                 .thenReturn(studentMapper.toEntity(expectedStudent));
         Student updatedStudent = studentService.update(expectedStudent);
 
-        verify(studentRepository).saveAndFlush(studentMapper.toEntity(expectedStudent));
+        verify(studentRepository).save(studentMapper.toEntity(expectedStudent));
         assertEquals(expectedStudent, updatedStudent);
     }
 

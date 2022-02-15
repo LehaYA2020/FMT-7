@@ -10,7 +10,7 @@ import ru.fmt.university.service.IGroupService;
 import java.util.List;
 
 @RestController
-public class GroupController {
+public class    GroupController {
     @Autowired
     private IGroupService groupService;
 

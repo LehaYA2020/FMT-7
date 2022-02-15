@@ -64,7 +64,7 @@ public class StudentRepositoryHibernateImplTest extends RepositoryTest {
     @Test
     public void assignToGroup_shouldAssignToGroup() {
         studentRepositoryHibernate.assignToGroup(testStudentList.get(3).getId(), testGroupList.get(2).getId());
-        testStudentList.get(3).setGroup(testGroupList.get(4));
+        testStudentList.get(3).setGroup(testGroupList.get(2));
         assertEquals(testStudentList.subList(3, 4), studentRepositoryHibernate.findByGroup_Id(3));
         testStudentList.get(3).setGroup(null);
     }

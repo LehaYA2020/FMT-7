@@ -2,6 +2,7 @@ package ru.fmt.university.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.fmt.university.model.dto.Course;
@@ -14,7 +15,8 @@ public class CourseController {
     @Autowired
     private ICourseService courseService;
 
-    @PostMapping(value = "/courses")
+    @PostMapping(value = "/courses/{course}", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> create(@RequestBody Course course) {
         courseService.create(course);
         return new ResponseEntity<>(HttpStatus.CREATED);

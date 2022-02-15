@@ -20,7 +20,7 @@ public class LessonService implements ILessonService {
 
     public void create(Lesson lesson) {
         log.debug("LessonService calls lessonRepository.create({}).", lesson.getId());
-        lessonRepository.saveAndFlush(lessonMapper.toEntity(lesson));
+        lessonRepository.save(lessonMapper.toEntity(lesson));
     }
 
     public Lesson getById(Integer id) {
@@ -35,7 +35,7 @@ public class LessonService implements ILessonService {
 
     public Lesson update(Lesson forUpdate) {
         log.debug("LessonService calls lessonRepository.update({}).", forUpdate.getId());
-        return lessonMapper.toLesson(lessonRepository.saveAndFlush(lessonMapper.toEntity(forUpdate)));
+        return lessonMapper.toLesson(lessonRepository.save(lessonMapper.toEntity(forUpdate)));
     }
 
     public boolean deleteById(Integer id) {

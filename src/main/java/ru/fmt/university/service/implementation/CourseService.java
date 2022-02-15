@@ -13,14 +13,14 @@ import java.util.List;
 @Component
 @Log4j2
 public class CourseService implements ICourseService {
-    @Autowired
+    @Autowired(required = false)
     private ICourseRepository courseRepository;
     @Autowired
     private CourseMapper courseMapper;
 
     public void create(Course course) {
         log.debug("CourseService calls courseRepository.create({}).", course.getId());
-        courseRepository.saveAndFlush(courseMapper.toEntity(course));
+        courseRepository.save(courseMapper.toEntity(course));
     }
 
     public List<Course> getAll() {
@@ -35,7 +35,7 @@ public class CourseService implements ICourseService {
 
     public Course update(Course forUpdate) {
         log.debug("CourseService calls courseRepository.update({}).", forUpdate.getId());
-        return courseMapper.toCourse(courseRepository.saveAndFlush(courseMapper.toEntity(forUpdate)));
+        return courseMapper.toCourse(courseRepository.save(courseMapper.toEntity(forUpdate)));
     }
 
     public boolean deleteById(Integer id) {

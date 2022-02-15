@@ -12,7 +12,5 @@ public interface IRepository<T, I> {
 
     T getById(I id);
 
-    T saveAndFlush(T toUpdate);
-
     void deleteById(I id);
 }

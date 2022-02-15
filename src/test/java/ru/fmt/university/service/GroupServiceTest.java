@@ -14,7 +14,7 @@ public class GroupServiceTest extends ServiceTest {
     @Test
     public void create_shouldCallGroupRepositoryCreateMethod() {
         groupService.create(expectedGroup);
-        verify(groupRepository).saveAndFlush(groupMapper.toEntity(expectedGroup));
+        verify(groupRepository).save(groupMapper.toEntity(expectedGroup));
     }
 
     @Test
@@ -37,10 +37,10 @@ public class GroupServiceTest extends ServiceTest {
 
     @Test
     public void update_shouldCallGroupRepositoryUpdateMethod() {
-        when(groupRepository.saveAndFlush(groupMapper.toEntity(expectedGroup))).thenReturn(groupMapper.toEntity(expectedGroup));
+        when(groupRepository.save(groupMapper.toEntity(expectedGroup))).thenReturn(groupMapper.toEntity(expectedGroup));
         Group updatedGroup = groupService.update(expectedGroup);
 
-        verify(groupRepository).saveAndFlush(groupMapper.toEntity(expectedGroup));
+        verify(groupRepository).save(groupMapper.toEntity(expectedGroup));
         assertEquals(expectedGroup, updatedGroup);
     }
 

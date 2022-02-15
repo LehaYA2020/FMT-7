@@ -14,7 +14,7 @@ public class LessonServiceTest extends ServiceTest {
     @Test
     public void create_shouldCallLessonRepositoryCreateMethod() {
         lessonService.create(expectedLesson);
-        verify(lessonRepository).saveAndFlush(lessonMapper.toEntity(expectedLesson));
+        verify(lessonRepository).save(lessonMapper.toEntity(expectedLesson));
     }
 
     @Test
@@ -37,10 +37,10 @@ public class LessonServiceTest extends ServiceTest {
 
     @Test
     public void update_shouldCallLessonRepositoryUpdateMethod() {
-        when(lessonRepository.saveAndFlush(lessonMapper.toEntity(expectedLesson))).thenReturn(lessonMapper.toEntity(expectedLesson));
+        when(lessonRepository.save(lessonMapper.toEntity(expectedLesson))).thenReturn(lessonMapper.toEntity(expectedLesson));
         Lesson updatedLesson = lessonService.update(expectedLesson);
 
-        verify(lessonRepository).saveAndFlush(lessonMapper.toEntity(expectedLesson));
+        verify(lessonRepository).save(lessonMapper.toEntity(expectedLesson));
         assertEquals(expectedLesson, updatedLesson);
     }
 

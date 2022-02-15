@@ -8,13 +8,15 @@ import org.springframework.stereotype.Repository;
 import ru.fmt.university.dao.interfaces.ILessonRepository;
 import ru.fmt.university.model.entity.LessonEntity;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
+@Transactional
 @ConditionalOnProperty(name = "daoImpl", havingValue = "jpa")
 public interface LessonJpa extends CrudRepository<LessonEntity, Integer>, ILessonRepository {
 
-    @Query(value = "select st.group.lessons FROM StudentEntity st, GroupEntity where st.id=:studentId")
+    @Query(value = "select st.group.lessons FROM StudentEntity st where st.id=:studentId")
     List<LessonEntity> findByStudents_id(@Param("studentId") Integer studentId);
 
     List<LessonEntity> findByTeacher_id(Integer teacherId);

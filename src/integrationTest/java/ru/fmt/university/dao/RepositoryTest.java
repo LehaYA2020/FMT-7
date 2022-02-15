@@ -9,13 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import ru.fmt.university.dao.implementation.hibernate.*;
-import ru.fmt.university.dao.implementation.jpa.CourseJpa;
+import ru.fmt.university.dao.implementation.jpa.*;
 import ru.fmt.university.model.LessonType;
-import ru.fmt.university.model.dto.*;
-import ru.fmt.university.model.entity.CourseEntity;
-import ru.fmt.university.model.entity.GroupEntity;
-import ru.fmt.university.model.entity.StudentEntity;
-import ru.fmt.university.model.entity.TeacherEntity;
+import ru.fmt.university.model.entity.*;
 
 import javax.sql.DataSource;
 import javax.transaction.Transactional;
@@ -28,14 +24,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 @SpringBootTest
-@Transactional
 public abstract class RepositoryTest {
     protected static final List<CourseEntity> testCourseList = new LinkedList<>();
     protected static final List<GroupEntity> testGroupList = new LinkedList<>();
     protected static final List<StudentEntity> testStudentList = new LinkedList<>();
     protected static final List<TeacherEntity> testTeacherList = new LinkedList<>();
-    protected static final List<Lesson> testLessonList = new LinkedList<>();
-    
+    protected static final List<LessonEntity> testLessonList = new LinkedList<>();
+
     @Autowired(required = false)
     protected CourseRepositoryHibernateImpl courseRepositoryHibernate;
     @Autowired(required = false)
@@ -49,6 +44,14 @@ public abstract class RepositoryTest {
 
     @Autowired(required = false)
     protected CourseJpa courseJpa;
+    @Autowired(required = false)
+    protected GroupJpa groupJpa;
+    @Autowired(required = false)
+    protected LessonJpa lessonJpa;
+    @Autowired(required = false)
+    protected StudentJpa studentJpa;
+    @Autowired(required = false)
+    protected TeacherJpa teacherJpa;
 
     @Autowired
     protected DataSource dataSource;
@@ -68,17 +71,17 @@ public abstract class RepositoryTest {
         }
 
         testStudentList.get(2).setGroup(testGroupList.get(1));
-        testStudentList.get(3).setGroup(testGroupList.get(2));
+        testStudentList.get(3).setGroup(null);
 
         testTeacherList.add(new TeacherEntity(1, "T-" + 1, "Teacher", testCourseList.get(0)));
         testTeacherList.add(new TeacherEntity(2, "T-" + 2, "Teacher", testCourseList.get(0)));
         testTeacherList.add(new TeacherEntity(3, "T-" + 3, "Teacher", testCourseList.get(1)));
 
-        testLessonList.add(new Lesson(1, testCourseList.get(0).getId(), new Teacher(1).getId(), 10,
+        testLessonList.add(new LessonEntity(1, testCourseList.get(0), testTeacherList.get(0), 10,
                 DayOfWeek.MONDAY, LocalTime.of(9, 30, 0), LessonType.LECTURE));
-        testLessonList.add(new Lesson(2, testCourseList.get(1).getId(), new Teacher(1).getId(), 10,
+        testLessonList.add(new LessonEntity(2, testCourseList.get(1), testTeacherList.get(0), 10,
                 DayOfWeek.TUESDAY, LocalTime.of(9, 30, 0), LessonType.LECTURE));
-        testLessonList.add(new Lesson(3, testCourseList.get(1).getId(), 2, 20,
+        testLessonList.add(new LessonEntity(3, testCourseList.get(1), testTeacherList.get(1), 20,
                 DayOfWeek.FRIDAY, LocalTime.of(9, 30, 0), LessonType.LECTURE));
     }
 

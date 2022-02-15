@@ -19,7 +19,7 @@ public class TeacherServiceTest extends ServiceTest {
     @Test
     public void create_shouldCallTeacherRepositoryCreateMethod() {
         teacherService.create(expectedTeacher);
-        verify(teacherRepository).saveAndFlush(teacherMapper.toEntity(expectedTeacher));
+        verify(teacherRepository).save(teacherMapper.toEntity(expectedTeacher));
     }
 
     @Test
@@ -43,10 +43,10 @@ public class TeacherServiceTest extends ServiceTest {
 
     @Test
     public void update_shouldCallTeacherRepositoryUpdateMethod() {
-        when(teacherRepository.saveAndFlush(teacherMapper.toEntity(expectedTeacher))).thenReturn(teacherMapper.toEntity(expectedTeacher));
+        when(teacherRepository.save(teacherMapper.toEntity(expectedTeacher))).thenReturn(teacherMapper.toEntity(expectedTeacher));
         Teacher updatedTeacher = teacherService.update(expectedTeacher);
 
-        verify(teacherRepository).saveAndFlush(teacherMapper.toEntity(expectedTeacher));
+        verify(teacherRepository).save(teacherMapper.toEntity(expectedTeacher));
         assertEquals(expectedTeacher, updatedTeacher);
     }
 

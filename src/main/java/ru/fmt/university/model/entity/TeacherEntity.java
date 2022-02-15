@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Transactional
 @Table(name = "teachers")
 public class TeacherEntity {
     @Id

@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(properties = {"daoImpl=hibernate"})
 public class LessonRepositoryHibernateImplTest extends RepositoryTest {
-    private static final LessonEntity FOR_UPDATE = new LessonEntity(2, testCourseList.get(1), testTeacherList.get(0), 10,
+    private static final LessonEntity FOR_UPDATE = new LessonEntity(2,testCourseList.get(1), testTeacherList.get(0), 10,
             DayOfWeek.THURSDAY, LocalTime.of(9, 30, 0), LessonType.LECTURE);
 
     private static final LessonEntity lesson = new LessonEntity( testCourseList.get(1), testTeacherList.get(0), 10,
@@ -37,7 +37,7 @@ public class LessonRepositoryHibernateImplTest extends RepositoryTest {
 
     @Test
     public void getById() {
-        assertEquals(testLessonList.get(0), lessonRepositoryHibernate.getById(1));
+        assertEquals(testLessonList.get(0).getTeacher(), lessonRepositoryHibernate.getById(1).getTeacher());
     }
 
     @Test

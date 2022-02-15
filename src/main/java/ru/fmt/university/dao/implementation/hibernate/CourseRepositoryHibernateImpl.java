@@ -24,19 +24,18 @@ public class CourseRepositoryHibernateImpl implements ICourseRepository {
     private EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
 
-    public CourseEntity saveAndFlush(CourseEntity course) {
+    public CourseEntity save(CourseEntity course) {
         log.trace("create({}).", course);
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            entityManager.persist(course);
+            entityManager.merge(course);
             entityManager.flush();
             entityManager.getTransaction().commit();
+            entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_INSERT_COURSE, e);
             throw new DaoException(MessagesConstants.CANNOT_INSERT_COURSE, e);
-        } finally {
-            entityManager.close();
         }
         log.debug("{} created", course);
         return course;
@@ -52,11 +51,10 @@ public class CourseRepositoryHibernateImpl implements ICourseRepository {
                     .getResultList();
             entityManager.flush();
             entityManager.getTransaction().commit();
+            entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_COURSES, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_COURSES, e);
-        } finally {
-            entityManager.close();
         }
         log.trace("Found {} courses", courses.size());
         return courses;
@@ -71,31 +69,15 @@ public class CourseRepositoryHibernateImpl implements ICourseRepository {
             course = entityManager.find(CourseEntity.class, id);
             entityManager.flush();
             entityManager.getTransaction().commit();
+            entityManager.close();
+            if (course == null) {
+                throw new Exception("Student is null");
+            }
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_COURSE_BY_ID, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_COURSE_BY_ID, e);
-        } finally {
-            entityManager.close();
         }
         log.debug("Found {}.", course.getName());
-        return course;
-    }
-
-    public CourseEntity save(CourseEntity course) {
-        log.trace("update({}).", course);
-        try {
-            entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
-            entityManager.merge(course);
-            entityManager.flush();
-            entityManager.getTransaction().commit();
-        } catch (Exception e) {
-            log.error(MessagesConstants.CANNOT_UPDATE_COURSE, e);
-            throw new DaoException(MessagesConstants.CANNOT_UPDATE_COURSE, e);
-        } finally {
-            entityManager.close();
-        }
-        log.debug("Course updated {}", course);
         return course;
     }
 
@@ -107,11 +89,10 @@ public class CourseRepositoryHibernateImpl implements ICourseRepository {
             entityManager.remove(entityManager.find(CourseEntity.class, id));
             entityManager.flush();
             entityManager.getTransaction().commit();
+            entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_DELETE_COURSE, e);
             throw new DaoException(MessagesConstants.CANNOT_DELETE_COURSE, e);
-        } finally {
-            entityManager.close();
         }
         log.debug("Course with id={} deleted.", id);
     }
@@ -125,11 +106,10 @@ public class CourseRepositoryHibernateImpl implements ICourseRepository {
             courses = entityManager.find(GroupEntity.class, groupId).getCourses();
             entityManager.flush();
             entityManager.getTransaction().commit();
+            entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_DELETE_COURSE, e);
             throw new DaoException(MessagesConstants.CANNOT_DELETE_COURSE, e);
-        } finally {
-            entityManager.close();
         }
         log.debug("Found {}", courses);
         return courses;

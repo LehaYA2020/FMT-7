@@ -24,7 +24,7 @@ public class TeacherService implements ITeacherService {
 
     public void create(Teacher teacher) {
         log.debug("TeacherService calls teacherRepository.create({}).", teacher.getId());
-        teacherRepository.saveAndFlush(teacherMapper.toEntity(teacher));
+        teacherRepository.save(teacherMapper.toEntity(teacher));
     }
 
     public Teacher getById(Integer id) {
@@ -39,7 +39,7 @@ public class TeacherService implements ITeacherService {
 
     public Teacher update(Teacher forUpdate) {
         log.debug("TeacherService calls teacherRepository.update({}).", forUpdate.getId());
-        return teacherMapper.toTeacher(teacherRepository.saveAndFlush(teacherMapper.toEntity(forUpdate)));
+        return teacherMapper.toTeacher(teacherRepository.save(teacherMapper.toEntity(forUpdate)));
     }
 
     public boolean deleteById(Integer id) {

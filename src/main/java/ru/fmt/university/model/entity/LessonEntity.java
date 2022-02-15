@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Transactional
 @Table(name = "lessons")
 public class LessonEntity {
     @Id

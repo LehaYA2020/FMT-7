@@ -24,7 +24,7 @@ public class StudentService implements IStudentService {
 
     public void create(Student student) {
         log.debug("StudentService calls studentRepository.create({}).", student.getId());
-        studentRepository.saveAndFlush(studentMapper.toEntity(student));
+        studentRepository.save(studentMapper.toEntity(student));
     }
 
     public Student getById(Integer id) {
@@ -45,7 +45,7 @@ public class StudentService implements IStudentService {
 
     public Student update(Student forUpdate) {
         log.debug("StudentService calls studentRepository.update({}).", forUpdate.getId());
-        return studentMapper.toStudent(studentRepository.saveAndFlush(studentMapper.toEntity(forUpdate)));
+        return studentMapper.toStudent(studentRepository.save(studentMapper.toEntity(forUpdate)));
     }
 
     public boolean assignStudentToGroup(Integer studentId, Integer groupId) {

@@ -16,7 +16,7 @@ public class CourseJpaTest extends RepositoryTest {
 
     @Test
     public void create() {
-        courseJpa.saveAndFlush(FOR_CREATION);
+        courseJpa.save(FOR_CREATION);
         assertNotEquals(testCourseList, courseJpa.findAll());
         FOR_CREATION.setId(4);
         assertEquals(FOR_CREATION, courseJpa.getById(4));
@@ -29,8 +29,8 @@ public class CourseJpaTest extends RepositoryTest {
 
     @Test
     public void getById_shouldReturnCourseById() {
-        CourseEntity expected = testCourseList.get(0);
-        assertEquals(expected, courseJpa.findById(1).get());
+        CourseEntity expected = testCourseList.get(1);
+        assertEquals(expected, courseJpa.getById(2));
     }
 
     @Test
@@ -42,11 +42,12 @@ public class CourseJpaTest extends RepositoryTest {
 
     @Test
     public void delete_shouldDeleteCourse() {
-        List<CourseEntity> expected = testCourseList.subList(0, 2);
+        courseJpa.save(FOR_CREATION);
+        assertNotEquals(testCourseList, courseJpa.findAll());
 
-        courseJpa.deleteById(3);
+        courseJpa.deleteById(4);
 
-        assertEquals(expected, courseJpa.findAll());
+        assertEquals(testCourseList, courseJpa.findAll());
     }
 
     @Test

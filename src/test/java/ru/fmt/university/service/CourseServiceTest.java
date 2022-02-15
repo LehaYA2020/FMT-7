@@ -15,7 +15,7 @@ public class CourseServiceTest extends ServiceTest {
     @Test
     public void create_shouldCallCourseRepositoryCreateMethod() {
         courseService.create(expectedCourse);
-        verify(courseRepository).saveAndFlush(courseMapper.toEntity(expectedCourse));
+        verify(courseRepository).save(courseMapper.toEntity(expectedCourse));
     }
 
     @Test
@@ -38,10 +38,10 @@ public class CourseServiceTest extends ServiceTest {
 
     @Test
     public void update_shouldCallCourseRepositoryUpdateMethod() {
-        when(courseRepository.saveAndFlush(courseMapper.toEntity(expectedCourse))).thenReturn(courseMapper.toEntity(expectedCourse));
+        when(courseRepository.save(courseMapper.toEntity(expectedCourse))).thenReturn(courseMapper.toEntity(expectedCourse));
         Course updatedCourse = courseService.update(expectedCourse);
 
-        verify(courseRepository).saveAndFlush(courseMapper.toEntity(expectedCourse));
+        verify(courseRepository).save(courseMapper.toEntity(expectedCourse));
         assertEquals(expectedCourse, updatedCourse);
     }
 

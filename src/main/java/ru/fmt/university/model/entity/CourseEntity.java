@@ -1,14 +1,14 @@
 package ru.fmt.university.model.entity;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Transactional
 @Table(name = "courses")
 public class CourseEntity {
+    @OneToMany(mappedBy = "course")
+    List<TeacherEntity> teachers;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -16,15 +16,10 @@ public class CourseEntity {
     private String name;
     @Column(name = "description")
     private String description;
-
     @ManyToMany(mappedBy = "courses")
     private List<GroupEntity> groups;
-
     @OneToMany(mappedBy = "course")
     private List<LessonEntity> lessons;
-
-    @OneToMany(mappedBy = "course")
-    List<TeacherEntity> teachers;
 
     public CourseEntity(int id, String name, String description) {
         this.id = id;
@@ -92,16 +87,17 @@ public class CourseEntity {
         this.teachers = teachers;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CourseEntity courseEntity = (CourseEntity) o;
-        return id == courseEntity.id && Objects.equals(name, courseEntity.name) && Objects.equals(description, courseEntity.description);
-    }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, name, description);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CourseEntity that = (CourseEntity) o;
+        return id == that.id && Objects.equals(name, that.name) && Objects.equals(description, that.description);
     }
 }

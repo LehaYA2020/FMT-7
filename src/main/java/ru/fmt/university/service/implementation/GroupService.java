@@ -20,7 +20,7 @@ public class GroupService implements IGroupService {
 
     public void create(Group group) {
         log.debug("GroupService calls groupRepository.create({}).", group.getId());
-        groupRepository.saveAndFlush(groupMapper.toEntity(group));
+        groupRepository.save(groupMapper.toEntity(group));
     }
 
     public Group getById(Integer id) {
@@ -35,7 +35,7 @@ public class GroupService implements IGroupService {
 
     public Group update(Group forUpdate) {
         log.debug("GroupService calls groupRepository.update({}).", forUpdate);
-        return groupMapper.toGroup(groupRepository.saveAndFlush(groupMapper.toEntity(forUpdate)));
+        return groupMapper.toGroup(groupRepository.save(groupMapper.toEntity(forUpdate)));
     }
 
     public boolean deleteById(Integer id) {
