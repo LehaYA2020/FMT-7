@@ -1,7 +1,7 @@
 package ru.fmt.university.dao.hibernate;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import ru.fmt.university.dao.RepositoryTest;
 import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(properties = {"daoImpl=hibernate"})
+@DataJpaTest(properties = {"daoImpl=hibernate"})
 public class CourseRepositoryHibernateImplTest extends RepositoryTest {
     private static final CourseEntity FOR_CREATION = new CourseEntity("Course-" + 4, "forTest");
 

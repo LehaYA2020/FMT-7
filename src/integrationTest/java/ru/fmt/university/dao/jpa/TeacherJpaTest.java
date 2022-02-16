@@ -1,7 +1,7 @@
 package ru.fmt.university.dao.jpa;
 
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-@SpringBootTest(properties = {"daoImpl=jpa"})
+@DataJpaTest(properties = {"daoImpl=jpa"})
 public class TeacherJpaTest {
 }

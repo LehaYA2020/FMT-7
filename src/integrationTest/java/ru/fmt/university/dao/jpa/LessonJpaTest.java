@@ -1,18 +1,20 @@
 package ru.fmt.university.dao.jpa;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import ru.fmt.university.dao.RepositoryTest;
 import ru.fmt.university.model.LessonType;
 import ru.fmt.university.model.entity.LessonEntity;
 
+import javax.transaction.Transactional;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-@SpringBootTest(properties = {"daoImpl=jpa"})
+@Transactional
+@DataJpaTest(properties = {"daoImpl=jpa"})
 public class LessonJpaTest extends RepositoryTest {
     private static final LessonEntity FOR_UPDATE = new LessonEntity(2, testCourseList.get(1), testTeacherList.get(0), 10,
             DayOfWeek.THURSDAY, LocalTime.of(9, 30, 0), LessonType.LECTURE);
@@ -36,7 +38,7 @@ public class LessonJpaTest extends RepositoryTest {
 
     @Test
     public void getById() {
-        assertEquals(testLessonList.get(0).getTeacher(), lessonJpa.getById(1).getTeacher());
+        assertEquals(testLessonList.get(0), lessonJpa.getById(1));
     }
 
     @Test

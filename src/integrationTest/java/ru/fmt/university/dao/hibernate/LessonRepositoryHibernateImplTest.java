@@ -1,7 +1,7 @@
 package ru.fmt.university.dao.hibernate;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import ru.fmt.university.dao.RepositoryTest;
 import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
@@ -13,12 +13,12 @@ import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(properties = {"daoImpl=hibernate"})
+@DataJpaTest(properties = {"daoImpl=hibernate"})
 public class LessonRepositoryHibernateImplTest extends RepositoryTest {
-    private static final LessonEntity FOR_UPDATE = new LessonEntity(2,testCourseList.get(1), testTeacherList.get(0), 10,
+    private static final LessonEntity FOR_UPDATE = new LessonEntity(2, testCourseList.get(1), testTeacherList.get(0), 10,
             DayOfWeek.THURSDAY, LocalTime.of(9, 30, 0), LessonType.LECTURE);
 
-    private static final LessonEntity lesson = new LessonEntity( testCourseList.get(1), testTeacherList.get(0), 10,
+    private static final LessonEntity lesson = new LessonEntity(testCourseList.get(1), testTeacherList.get(0), 10,
             DayOfWeek.THURSDAY, LocalTime.of(9, 30, 0), LessonType.LECTURE);
 
     @Test

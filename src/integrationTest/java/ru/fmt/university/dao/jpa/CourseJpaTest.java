@@ -1,6 +1,7 @@
 package ru.fmt.university.dao.jpa;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.fmt.university.dao.RepositoryTest;
 import ru.fmt.university.model.entity.CourseEntity;
@@ -10,7 +11,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest(properties = {"daoImpl=jpa"})
+@DataJpaTest(properties = {"daoImpl=jpa"})
 public class CourseJpaTest extends RepositoryTest {
     private static final CourseEntity FOR_CREATION = new CourseEntity("Course-" + 4, "forTest");
 
