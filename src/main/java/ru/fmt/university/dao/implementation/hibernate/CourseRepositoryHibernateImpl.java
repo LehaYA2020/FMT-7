@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
-import ru.fmt.university.dao.interfaces.ICourseRepository;
+import ru.fmt.university.dao.interfaces.CourseRepository;
 import ru.fmt.university.model.entity.CourseEntity;
 import ru.fmt.university.model.entity.GroupEntity;
 
@@ -14,12 +14,13 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Log4j2
 @Repository
 @Transactional
 @ConditionalOnProperty(name = "daoImpl", havingValue = "hibernate")
-public class CourseRepositoryHibernateImpl implements ICourseRepository {
+public class CourseRepositoryHibernateImpl implements CourseRepository {
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
@@ -60,13 +61,13 @@ public class CourseRepositoryHibernateImpl implements ICourseRepository {
         return courses;
     }
 
-    public CourseEntity getById(Integer id) {
+    public Optional<CourseEntity> findById(Integer id) {
         log.trace("getById({}).", id);
-        CourseEntity course;
+        Optional<CourseEntity> course;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            course = entityManager.find(CourseEntity.class, id);
+            course = Optional.of(entityManager.find(CourseEntity.class, id));
             entityManager.flush();
             entityManager.getTransaction().commit();
             entityManager.close();
@@ -77,7 +78,7 @@ public class CourseRepositoryHibernateImpl implements ICourseRepository {
             log.error(MessagesConstants.CANNOT_GET_COURSE_BY_ID, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_COURSE_BY_ID, e);
         }
-        log.debug("Found {}.", course.getName());
+        log.debug("Found {}.", course.get().getName());
         return course;
     }
 

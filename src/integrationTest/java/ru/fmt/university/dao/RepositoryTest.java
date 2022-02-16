@@ -3,15 +3,12 @@ package ru.fmt.university.dao;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.jdbc.Sql;
 import ru.fmt.university.dao.implementation.hibernate.*;
 import ru.fmt.university.dao.implementation.jpa.*;
 import ru.fmt.university.model.LessonType;
 import ru.fmt.university.model.entity.*;
 
-import javax.sql.DataSource;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.LinkedList;
@@ -19,7 +16,6 @@ import java.util.List;
 
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 
-@DataJpaTest
 @Sql(scripts = {"/createTables.sql", "/create-data.sql"})
 @Sql(scripts = "/cleanup-data.sql", executionPhase = AFTER_TEST_METHOD)
 public abstract class RepositoryTest {
@@ -50,11 +46,6 @@ public abstract class RepositoryTest {
     protected StudentJpa studentJpa;
     @Autowired(required = false)
     protected TeacherJpa teacherJpa;
-
-    @Autowired
-    protected DataSource dataSource;
-    @Autowired
-    ApplicationContext context;
 
     @BeforeAll
     protected static void prepareLists() {
@@ -90,26 +81,4 @@ public abstract class RepositoryTest {
         testGroupList.clear();
         testStudentList.clear();
     }
-
-    /*@BeforeEach
-    protected void fillDb() throws Exception {
-        ScriptRunner scriptRunner = new ScriptRunner(dataSource.getConnection());
-        Reader createDatabaseReader = new BufferedReader(
-                new FileReader(context.getClassLoader().getResource("createTables.sql").getFile()));
-        scriptRunner.runScript(createDatabaseReader);
-
-        Reader fillDatabaseReader = new BufferedReader(
-                new FileReader(context.getClassLoader().getResource("create-data.sql").getFile()));
-        scriptRunner.runScript(fillDatabaseReader);
-        scriptRunner.closeConnection();
-    }*/
-
-    /*@AfterEach
-    public void clearDatabase() throws Exception {
-        ScriptRunner scriptRunner = new ScriptRunner(dataSource.getConnection());
-        Reader reader = new BufferedReader(
-                new FileReader(context.getClassLoader().getResource("cleanup-create-data.sql").getFile()));
-        scriptRunner.runScript(reader);
-        scriptRunner.closeConnection();
-    }*/
 }

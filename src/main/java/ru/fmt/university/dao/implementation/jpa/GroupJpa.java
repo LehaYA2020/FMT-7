@@ -6,15 +6,16 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-import ru.fmt.university.dao.interfaces.IGroupRepository;
+import ru.fmt.university.dao.interfaces.GroupRepository;
 import ru.fmt.university.model.entity.GroupEntity;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
+@Transactional
 @ConditionalOnProperty(name = "daoImpl", havingValue = "jpa")
-public interface GroupJpa extends JpaRepository<GroupEntity, Integer>, IGroupRepository {
+public interface GroupJpa extends JpaRepository<GroupEntity, Integer>, GroupRepository {
     @Modifying
     @Query(nativeQuery = true, value = "insert into groups_courses(group_id, course_id) values(:groupId, :courseId) ;")
     void assignToCourse(@Param("groupId") Integer groupId, @Param("courseId") Integer courseId);

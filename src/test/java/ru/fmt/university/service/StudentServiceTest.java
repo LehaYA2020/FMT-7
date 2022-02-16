@@ -7,6 +7,7 @@ import ru.fmt.university.model.dto.Student;
 import ru.fmt.university.service.implementation.LessonService;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -33,10 +34,10 @@ public class StudentServiceTest extends ServiceTest {
 
     @Test
     public void getById_shouldCallStudentRepositoryGetByIdMethod() {
-        when(studentRepository.getById(1)).thenReturn(studentMapper.toEntity(expectedStudent));
+        when(studentRepository.findById(1)).thenReturn(Optional.of(studentMapper.toEntity(expectedStudent)));
         Student actualStudent = studentService.getById(1);
 
-        verify(studentRepository).getById(1);
+        verify(studentRepository).findById(1);
         assertEquals(expectedStudent, actualStudent);
     }
 

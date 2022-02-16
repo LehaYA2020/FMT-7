@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import ru.fmt.university.model.dto.Course;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -29,10 +30,10 @@ public class CourseServiceTest extends ServiceTest {
 
     @Test
     public void getById_shouldCallCourseRepositoryGetByIdMethod() {
-        when(courseRepository.getById(1)).thenReturn(courseMapper.toEntity(expectedCourse));
+        when(courseRepository.findById(1)).thenReturn(Optional.of(courseMapper.toEntity(expectedCourse)));
         Course actualCourse = courseService.getById(1);
 
-        verify(courseRepository).getById(1);
+        verify(courseRepository).findById(1);
         assertEquals(expectedCourse, actualCourse);
     }
 

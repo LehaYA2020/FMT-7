@@ -2,6 +2,7 @@ package ru.fmt.university.dao.hibernate;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.fmt.university.dao.RepositoryTest;
 import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
@@ -9,7 +10,7 @@ import ru.fmt.university.model.entity.StudentEntity;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest(properties = {"daoImpl=hibernate"})
+@SpringBootTest(properties = {"daoImpl=hibernate"})
 public class StudentRepositoryHibernateImplTest extends RepositoryTest {
     private static final StudentEntity FOR_CREATION = new StudentEntity("S-05", "Student", testGroupList.get(0));
 
@@ -18,7 +19,7 @@ public class StudentRepositoryHibernateImplTest extends RepositoryTest {
         studentRepositoryHibernate.save(FOR_CREATION);
         assertNotEquals(testStudentList, studentRepositoryHibernate.findAll());
         FOR_CREATION.setId(5);
-        assertEquals(FOR_CREATION, studentRepositoryHibernate.getById(5));
+        assertEquals(FOR_CREATION, studentRepositoryHibernate.findById(5).get());
     }
 
     @Test
@@ -37,13 +38,13 @@ public class StudentRepositoryHibernateImplTest extends RepositoryTest {
 
     @Test
     public void getByID_shouldReturnStudentByIdFromDb() {
-        assertEquals(testStudentList.get(0), studentRepositoryHibernate.getById(1));
+        assertEquals(testStudentList.get(0), studentRepositoryHibernate.findById(1).get());
     }
 
     @Test
     public void getById_shouldThrowDaoException() {
         Throwable exception = assertThrows(DaoException.class,
-                () -> studentRepositoryHibernate.getById(10));
+                () -> studentRepositoryHibernate.findById(10));
 
         assertEquals(MessagesConstants.CANNOT_GET_STUDENT_BY_ID, exception.getMessage());
     }
@@ -58,7 +59,7 @@ public class StudentRepositoryHibernateImplTest extends RepositoryTest {
     public void update_shouldUpdateStudent() {
         StudentEntity forUpdate = new StudentEntity(1, "S-01", "UPDATED", testGroupList.get(0));
         studentRepositoryHibernate.save(forUpdate);
-        assertEquals(forUpdate, studentRepositoryHibernate.getById(1));
+        assertEquals(forUpdate, studentRepositoryHibernate.findById(1).get());
     }
 
     @Test

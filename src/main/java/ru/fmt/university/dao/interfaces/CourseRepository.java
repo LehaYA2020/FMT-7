@@ -8,6 +8,6 @@ import ru.fmt.university.model.entity.CourseEntity;
 import java.util.List;
 
 @Repository
-public interface ICourseRepository extends IRepository<CourseEntity, Integer> {
+public interface CourseRepository extends IRepository<CourseEntity, Integer> {
     List<CourseEntity> findByGroups_id(Integer groupId);
 }

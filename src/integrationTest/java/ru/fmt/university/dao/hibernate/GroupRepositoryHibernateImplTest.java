@@ -2,6 +2,7 @@ package ru.fmt.university.dao.hibernate;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.fmt.university.dao.RepositoryTest;
 import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
@@ -9,7 +10,7 @@ import ru.fmt.university.model.entity.GroupEntity;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest(properties = {"daoImpl=hibernate"})
+@SpringBootTest(properties = {"daoImpl=hibernate"})
 public class GroupRepositoryHibernateImplTest extends RepositoryTest {
     private static final GroupEntity FOR_CREATION = new GroupEntity("Group-4");
 
@@ -18,7 +19,7 @@ public class GroupRepositoryHibernateImplTest extends RepositoryTest {
         groupRepositoryHibernate.save(FOR_CREATION);
         assertNotEquals(testGroupList, groupRepositoryHibernate.findAll());
         FOR_CREATION.setId(4);
-        assertEquals(FOR_CREATION, groupRepositoryHibernate.getById(FOR_CREATION.getId()));
+        assertEquals(FOR_CREATION, groupRepositoryHibernate.findById(FOR_CREATION.getId()).get());
     }
 
     @Test
@@ -37,13 +38,13 @@ public class GroupRepositoryHibernateImplTest extends RepositoryTest {
 
     @Test
     public void getById() {
-        assertEquals(testGroupList.get(0), groupRepositoryHibernate.getById(1));
+        assertEquals(testGroupList.get(0), groupRepositoryHibernate.findById(1).get());
     }
 
     @Test
     public void getById_shouldThrowDaoException() {
         Throwable exception = assertThrows(DaoException.class,
-                () -> groupRepositoryHibernate.getById(10));
+                () -> groupRepositoryHibernate.findById(10));
 
         assertEquals(MessagesConstants.CANNOT_GET_GROUP_BY_ID, exception.getMessage());
     }
@@ -78,7 +79,7 @@ public class GroupRepositoryHibernateImplTest extends RepositoryTest {
         GroupEntity expected = new GroupEntity(1, "updated");
         groupRepositoryHibernate.save(expected);
 
-        assertEquals(expected, groupRepositoryHibernate.getById(1));
+        assertEquals(expected, groupRepositoryHibernate.findById(1).get());
     }
 
     @Test
@@ -89,7 +90,8 @@ public class GroupRepositoryHibernateImplTest extends RepositoryTest {
 
     @Test
     public void getByLesson() {
-        assertEquals(testGroupList.subList(0, 2), groupRepositoryHibernate.findByLessons_Id(lessonRepositoryHibernate.getById(2).getId()));
+        assertEquals(testGroupList.subList(0, 2), groupRepositoryHibernate.findByLessons_Id(lessonRepositoryHibernate.findById(2).get()
+                .getId()));
     }
 
     @Test
@@ -100,6 +102,6 @@ public class GroupRepositoryHibernateImplTest extends RepositoryTest {
     @Test
     public void deleteFromLesson() {
         groupRepositoryHibernate.deleteFromLesson(2, testGroupList.get(0).getId());
-        assertEquals(testGroupList.subList(1, 2), groupRepositoryHibernate.findByLessons_Id(lessonRepositoryHibernate.getById(2).getId()));
+        assertEquals(testGroupList.subList(1, 2), groupRepositoryHibernate.findByLessons_Id(lessonRepositoryHibernate.findById(2).get().getId()));
     }
 }

@@ -26,7 +26,7 @@ public class LessonJpaTest extends RepositoryTest {
     public void create() {
         lessonJpa.save(lesson);
         assertNotEquals(testLessonList.size(), lessonJpa.findAll().size());
-        LessonEntity actual = lessonJpa.getById(4);
+        LessonEntity actual = lessonJpa.findById(4).get();
         lesson.setId(4);
         assertEquals(lesson, actual);
     }
@@ -38,19 +38,20 @@ public class LessonJpaTest extends RepositoryTest {
 
     @Test
     public void getById() {
-        assertEquals(testLessonList.get(0), lessonJpa.getById(1));
+        assertEquals(testLessonList.get(0), lessonJpa.findById(1).get());
     }
 
     @Test
     public void update_shouldUpdateLessonInDb() {
         lessonJpa.save(FOR_UPDATE);
-        assertEquals(FOR_UPDATE, lessonJpa.getById(2));
+        assertEquals(FOR_UPDATE, lessonJpa.findById(2).get());
     }
 
     @Test
     public void delete_shouldDeleteLessonFromDb() {
         lessonJpa.deleteById(3);
         assertEquals(testLessonList.subList(0, 2), lessonJpa.findAll());
+        assertEquals(testTeacherList, teacherJpa.findAll());
     }
 
     @Test

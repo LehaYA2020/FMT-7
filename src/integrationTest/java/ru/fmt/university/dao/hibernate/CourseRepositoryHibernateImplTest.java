@@ -1,26 +1,28 @@
 package ru.fmt.university.dao.hibernate;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.fmt.university.dao.RepositoryTest;
 import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
 import ru.fmt.university.model.entity.CourseEntity;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest(properties = {"daoImpl=hibernate"})
+@SpringBootTest(properties = {"daoImpl=hibernate"})
 public class CourseRepositoryHibernateImplTest extends RepositoryTest {
     private static final CourseEntity FOR_CREATION = new CourseEntity("Course-" + 4, "forTest");
 
+    @Transactional
     @Test
     public void create() {
         courseRepositoryHibernate.save(FOR_CREATION);
         assertNotEquals(testCourseList, courseRepositoryHibernate.findAll());
         FOR_CREATION.setId(4);
-        assertEquals(FOR_CREATION, courseRepositoryHibernate.getById(4));
+        assertEquals(FOR_CREATION, courseRepositoryHibernate.findById(4).get());
     }
 
     @Test
@@ -31,13 +33,13 @@ public class CourseRepositoryHibernateImplTest extends RepositoryTest {
     @Test
     public void getById_shouldReturnCourseById() {
         CourseEntity expected = testCourseList.get(0);
-        assertEquals(expected, courseRepositoryHibernate.getById(1));
+        assertEquals(expected, courseRepositoryHibernate.findById(1).get());
     }
 
     @Test
     public void getById_shouldThrowDaoException() {
         Throwable exception = assertThrows(DaoException.class,
-                () -> courseRepositoryHibernate.getById(10));
+                () -> courseRepositoryHibernate.findById(10));
 
         assertEquals(MessagesConstants.CANNOT_GET_COURSE_BY_ID, exception.getMessage());
     }
@@ -46,7 +48,7 @@ public class CourseRepositoryHibernateImplTest extends RepositoryTest {
     public void update_shouldUpdateCourse() {
         CourseEntity expected = new CourseEntity(1, "Course-" + 1, "updated");
         courseRepositoryHibernate.save(expected);
-        assertEquals(expected.getDescription(), courseRepositoryHibernate.getById(1).getDescription());
+        assertEquals(expected.getDescription(), courseRepositoryHibernate.findById(1).get().getDescription());
     }
 
     @Test

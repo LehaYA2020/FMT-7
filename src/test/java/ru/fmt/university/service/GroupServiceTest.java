@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import ru.fmt.university.model.dto.Group;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -28,10 +29,10 @@ public class GroupServiceTest extends ServiceTest {
 
     @Test
     public void getById_shouldCallGroupRepositoryGetByIdMethod() {
-        when(groupRepository.getById(1)).thenReturn(groupMapper.toEntity(expectedGroup));
+        when(groupRepository.findById(1)).thenReturn(Optional.of(groupMapper.toEntity(expectedGroup)));
         Group actualGroup = groupService.getById(1);
 
-        verify(groupRepository).getById(1);
+        verify(groupRepository).findById(1);
         assertEquals(expectedGroup, actualGroup);
     }
 

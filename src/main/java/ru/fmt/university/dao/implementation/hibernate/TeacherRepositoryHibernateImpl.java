@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
-import ru.fmt.university.dao.interfaces.ITeacherRepository;
+import ru.fmt.university.dao.interfaces.TeacherRepository;
 import ru.fmt.university.model.entity.CourseEntity;
 import ru.fmt.university.model.entity.LessonEntity;
 import ru.fmt.university.model.entity.TeacherEntity;
@@ -15,12 +15,13 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Log4j2
 @Repository
 @Transactional
 @ConditionalOnProperty(name = "daoImpl", havingValue = "hibernate")
-public class TeacherRepositoryHibernateImpl implements ITeacherRepository {
+public class TeacherRepositoryHibernateImpl implements TeacherRepository {
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
@@ -61,13 +62,13 @@ public class TeacherRepositoryHibernateImpl implements ITeacherRepository {
         return teachers;
     }
 
-    public TeacherEntity getById(Integer id) {
+    public Optional<TeacherEntity> findById(Integer id) {
         log.trace("getById({})", id);
-        TeacherEntity entity;
+        Optional<TeacherEntity> entity;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            entity = entityManager.find(TeacherEntity.class, id);
+            entity = Optional.of(entityManager.find(TeacherEntity.class, id));
             entityManager.flush();
             entityManager.getTransaction().commit();
             entityManager.close();
@@ -78,7 +79,8 @@ public class TeacherRepositoryHibernateImpl implements ITeacherRepository {
             log.error(MessagesConstants.CANNOT_GET_TEACHER_BY_ID, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_TEACHER_BY_ID, e);
         }
-        log.debug("Teacher {}, {}, {} found", entity.getFirstName(), entity.getLastName(), entity.getCourse().getName());
+        log.debug("Teacher {}, {}, {} found", entity.get().getFirstName(), entity.get().getLastName()
+                , entity.get().getCourse().getName());
         return entity;
     }
 

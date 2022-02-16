@@ -2,6 +2,7 @@ package ru.fmt.university.dao.hibernate;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.fmt.university.dao.RepositoryTest;
 import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
@@ -13,7 +14,7 @@ import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest(properties = {"daoImpl=hibernate"})
+@SpringBootTest(properties = {"daoImpl=hibernate"})
 public class LessonRepositoryHibernateImplTest extends RepositoryTest {
     private static final LessonEntity FOR_UPDATE = new LessonEntity(2, testCourseList.get(1), testTeacherList.get(0), 10,
             DayOfWeek.THURSDAY, LocalTime.of(9, 30, 0), LessonType.LECTURE);
@@ -25,7 +26,7 @@ public class LessonRepositoryHibernateImplTest extends RepositoryTest {
     public void create() {
         lessonRepositoryHibernate.save(lesson);
         assertNotEquals(testLessonList.size(), lessonRepositoryHibernate.findAll().size());
-        LessonEntity actual = lessonRepositoryHibernate.getById(4);
+        LessonEntity actual = lessonRepositoryHibernate.findById(4).get();
         lesson.setId(4);
         assertEquals(lesson, actual);
     }
@@ -37,13 +38,13 @@ public class LessonRepositoryHibernateImplTest extends RepositoryTest {
 
     @Test
     public void getById() {
-        assertEquals(testLessonList.get(0).getTeacher(), lessonRepositoryHibernate.getById(1).getTeacher());
+        assertEquals(testLessonList.get(0).getTeacher(), lessonRepositoryHibernate.findById(1).get().getTeacher());
     }
 
     @Test
     public void getById_shouldThrowDaoException() {
         Throwable exception = assertThrows(DaoException.class,
-                () -> lessonRepositoryHibernate.getById(10));
+                () -> lessonRepositoryHibernate.findById(10));
 
         assertEquals(MessagesConstants.CANNOT_GET_LESSON_BY_ID, exception.getMessage());
     }
@@ -51,7 +52,7 @@ public class LessonRepositoryHibernateImplTest extends RepositoryTest {
     @Test
     public void update_shouldUpdateLessonInDb() {
         lessonRepositoryHibernate.save(FOR_UPDATE);
-        assertEquals(FOR_UPDATE, lessonRepositoryHibernate.getById(2));
+        assertEquals(FOR_UPDATE, lessonRepositoryHibernate.findById(2).get());
     }
 
     @Test

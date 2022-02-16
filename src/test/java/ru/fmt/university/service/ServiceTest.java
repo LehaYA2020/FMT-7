@@ -53,13 +53,13 @@ public abstract class ServiceTest {
     protected TeacherMapper teacherMapper;
 
     @MockBean
-    protected ICourseRepository courseRepository;
+    protected CourseRepository courseRepository;
     @MockBean
-    protected IGroupRepository groupRepository;
+    protected GroupRepository groupRepository;
     @MockBean
-    protected ILessonRepository lessonRepository;
+    protected LessonRepository lessonRepository;
     @MockBean
-    protected IStudentRepository studentRepository;
+    protected StudentRepository studentRepository;
     @MockBean
-    protected ITeacherRepository teacherRepository;
+    protected TeacherRepository teacherRepository;
 }

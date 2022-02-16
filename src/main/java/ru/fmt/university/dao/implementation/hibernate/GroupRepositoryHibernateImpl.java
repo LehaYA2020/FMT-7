@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
-import ru.fmt.university.dao.interfaces.IGroupRepository;
+import ru.fmt.university.dao.interfaces.GroupRepository;
 import ru.fmt.university.dao.sources.Query;
 import ru.fmt.university.model.entity.CourseEntity;
 import ru.fmt.university.model.entity.GroupEntity;
@@ -17,12 +17,13 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Repository
 @Log4j2
 @ConditionalOnProperty(name = "daoImpl", havingValue = "hibernate")
-public class GroupRepositoryHibernateImpl implements IGroupRepository {
+public class GroupRepositoryHibernateImpl implements GroupRepository {
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
@@ -62,13 +63,13 @@ public class GroupRepositoryHibernateImpl implements IGroupRepository {
         return groups;
     }
 
-    public GroupEntity getById(Integer id) {
+    public Optional<GroupEntity> findById(Integer id) {
         log.trace("getById({})", id);
-        GroupEntity group;
+        Optional<GroupEntity> group;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            group = entityManager.find(GroupEntity.class, id);
+            group = Optional.of(entityManager.find(GroupEntity.class, id));
             entityManager.flush();
             entityManager.getTransaction().commit();
             entityManager.close();

@@ -7,7 +7,7 @@ import ru.fmt.university.model.entity.GroupEntity;
 import java.util.List;
 
 @Repository
-public interface IGroupRepository extends IRepository<GroupEntity, Integer> {
+public interface GroupRepository extends IRepository<GroupEntity, Integer> {
     void assignToCourse(Integer groupId, Integer courseId);
 
     void deleteFromCourse(Integer groupId, Integer courseId);

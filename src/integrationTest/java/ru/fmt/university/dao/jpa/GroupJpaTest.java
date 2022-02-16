@@ -19,7 +19,7 @@ public class GroupJpaTest extends RepositoryTest {
         groupJpa.save(FOR_CREATION);
         assertNotEquals(testGroupList, groupJpa.findAll());
         FOR_CREATION.setId(4);
-        assertEquals(FOR_CREATION, groupJpa.getById(FOR_CREATION.getId()));
+        assertEquals(FOR_CREATION, groupJpa.findById(FOR_CREATION.getId()).get());
     }
 
     @Test
@@ -29,8 +29,7 @@ public class GroupJpaTest extends RepositoryTest {
 
     @Test
     public void getById() {
-        GroupEntity actual = groupJpa.getById(1);
-        assertEquals(testGroupList.get(0), groupJpa.getById(1));
+        assertEquals(testGroupList.get(0), groupJpa.findById(1).get());
     }
 
     @Test
@@ -63,7 +62,7 @@ public class GroupJpaTest extends RepositoryTest {
         GroupEntity expected = new GroupEntity(1, "updated");
         groupJpa.save(expected);
 
-        assertEquals(expected, groupJpa.getById(1));
+        assertEquals(expected, groupJpa.findById(1).get());
     }
 
     @Test

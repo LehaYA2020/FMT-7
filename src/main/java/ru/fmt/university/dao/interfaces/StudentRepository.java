@@ -5,7 +5,7 @@ import ru.fmt.university.model.entity.StudentEntity;
 
 import java.util.List;
 
-public interface IStudentRepository extends IRepository<StudentEntity, Integer> {
+public interface StudentRepository extends IRepository<StudentEntity, Integer> {
     void assignToGroup(Integer studentId, Integer groupId);
 
     void updateGroupAssignment(Integer studentId, Integer groupId);

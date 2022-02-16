@@ -7,7 +7,7 @@ import ru.fmt.university.model.entity.LessonEntity;
 import java.util.List;
 
 @Repository
-public interface ILessonRepository extends IRepository<LessonEntity, Integer> {
+public interface LessonRepository extends IRepository<LessonEntity, Integer> {
     List<LessonEntity> findByStudents_id(Integer studentId);
 
     List<LessonEntity> findByTeacher_id(Integer teacherId);

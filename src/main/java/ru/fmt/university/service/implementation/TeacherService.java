@@ -3,7 +3,7 @@ package ru.fmt.university.service.implementation;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.fmt.university.dao.interfaces.ITeacherRepository;
+import ru.fmt.university.dao.interfaces.TeacherRepository;
 import ru.fmt.university.model.dto.Lesson;
 import ru.fmt.university.model.dto.Teacher;
 import ru.fmt.university.service.ILessonService;
@@ -18,7 +18,7 @@ public class TeacherService implements ITeacherService {
     @Autowired
     TeacherMapper teacherMapper;
     @Autowired
-    private ITeacherRepository teacherRepository;
+    private TeacherRepository teacherRepository;
     @Autowired
     private ILessonService lessonService;
 
@@ -29,7 +29,7 @@ public class TeacherService implements ITeacherService {
 
     public Teacher getById(Integer id) {
         log.debug("TeacherService calls teacherRepository.getById({}).", id);
-        return teacherMapper.toTeacher(teacherRepository.getById(id));
+        return teacherMapper.toTeacher(teacherRepository.findById(id).get());
     }
 
     public List<Teacher> getAll() {

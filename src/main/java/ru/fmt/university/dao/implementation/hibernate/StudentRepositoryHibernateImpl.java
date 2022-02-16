@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
-import ru.fmt.university.dao.interfaces.IStudentRepository;
+import ru.fmt.university.dao.interfaces.StudentRepository;
 import ru.fmt.university.dao.sources.Query;
 import ru.fmt.university.model.entity.GroupEntity;
 import ru.fmt.university.model.entity.StudentEntity;
@@ -15,12 +15,13 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Log4j2
 @Repository
 @Transactional
 @ConditionalOnProperty(name = "daoImpl", havingValue = "hibernate")
-public class StudentRepositoryHibernateImpl implements IStudentRepository {
+public class StudentRepositoryHibernateImpl implements StudentRepository {
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
@@ -61,14 +62,14 @@ public class StudentRepositoryHibernateImpl implements IStudentRepository {
         return students;
     }
 
-    public StudentEntity getById(Integer id) {
+    public Optional<StudentEntity> findById(Integer id) {
         log.trace("getById({})", id);
-        StudentEntity student;
+        Optional<StudentEntity> student;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            student = entityManager.find(StudentEntity.class, id);
-            if (student == null) {
+            student = Optional.of(entityManager.find(StudentEntity.class, id));
+            if (student.isEmpty()) {
                 throw new Exception("Student is null");
             }
             entityManager.flush();
@@ -78,7 +79,7 @@ public class StudentRepositoryHibernateImpl implements IStudentRepository {
             log.error(MessagesConstants.CANNOT_GET_STUDENT_BY_ID, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_STUDENT_BY_ID, e);
         }
-        log.debug("Found {}", student);
+        log.debug("Found {}, {}, {}", student.get().getId(), student.get().getFirstName(), student.get().getLastName());
         return student;
     }
 
@@ -93,6 +94,7 @@ public class StudentRepositoryHibernateImpl implements IStudentRepository {
             }
             entityManager.flush();
             entityManager.getTransaction().commit();
+            entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_DELETE_STUDENT, e);
             throw new DaoException(MessagesConstants.CANNOT_DELETE_STUDENT, e);

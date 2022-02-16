@@ -3,7 +3,7 @@ package ru.fmt.university.service.implementation;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.fmt.university.dao.interfaces.ICourseRepository;
+import ru.fmt.university.dao.interfaces.CourseRepository;
 import ru.fmt.university.model.dto.Course;
 import ru.fmt.university.service.ICourseService;
 import ru.fmt.university.service.util.CourseMapper;
@@ -14,7 +14,7 @@ import java.util.List;
 @Log4j2
 public class CourseService implements ICourseService {
     @Autowired(required = false)
-    private ICourseRepository courseRepository;
+    private CourseRepository courseRepository;
     @Autowired
     private CourseMapper courseMapper;
 
@@ -30,7 +30,7 @@ public class CourseService implements ICourseService {
 
     public Course getById(Integer id) {
         log.debug("CourseService calls courseRepository.getById({}).", id);
-        return courseMapper.toCourse(courseRepository.getById(id));
+        return courseMapper.toCourse(courseRepository.findById(id).get());
     }
 
     public Course update(Course forUpdate) {
