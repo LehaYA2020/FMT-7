@@ -18,7 +18,7 @@
         <maven.compiler.source>16</maven.compiler.source>
         <maven.compiler.target>16</maven.compiler.target>
 
-        <postgres.version>42.3.1</postgres.version>
+        <postgres.version>42.3.2</postgres.version>
         <spring.version>5.3.15</spring.version>
         <h2.version>1.4.200 </h2.version>
         <ibatis.version>3.5.7</ibatis.version>

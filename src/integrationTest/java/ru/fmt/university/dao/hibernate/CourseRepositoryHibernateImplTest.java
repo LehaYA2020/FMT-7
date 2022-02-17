@@ -7,7 +7,6 @@ import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
 import ru.fmt.university.model.entity.CourseEntity;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CourseRepositoryHibernateImplTest extends RepositoryTest {
     private static final CourseEntity FOR_CREATION = new CourseEntity("Course-" + 4, "forTest");
 
-    @Transactional
     @Test
     public void create() {
         courseRepositoryHibernate.save(FOR_CREATION);

@@ -37,6 +37,8 @@ public class CourseRepositoryHibernateImpl implements CourseRepository {
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_INSERT_COURSE, e);
             throw new DaoException(MessagesConstants.CANNOT_INSERT_COURSE, e);
+        } finally {
+            entityManager.close();
         }
         log.debug("{} created", course);
         return course;
@@ -56,6 +58,8 @@ public class CourseRepositoryHibernateImpl implements CourseRepository {
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_COURSES, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_COURSES, e);
+        } finally {
+            entityManager.close();
         }
         log.trace("Found {} courses", courses.size());
         return courses;
@@ -77,6 +81,8 @@ public class CourseRepositoryHibernateImpl implements CourseRepository {
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_COURSE_BY_ID, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_COURSE_BY_ID, e);
+        } finally {
+            entityManager.close();
         }
         log.debug("Found {}.", course.get().getName());
         return course;
@@ -94,6 +100,8 @@ public class CourseRepositoryHibernateImpl implements CourseRepository {
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_DELETE_COURSE, e);
             throw new DaoException(MessagesConstants.CANNOT_DELETE_COURSE, e);
+        } finally {
+            entityManager.close();
         }
         log.debug("Course with id={} deleted.", id);
     }
@@ -111,6 +119,8 @@ public class CourseRepositoryHibernateImpl implements CourseRepository {
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_DELETE_COURSE, e);
             throw new DaoException(MessagesConstants.CANNOT_DELETE_COURSE, e);
+        } finally {
+            entityManager.close();
         }
         log.debug("Found {}", courses);
         return courses;

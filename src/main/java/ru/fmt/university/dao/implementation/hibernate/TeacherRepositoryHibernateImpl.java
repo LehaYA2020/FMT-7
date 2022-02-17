@@ -32,12 +32,13 @@ public class TeacherRepositoryHibernateImpl implements TeacherRepository {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             entityManager.merge(teacher);
-            entityManager.flush();
             entityManager.getTransaction().commit();
             entityManager.close();
         } catch (RuntimeException e) {
             log.error(MessagesConstants.CANNOT_INSERT_TEACHERS_LIST, e);
             throw new DaoException(MessagesConstants.CANNOT_INSERT_TEACHERS_LIST, e);
+        } finally {
+            entityManager.close();
         }
         log.debug("Teacher {} created.", teacher);
         return teacher;
@@ -51,12 +52,13 @@ public class TeacherRepositoryHibernateImpl implements TeacherRepository {
             entityManager.getTransaction().begin();
             teachers = entityManager.createQuery("FROM TeacherEntity", TeacherEntity.class)
                     .getResultList();
-            entityManager.flush();
             entityManager.getTransaction().commit();
             entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_ALL_TEACHERS, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_ALL_TEACHERS, e);
+        } finally {
+            entityManager.close();
         }
         log.debug("{} found", teachers);
         return teachers;
@@ -69,7 +71,6 @@ public class TeacherRepositoryHibernateImpl implements TeacherRepository {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             entity = Optional.of(entityManager.find(TeacherEntity.class, id));
-            entityManager.flush();
             entityManager.getTransaction().commit();
             entityManager.close();
             if (entity == null) {
@@ -78,6 +79,8 @@ public class TeacherRepositoryHibernateImpl implements TeacherRepository {
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_TEACHER_BY_ID, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_TEACHER_BY_ID, e);
+        } finally {
+            entityManager.close();
         }
         log.debug("Teacher {}, {}, {} found", entity.get().getFirstName(), entity.get().getLastName()
                 , entity.get().getCourse().getName());
@@ -90,12 +93,13 @@ public class TeacherRepositoryHibernateImpl implements TeacherRepository {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             entityManager.remove(entityManager.find(TeacherEntity.class, id));
-            entityManager.flush();
             entityManager.getTransaction().commit();
             entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_DELETE_TEACHER, e);
             throw new DaoException(MessagesConstants.CANNOT_DELETE_TEACHER, e);
+        } finally {
+            entityManager.close();
         }
         log.debug("Teacher with id {} deleted", id);
     }
@@ -107,12 +111,13 @@ public class TeacherRepositoryHibernateImpl implements TeacherRepository {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             teachers = entityManager.find(CourseEntity.class, courseId).getTeachers();
-            entityManager.flush();
             entityManager.getTransaction().commit();
             entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_TEACHERS_BY_COURSE, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_TEACHERS_BY_COURSE, e);
+        } finally {
+            entityManager.close();
         }
         log.debug("Teachers {} found", teachers);
         return teachers;
@@ -125,12 +130,13 @@ public class TeacherRepositoryHibernateImpl implements TeacherRepository {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             teacher = entityManager.find(LessonEntity.class, lessonId).getTeacher();
-            entityManager.flush();
             entityManager.getTransaction().commit();
             entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_TEACHERS_BY_LESSON, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_TEACHERS_BY_LESSON, e);
+        } finally {
+            entityManager.close();
         }
         log.debug("Teacher {} found", teacher);
         return teacher;

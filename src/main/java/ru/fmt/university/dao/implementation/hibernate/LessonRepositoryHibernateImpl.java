@@ -30,12 +30,13 @@ public class LessonRepositoryHibernateImpl implements LessonRepository {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             entityManager.merge(lesson);
-            entityManager.flush();
             entityManager.getTransaction().commit();
             entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_INSERT_LESSON, e);
             throw new DaoException(MessagesConstants.CANNOT_INSERT_LESSON, e);
+        } finally {
+            entityManager.close();
         }
         log.debug("Created {}.", lesson);
 
@@ -50,12 +51,13 @@ public class LessonRepositoryHibernateImpl implements LessonRepository {
             entityManager.getTransaction().begin();
             lessons = entityManager.createQuery("FROM LessonEntity", LessonEntity.class)
                     .getResultList();
-            entityManager.flush();
             entityManager.getTransaction().commit();
             entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_ALL_LESSONS, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_ALL_LESSONS, e);
+        } finally {
+            entityManager.close();
         }
         log.debug("Found {}.", lessons);
 
@@ -69,15 +71,16 @@ public class LessonRepositoryHibernateImpl implements LessonRepository {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             lesson = Optional.of(entityManager.find(LessonEntity.class, id));
-            entityManager.flush();
             entityManager.getTransaction().commit();
             entityManager.close();
-            if (lesson==null) {
+            if (lesson == null) {
                 throw new Exception("lesson is null");
             }
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_LESSON_BY_ID, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_LESSON_BY_ID, e);
+        } finally {
+            entityManager.close();
         }
         log.debug("Found {}.", lesson.get().getId());
 
@@ -91,12 +94,13 @@ public class LessonRepositoryHibernateImpl implements LessonRepository {
             entityManager.getTransaction().begin();
             entityManager.createNativeQuery("delete from lessons where id=?")
                     .setParameter(1, id).executeUpdate();
-            entityManager.flush();
             entityManager.getTransaction().commit();
             entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_DELETE_LESSON_BY_ID, e);
             throw new DaoException(MessagesConstants.CANNOT_DELETE_LESSON_BY_ID, e);
+        } finally {
+            entityManager.close();
         }
         log.debug("Lesson with id={} deleted.", id);
     }
@@ -108,12 +112,13 @@ public class LessonRepositoryHibernateImpl implements LessonRepository {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             lessons = entityManager.find(StudentEntity.class, studentId).getGroup().getLessons();
-            entityManager.flush();
             entityManager.getTransaction().commit();
             entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_LESSON_BY_STUDENT, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_LESSON_BY_STUDENT, e);
+        } finally {
+            entityManager.close();
         }
         log.debug("Found {} by student {}.", lessons, studentId);
 
@@ -127,50 +132,51 @@ public class LessonRepositoryHibernateImpl implements LessonRepository {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             lessons = entityManager.find(TeacherEntity.class, teacherId).getLessons();
-            entityManager.flush();
             entityManager.getTransaction().commit();
             entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_LESSON_BY_TEACHER, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_LESSON_BY_TEACHER, e);
+        } finally {
+            entityManager.close();
         }
         log.debug("Found {} by teacher {}.", lessons, teacherId);
 
         return lessons;
     }
 
+    @org.springframework.transaction.annotation.Transactional
     public List<LessonEntity> findByGroups_id(Integer groupId) {
         log.trace("getByGroup({})", groupId);
         List<LessonEntity> lessons;
         try {
             entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
             lessons = entityManager.find(GroupEntity.class, groupId).getLessons();
-            entityManager.flush();
-            entityManager.getTransaction().commit();
             entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_LESSON_BY_GROUP, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_LESSON_BY_GROUP, e);
+        } finally {
+            entityManager.close();
         }
         log.debug("Found {} by group {}.", lessons, groupId);
 
         return lessons;
     }
 
+    @Transactional
     public List<LessonEntity> findByCourse_id(Integer courseId) {
         log.trace("getByCourse({})", courseId);
         List<LessonEntity> lessons;
         try {
             entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
             lessons = entityManager.find(CourseEntity.class, courseId).getLessons();
-            entityManager.flush();
-            entityManager.getTransaction().commit();
             entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_LESSON_BY_COURSE, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_LESSON_BY_COURSE, e);
+        } finally {
+            entityManager.close();
         }
         log.debug("Found {} by course {}.", lessons, courseId);
 

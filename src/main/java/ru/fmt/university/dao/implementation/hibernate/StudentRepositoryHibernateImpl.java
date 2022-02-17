@@ -32,12 +32,13 @@ public class StudentRepositoryHibernateImpl implements StudentRepository {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             entityManager.merge(student);
-            entityManager.flush();
             entityManager.getTransaction().commit();
             entityManager.close();
         } catch (RuntimeException e) {
             log.error(MessagesConstants.CANNOT_INSERT_STUDENT, e);
             throw new DaoException(MessagesConstants.CANNOT_INSERT_STUDENT, e);
+        } finally {
+            entityManager.close();
         }
         log.debug("{} created", student);
         return student;
@@ -51,12 +52,13 @@ public class StudentRepositoryHibernateImpl implements StudentRepository {
             entityManager.getTransaction().begin();
             students = entityManager.createQuery("FROM StudentEntity", StudentEntity.class)
                     .getResultList();
-            entityManager.flush();
             entityManager.getTransaction().commit();
             entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_ALL_STUDENTS, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_ALL_STUDENTS, e);
+        } finally {
+            entityManager.close();
         }
         log.debug("Found {}", students);
         return students;
@@ -72,12 +74,13 @@ public class StudentRepositoryHibernateImpl implements StudentRepository {
             if (student.isEmpty()) {
                 throw new Exception("Student is null");
             }
-            entityManager.flush();
             entityManager.getTransaction().commit();
             entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_STUDENT_BY_ID, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_STUDENT_BY_ID, e);
+        } finally {
+            entityManager.close();
         }
         log.debug("Found {}, {}, {}", student.get().getId(), student.get().getFirstName(), student.get().getLastName());
         return student;
@@ -92,12 +95,13 @@ public class StudentRepositoryHibernateImpl implements StudentRepository {
             if (student != null) {
                 entityManager.remove(student);
             }
-            entityManager.flush();
             entityManager.getTransaction().commit();
             entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_DELETE_STUDENT, e);
             throw new DaoException(MessagesConstants.CANNOT_DELETE_STUDENT, e);
+        } finally {
+            entityManager.close();
         }
         log.debug("Student with id={} deleted", id);
     }
@@ -111,12 +115,13 @@ public class StudentRepositoryHibernateImpl implements StudentRepository {
                     .setParameter(1, groupId)
                     .setParameter(2, studentId)
                     .executeUpdate();
-            entityManager.flush();
             entityManager.getTransaction().commit();
             entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_ASSIGN_TO_GROUP, e);
             throw new DaoException(MessagesConstants.CANNOT_ASSIGN_TO_GROUP, e);
+        } finally {
+            entityManager.close();
         }
         log.debug("Student's {} assigned to group with id = {}", studentId, groupId);
     }
@@ -129,12 +134,13 @@ public class StudentRepositoryHibernateImpl implements StudentRepository {
             entityManager.createNativeQuery(Query.UPDATE_STUDENT_ASSIGNMENTS.getText())
                     .setParameter(1, groupId)
                     .setParameter(2, studentId).executeUpdate();
-            entityManager.flush();
             entityManager.getTransaction().commit();
             entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_UPDATE_STUDENT_ASSIGNMENTS, e);
             throw new DaoException(MessagesConstants.CANNOT_UPDATE_STUDENT_ASSIGNMENTS, e);
+        } finally {
+            entityManager.close();
         }
         log.debug("Student's {} group assignments updated with {}", studentId, groupId);
     }
@@ -146,7 +152,6 @@ public class StudentRepositoryHibernateImpl implements StudentRepository {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             students = entityManager.find(GroupEntity.class, groupId).getStudents();
-            entityManager.flush();
             entityManager.getTransaction().commit();
             entityManager.close();
         } catch (Exception e) {
@@ -166,12 +171,13 @@ public class StudentRepositoryHibernateImpl implements StudentRepository {
             entityManager.createNativeQuery(Query.DELETE_STUDENT_FROM_GROUP.getText())
                     .setParameter(1, studentId)
                     .setParameter(2, groupId).executeUpdate();
-            entityManager.flush();
             entityManager.getTransaction().commit();
             entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_DELETE_STUDENT_FROM_GROUP, e);
             throw new DaoException(MessagesConstants.CANNOT_DELETE_STUDENT_FROM_GROUP, e);
+        } finally {
+            entityManager.close();
         }
         log.debug("Student {} deleted from Group {})", studentId, groupId);
     }

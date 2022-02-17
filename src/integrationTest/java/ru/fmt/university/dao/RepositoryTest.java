@@ -24,7 +24,7 @@ public abstract class RepositoryTest {
     protected static final List<StudentEntity> testStudentList = new LinkedList<>();
     protected static final List<TeacherEntity> testTeacherList = new LinkedList<>();
     protected static final List<LessonEntity> testLessonList = new LinkedList<>();
-
+    
     @Autowired(required = false)
     protected CourseRepositoryHibernateImpl courseRepositoryHibernate;
     @Autowired(required = false)

@@ -2,7 +2,6 @@ package ru.fmt.university.dao.jpa;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.transaction.annotation.Transactional;
 import ru.fmt.university.dao.RepositoryTest;
 import ru.fmt.university.model.entity.GroupEntity;
 
@@ -14,7 +13,6 @@ public class GroupJpaTest extends RepositoryTest {
     private static final GroupEntity FOR_CREATION = new GroupEntity("Group-4");
 
     @Test
-    @Transactional
     public void create() {
         groupJpa.save(FOR_CREATION);
         assertNotEquals(testGroupList, groupJpa.findAll());

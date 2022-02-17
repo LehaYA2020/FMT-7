@@ -6,14 +6,12 @@ import ru.fmt.university.dao.RepositoryTest;
 import ru.fmt.university.model.LessonType;
 import ru.fmt.university.model.entity.LessonEntity;
 
-import javax.transaction.Transactional;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-@Transactional
 @DataJpaTest(properties = {"daoImpl=jpa"})
 public class LessonJpaTest extends RepositoryTest {
     private static final LessonEntity FOR_UPDATE = new LessonEntity(2, testCourseList.get(1), testTeacherList.get(0), 10,

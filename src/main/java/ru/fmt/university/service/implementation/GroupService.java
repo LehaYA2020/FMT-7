@@ -3,6 +3,7 @@ package ru.fmt.university.service.implementation;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ru.fmt.university.dao.interfaces.GroupRepository;
 import ru.fmt.university.model.dto.Group;
 import ru.fmt.university.service.IGroupService;
@@ -10,7 +11,7 @@ import ru.fmt.university.service.util.GroupMapper;
 
 import java.util.List;
 
-@Component
+@Service
 @Log4j2
 public class GroupService implements IGroupService {
     @Autowired

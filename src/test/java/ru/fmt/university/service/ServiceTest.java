@@ -3,6 +3,7 @@ package ru.fmt.university.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.ApplicationContext;
 import ru.fmt.university.dao.interfaces.*;
 import ru.fmt.university.model.LessonType;
 import ru.fmt.university.model.dto.*;
@@ -22,8 +23,8 @@ public abstract class ServiceTest {
     protected static Group expectedGroup = new Group(1, "Test");
     protected static Student expectedStudent = new Student(1, "fName", "lName");
     protected static Teacher expectedTeacher = new Teacher(1, "TestT", "lName", expectedCourse.getId());
-    protected static Lesson expectedLesson = new Lesson(1, expectedCourse.getId(), expectedTeacher.getId(), 10, DayOfWeek.MONDAY,
-            LocalTime.of(9, 30, 0), LessonType.LECTURE);
+    protected static Lesson expectedLesson = new Lesson(1, expectedCourse.getId(), expectedTeacher.getId(), 10
+            , DayOfWeek.MONDAY, LocalTime.of(9, 30, 0), LessonType.LECTURE);
     protected static List<Lesson> expectedLessons = singletonList(expectedLesson);
     protected static List<Teacher> expectedTeachers = singletonList(expectedTeacher);
     protected static List<Course> expectedCourses = singletonList(expectedCourse);

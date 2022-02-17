@@ -12,7 +12,6 @@ import static org.mockito.Mockito.when;
 
 
 public class CourseServiceTest extends ServiceTest {
-
     @Test
     public void create_shouldCallCourseRepositoryCreateMethod() {
         courseService.create(expectedCourse);
