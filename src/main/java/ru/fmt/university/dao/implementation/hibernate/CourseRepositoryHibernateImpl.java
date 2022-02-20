@@ -2,6 +2,9 @@ package ru.fmt.university.dao.implementation.hibernate;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
@@ -44,14 +47,14 @@ public class CourseRepositoryHibernateImpl implements CourseRepository {
         return course;
     }
 
-    public List<CourseEntity> findAll() {
+    public Page<CourseEntity> findAll(Pageable pageable) {
         log.trace("getAll().");
-        List<CourseEntity> courses;
+        Page<CourseEntity> courses;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            courses = entityManager.createQuery("FROM CourseEntity", CourseEntity.class)
-                    .getResultList();
+            courses = new PageImpl<>(entityManager.createQuery("FROM CourseEntity", CourseEntity.class)
+                    .getResultList(),pageable, pageable.getPageSize());
             entityManager.flush();
             entityManager.getTransaction().commit();
             entityManager.close();
@@ -61,7 +64,7 @@ public class CourseRepositoryHibernateImpl implements CourseRepository {
         } finally {
             entityManager.close();
         }
-        log.trace("Found {} courses", courses.size());
+        log.trace("Found {} courses", courses.getSize());
         return courses;
     }
 

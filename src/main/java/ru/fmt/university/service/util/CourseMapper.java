@@ -1,5 +1,7 @@
 package ru.fmt.university.service.util;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 import ru.fmt.university.model.dto.Course;
@@ -7,6 +9,7 @@ import ru.fmt.university.model.entity.CourseEntity;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,6 +27,11 @@ public class CourseMapper implements RowMapper<Course> {
     }
     public List<CourseEntity> toEntity(List<Course> courses) {
         return courses.stream().map(e->toEntity(e)).toList();
+    }
+    public Page<Course> toDtoPage(Page<CourseEntity> entities) {
+        List<CourseEntity> entityList = entities.getContent();
+        List<Course> dtoList = entities.getContent().stream().map(e->toCourse(e)).toList();
+        return new PageImpl<>(dtoList, entities.getPageable(), entities.getTotalElements());
     }
 
     public List<Course> toCourse(List<CourseEntity> entities) {

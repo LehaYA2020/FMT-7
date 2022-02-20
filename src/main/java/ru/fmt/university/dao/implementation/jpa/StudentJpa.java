@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import ru.fmt.university.dao.interfaces.StudentRepository;
 import ru.fmt.university.model.entity.StudentEntity;
@@ -15,7 +16,7 @@ import java.util.List;
 @Repository
 @Transactional
 @ConditionalOnProperty(name = "daoImpl", havingValue = "jpa")
-public interface StudentJpa extends JpaRepository<StudentEntity, Integer>, StudentRepository {
+public interface StudentJpa extends CrudRepository<StudentEntity, Integer>, StudentRepository {
     @Modifying
     @Query(nativeQuery = true, value = "update students set group_id=:groupId where id=:studentId")
     void assignToGroup(@Param("studentId") Integer studentId, @Param("groupId") Integer groupId);

@@ -2,6 +2,9 @@ package ru.fmt.university.service.implementation;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ru.fmt.university.dao.interfaces.CourseRepository;
@@ -25,9 +28,9 @@ public class CourseService implements ICourseService {
         courseRepository.save(courseMapper.toEntity(course));
     }
 
-    public List<Course> getAll() {
+    public Page<Course> getAll(Pageable pageable) {
         log.debug("CourseService calls courseRepository.getAll().");
-        return courseMapper.toCourse(courseRepository.findAll());
+        return courseMapper.toDtoPage(courseRepository.findAll(pageable));
     }
 
     public Course getById(Integer id) {

@@ -1,6 +1,11 @@
 package ru.fmt.university.service;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import ru.fmt.university.model.dto.Course;
 import ru.fmt.university.model.dto.Group;
 
 import java.util.List;
@@ -14,17 +19,20 @@ public class GroupServiceTest extends ServiceTest {
 
     @Test
     public void create_shouldCallGroupRepositoryCreateMethod() {
+        when(groupRepository.save(groupMapper.toEntity(expectedGroup))).thenReturn(groupMapper.toEntity(expectedGroup));
         groupService.create(expectedGroup);
         verify(groupRepository).save(groupMapper.toEntity(expectedGroup));
     }
 
     @Test
     public void getAll_shouldCallGroupRepositoryGetAllMethod() {
-        when(groupRepository.findAll()).thenReturn(groupMapper.toEntity(expectedGroups));
-        List<Group> actualGroup = groupService.getAll();
+        Pageable pageable = PageRequest.of(0, 10);
+        when(groupRepository.findAll(pageable)).thenReturn(new PageImpl<>(groupMapper.toEntity(expectedGroups), pageable, pageable.getPageSize()));
+        Page<Group> page = groupService.getAll(pageable);
+        List<Group> actualGroups = page.getContent();
 
-        verify(groupRepository).findAll();
-        assertEquals(expectedGroups, actualGroup);
+        verify(groupRepository).findAll(pageable);
+        assertEquals(expectedGroups, actualGroups);
     }
 
     @Test

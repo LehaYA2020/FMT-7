@@ -1,29 +1,35 @@
 package ru.fmt.university.service;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import ru.fmt.university.model.dto.Course;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 public class CourseServiceTest extends ServiceTest {
     @Test
     public void create_shouldCallCourseRepositoryCreateMethod() {
+        when(courseRepository.save(courseMapper.toEntity(expectedCourse))).thenReturn(courseMapper.toEntity(expectedCourse));
         courseService.create(expectedCourse);
         verify(courseRepository).save(courseMapper.toEntity(expectedCourse));
     }
 
     @Test
     public void getAll_shouldCallCourseRepositoryGetAllMethod() {
-        when(courseRepository.findAll()).thenReturn(courseMapper.toEntity(expectedCourses));
-        List<Course> actualCourses = courseService.getAll();
+        Pageable pageable = PageRequest.of(0, 10);
+        when(courseRepository.findAll(pageable)).thenReturn(new PageImpl<>(courseMapper.toEntity(expectedCourses), pageable, pageable.getPageSize()));
+        Page<Course> page = courseService.getAll(pageable);
+        List<Course> actualCourses = page.getContent();
 
-        verify(courseRepository).findAll();
+        verify(courseRepository).findAll(pageable);
         assertEquals(expectedCourses, actualCourses);
     }
 

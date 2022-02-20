@@ -1,9 +1,13 @@
 package ru.fmt.university.service.util;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
+import ru.fmt.university.model.dto.Lesson;
 import ru.fmt.university.model.dto.Teacher;
 import ru.fmt.university.model.entity.CourseEntity;
+import ru.fmt.university.model.entity.LessonEntity;
 import ru.fmt.university.model.entity.TeacherEntity;
 
 import java.sql.ResultSet;
@@ -23,7 +27,7 @@ public class TeacherMapper implements RowMapper<Teacher> {
     }
 
     public List<Teacher> toTeacher(List<TeacherEntity> entities) {
-        return entities.stream().map(e->toTeacher(e)).toList();
+        return entities.stream().map(this::toTeacher).toList();
     }
 
     public TeacherEntity toEntity (Teacher teacher) {
@@ -31,6 +35,12 @@ public class TeacherMapper implements RowMapper<Teacher> {
     }
 
     public List<TeacherEntity> toEntity (List<Teacher> teachers) {
-        return teachers.stream().map(e->toEntity(e)).toList();
+        return teachers.stream().map(this::toEntity).toList();
+    }
+
+    public Page<Teacher> toDtoPage(Page<TeacherEntity> entities) {
+        List<Teacher> dtoList = entities.getContent().stream().map(this::toTeacher).toList();
+
+        return new PageImpl<>(dtoList, entities.getPageable(), entities.getTotalElements());
     }
 }

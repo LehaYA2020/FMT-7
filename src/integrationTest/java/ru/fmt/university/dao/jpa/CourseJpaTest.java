@@ -2,6 +2,8 @@ package ru.fmt.university.dao.jpa;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import ru.fmt.university.dao.RepositoryTest;
 import ru.fmt.university.model.entity.CourseEntity;
 
@@ -17,14 +19,14 @@ public class CourseJpaTest extends RepositoryTest {
     @Test
     public void create() {
         courseJpa.save(FOR_CREATION);
-        assertNotEquals(testCourseList, courseJpa.findAll());
+        assertNotEquals(testCourseList, courseJpa.findAll(PageRequest.of(0,4, Sort.by("id"))).getContent());
         FOR_CREATION.setId(4);
         assertEquals(FOR_CREATION, courseJpa.findById(4).get());
     }
 
     @Test
     public void getAll_shouldReturnAllCourses() {
-        assertEquals(testCourseList, courseJpa.findAll());
+        assertEquals(testCourseList, courseJpa.findAll(PageRequest.of(0,3, Sort.by("id"))).getContent());
     }
 
     @Test
@@ -43,11 +45,11 @@ public class CourseJpaTest extends RepositoryTest {
     @Test
     public void delete_shouldDeleteCourse() {
         courseJpa.save(FOR_CREATION);
-        assertNotEquals(testCourseList, courseJpa.findAll());
+        assertNotEquals(testCourseList, courseJpa.findAll(PageRequest.of(0,4, Sort.by("id"))).getContent());
 
         courseJpa.deleteById(4);
 
-        assertEquals(testCourseList, courseJpa.findAll());
+        assertEquals(testCourseList, courseJpa.findAll(PageRequest.of(0,4, Sort.by("id"))).getContent());
     }
 
     @Test

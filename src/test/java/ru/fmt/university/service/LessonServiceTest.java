@@ -1,6 +1,11 @@
 package ru.fmt.university.service;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import ru.fmt.university.model.dto.Group;
 import ru.fmt.university.model.dto.Lesson;
 
 import java.util.List;
@@ -14,16 +19,19 @@ public class LessonServiceTest extends ServiceTest {
 
     @Test
     public void create_shouldCallLessonRepositoryCreateMethod() {
+        when(lessonRepository.save(lessonMapper.toEntity(expectedLesson))).thenReturn(lessonMapper.toEntity(expectedLesson));
         lessonService.create(expectedLesson);
         verify(lessonRepository).save(lessonMapper.toEntity(expectedLesson));
     }
 
     @Test
     public void getAll_shouldCallLessonRepositoryGetAllMethod() {
-        when(lessonRepository.findAll()).thenReturn(lessonMapper.toEntity(expectedLessons));
-        List<Lesson> actualLessons = lessonService.getAll();
+        Pageable pageable = PageRequest.of(0, 10);
+        when(lessonRepository.findAll(pageable)).thenReturn(new PageImpl<>(lessonMapper.toEntity(expectedLessons), pageable, pageable.getPageSize()));
+        Page<Lesson> page = lessonService.getAll(pageable);
+        List<Lesson> actualLessons = page.getContent();
 
-        verify(lessonRepository).findAll();
+        verify(lessonRepository).findAll(pageable);
         assertEquals(expectedLessons, actualLessons);
     }
 

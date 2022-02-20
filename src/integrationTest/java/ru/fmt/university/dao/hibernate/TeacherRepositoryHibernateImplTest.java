@@ -2,6 +2,7 @@ package ru.fmt.university.dao.hibernate;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 import ru.fmt.university.dao.RepositoryTest;
 import ru.fmt.university.dao.exceptions.DaoException;
@@ -17,7 +18,7 @@ public class TeacherRepositoryHibernateImplTest extends RepositoryTest {
     @Test
     public void create() {
         teacherRepositoryHibernate.save(FOR_CREATION);
-        assertNotEquals(testTeacherList, teacherRepositoryHibernate.findAll());
+        assertNotEquals(testTeacherList, teacherRepositoryHibernate.findAll(PageRequest.of(0, 10)).getContent());
         FOR_CREATION.setId(4);
         assertEquals(FOR_CREATION, teacherRepositoryHibernate.findById(FOR_CREATION.getId()).get());
     }
@@ -32,7 +33,7 @@ public class TeacherRepositoryHibernateImplTest extends RepositoryTest {
 
     @Test
     public void getAll() {
-        assertEquals(testTeacherList, teacherRepositoryHibernate.findAll());
+        assertEquals(testTeacherList, teacherRepositoryHibernate.findAll(PageRequest.of(0, 10)).getContent());
     }
 
     @Test
@@ -43,7 +44,7 @@ public class TeacherRepositoryHibernateImplTest extends RepositoryTest {
     @Test
     public void delete() {
         teacherRepositoryHibernate.deleteById(3);
-        assertEquals(testTeacherList.subList(0, 2), teacherRepositoryHibernate.findAll());
+        assertEquals(testTeacherList.subList(0, 2), teacherRepositoryHibernate.findAll(PageRequest.of(0, 10)).getContent());
     }
 
     @Test

@@ -1,5 +1,7 @@
 package ru.fmt.university.service.util;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 import ru.fmt.university.model.LessonType;
@@ -31,7 +33,7 @@ public class LessonMapper implements RowMapper<Lesson> {
     }
 
     public List<LessonEntity> toEntity(List<Lesson> lessons) {
-        return lessons.stream().map(e->toEntity(e)).toList();
+        return lessons.stream().map(this::toEntity).toList();
     }
 
     public Lesson toLesson(LessonEntity entity) {
@@ -40,6 +42,12 @@ public class LessonMapper implements RowMapper<Lesson> {
     }
 
     public List<Lesson> toLesson(List<LessonEntity> entities) {
-        return entities.stream().map(e->toLesson(e)).toList();
+        return entities.stream().map(this::toLesson).toList();
+    }
+
+    public Page<Lesson> toDtoPage(Page<LessonEntity> entities) {
+        List<Lesson> dtoList = entities.getContent().stream().map(this::toLesson).toList();
+
+        return new PageImpl<>(dtoList, entities.getPageable(), entities.getTotalElements());
     }
 }

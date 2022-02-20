@@ -2,6 +2,7 @@ package ru.fmt.university.dao.jpa;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
 import ru.fmt.university.dao.RepositoryTest;
 import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
@@ -17,14 +18,14 @@ public class StudentJpaTest extends RepositoryTest {
     @Test
     public void create() {
         studentJpa.save(FOR_CREATION);
-        assertNotEquals(testStudentList, studentJpa.findAll());
+        assertNotEquals(testStudentList, studentJpa.findAll(PageRequest.of(0, 10)).getContent());
         FOR_CREATION.setId(5);
         assertEquals(FOR_CREATION, studentJpa.findById(5).get());
     }
 
     @Test
     public void getAll_shouldReturnAllStudentsFromDb() {
-        assertEquals(testStudentList, studentJpa.findAll());
+        assertEquals(testStudentList, studentJpa.findAll(PageRequest.of(0, 10)).getContent());
     }
 
     @Test
@@ -35,7 +36,7 @@ public class StudentJpaTest extends RepositoryTest {
     @Test
     public void delete_shouldDeleteFromDb() {
         studentJpa.deleteById(1);
-        assertEquals(testStudentList.subList(1, 4), studentJpa.findAll());
+        assertEquals(testStudentList.subList(1, 4), studentJpa.findAll(PageRequest.of(0, 10)).getContent());
     }
 
     @Test

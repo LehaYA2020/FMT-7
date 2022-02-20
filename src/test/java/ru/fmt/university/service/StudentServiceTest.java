@@ -2,6 +2,10 @@ package ru.fmt.university.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import ru.fmt.university.model.dto.Lesson;
 import ru.fmt.university.model.dto.Student;
 import ru.fmt.university.service.implementation.LessonService;
@@ -19,16 +23,20 @@ public class StudentServiceTest extends ServiceTest {
 
     @Test
     public void create_shouldCallStudentRepositoryCreatedMethod() {
+        when(studentRepository.save(studentMapper.toEntity(expectedStudent)))
+                .thenReturn(studentMapper.toEntity(expectedStudent));
         studentService.create(expectedStudent);
         verify(studentRepository).save(studentMapper.toEntity(expectedStudent));
     }
 
     @Test
     public void getAll_shouldCallStudentRepositoryGetAllMethod() {
-        when(studentRepository.findAll()).thenReturn(studentMapper.toEntity(expectedStudents));
-        List<Student> actualStudents = studentService.getAll();
+        Pageable pageable = PageRequest.of(0, 10);
+        when(studentRepository.findAll(pageable)).thenReturn(new PageImpl<>(studentMapper.toEntity(expectedStudents), pageable, pageable.getPageSize()));
+        Page<Student> page = studentService.getAll(pageable);
+        List<Student> actualStudents = page.getContent();
 
-        verify(studentRepository).findAll();
+        verify(studentRepository).findAll(pageable);
         assertEquals(expectedStudents, actualStudents);
     }
 

@@ -2,6 +2,7 @@ package ru.fmt.university.dao.jpa;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
 import ru.fmt.university.dao.RepositoryTest;
 import ru.fmt.university.model.entity.TeacherEntity;
 
@@ -15,14 +16,14 @@ public class TeacherJpaTest extends RepositoryTest {
     @Test
     public void create() {
         teacherJpa.save(FOR_CREATION);
-        assertNotEquals(testTeacherList, teacherJpa.findAll());
+        assertNotEquals(testTeacherList, teacherJpa.findAll(PageRequest.of(0, 10)).getContent());
         FOR_CREATION.setId(4);
         assertEquals(FOR_CREATION, teacherJpa.findById(FOR_CREATION.getId()).get());
     }
 
     @Test
     public void getAll() {
-        assertEquals(testTeacherList, teacherJpa.findAll());
+        assertEquals(testTeacherList, teacherJpa.findAll(PageRequest.of(0, 10)).getContent());
     }
 
     @Test
@@ -33,7 +34,7 @@ public class TeacherJpaTest extends RepositoryTest {
     @Test
     public void delete() {
         teacherJpa.deleteById(3);
-        assertEquals(testTeacherList.subList(0, 2), teacherJpa.findAll());
+        assertEquals(testTeacherList.subList(0, 2), teacherJpa.findAll(PageRequest.of(0, 10)).getContent());
     }
 
     @Test

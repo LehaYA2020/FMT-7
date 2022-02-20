@@ -20,14 +20,14 @@ public class    GroupController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/groups")
+    /*@GetMapping("/groups")
     public ResponseEntity<List<Group>> getAll() {
         final List<Group> groups = groupService.getAll();
 
         return groups.isEmpty()
                 ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(groups, HttpStatus.OK);
-    }
+    }*/
 
     @GetMapping(value = "/groups/{id}")
     public ResponseEntity<Group> getById(@PathVariable(name = "id") int id) {

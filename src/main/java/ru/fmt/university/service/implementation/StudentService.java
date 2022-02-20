@@ -2,6 +2,8 @@ package ru.fmt.university.service.implementation;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ru.fmt.university.dao.interfaces.StudentRepository;
@@ -34,9 +36,9 @@ public class StudentService implements IStudentService {
         return studentMapper.toStudent(studentRepository.findById(id).get());
     }
 
-    public List<Student> getAll() {
+    public Page<Student> getAll(Pageable pageable) {
         log.debug("StudentService calls studentRepository.getAll().");
-        return studentMapper.toStudent(studentRepository.findAll());
+        return studentMapper.toDtoPage(studentRepository.findAll(pageable));
     }
 
     public boolean deleteById(Integer id) {

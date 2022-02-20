@@ -2,6 +2,9 @@ package ru.fmt.university.dao.implementation.hibernate;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
@@ -44,14 +47,14 @@ public class StudentRepositoryHibernateImpl implements StudentRepository {
         return student;
     }
 
-    public List<StudentEntity> findAll() {
+    public Page<StudentEntity> findAll(Pageable pageable) {
         log.trace("getAll()");
-        List<StudentEntity> students;
+        Page<StudentEntity> students;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            students = entityManager.createQuery("FROM StudentEntity", StudentEntity.class)
-                    .getResultList();
+            students = new PageImpl<>(entityManager.createQuery("FROM StudentEntity", StudentEntity.class)
+                    .getResultList(),pageable, pageable.getPageSize());
             entityManager.getTransaction().commit();
             entityManager.close();
         } catch (Exception e) {

@@ -21,14 +21,14 @@ public class TeacherController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/teachers")
+    /*@GetMapping("/teachers")
     public ResponseEntity<List<Teacher>> getAll() {
         final List<Teacher> teachers = teacherService.getAll();
 
         return teachers.isEmpty()
                 ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(teachers, HttpStatus.OK);
-    }
+    }*/
 
     @GetMapping("/teachers/{id}")
     public ResponseEntity<Teacher> getById(@PathVariable(name = "id") int id) {

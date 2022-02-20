@@ -2,6 +2,7 @@ package ru.fmt.university.dao.jpa;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
 import ru.fmt.university.dao.RepositoryTest;
 import ru.fmt.university.model.LessonType;
 import ru.fmt.university.model.entity.LessonEntity;
@@ -23,7 +24,7 @@ public class LessonJpaTest extends RepositoryTest {
     @Test
     public void create() {
         lessonJpa.save(lesson);
-        assertNotEquals(testLessonList.size(), lessonJpa.findAll().size());
+        assertNotEquals(testLessonList.size(), lessonJpa.findAll(PageRequest.of(0,3)).getContent());
         LessonEntity actual = lessonJpa.findById(4).get();
         lesson.setId(4);
         assertEquals(lesson, actual);
@@ -31,7 +32,7 @@ public class LessonJpaTest extends RepositoryTest {
 
     @Test
     public void getAll_shouldReturnAllLessonsFromDb() {
-        assertEquals(testLessonList, lessonJpa.findAll());
+        assertEquals(testLessonList, lessonJpa.findAll(PageRequest.of(0,3)).getContent());
     }
 
     @Test
@@ -48,8 +49,8 @@ public class LessonJpaTest extends RepositoryTest {
     @Test
     public void delete_shouldDeleteLessonFromDb() {
         lessonJpa.deleteById(3);
-        assertEquals(testLessonList.subList(0, 2), lessonJpa.findAll());
-        assertEquals(testTeacherList, teacherJpa.findAll());
+        assertEquals(testLessonList.subList(0, 2), lessonJpa.findAll(PageRequest.of(0,3)).getContent());
+        assertEquals(testTeacherList, teacherJpa.findAll(PageRequest.of(0,3)).getContent());
     }
 
     @Test

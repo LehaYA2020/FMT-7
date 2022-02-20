@@ -22,14 +22,14 @@ public class CourseController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/courses")
+    /*@GetMapping("/courses")
     public ResponseEntity<List<Course>> getAll() {
         final List<Course> courses = courseService.getAll();
 
         return courses.isEmpty()
                 ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(courses, HttpStatus.OK);
-    }
+    }*/
 
     @GetMapping(value = "/courses/{id}")
     public ResponseEntity<Course> getById(@PathVariable(name = "id") int id) {

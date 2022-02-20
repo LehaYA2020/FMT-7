@@ -20,14 +20,14 @@ public class LessonController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/lessons")
+    /*@GetMapping("/lessons")
     public ResponseEntity<List<Lesson>> getAll() {
         final List<Lesson> lessons = lessonService.getAll();
 
         return lessons.isEmpty()
                 ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(lessons, HttpStatus.OK);
-    }
+    }*/
 
     @GetMapping("/lessons/{id}")
     public ResponseEntity<Lesson> getById(@PathVariable(name = "id") int id) {

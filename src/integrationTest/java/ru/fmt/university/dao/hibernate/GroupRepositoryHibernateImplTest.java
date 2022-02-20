@@ -1,8 +1,8 @@
 package ru.fmt.university.dao.hibernate;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import ru.fmt.university.dao.RepositoryTest;
 import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
@@ -17,7 +17,7 @@ public class GroupRepositoryHibernateImplTest extends RepositoryTest {
     @Test
     public void create() {
         groupRepositoryHibernate.save(FOR_CREATION);
-        assertNotEquals(testGroupList, groupRepositoryHibernate.findAll());
+        assertNotEquals(testGroupList, groupRepositoryHibernate.findAll(PageRequest.of(0, 10)).getContent());
         FOR_CREATION.setId(4);
         assertEquals(FOR_CREATION, groupRepositoryHibernate.findById(FOR_CREATION.getId()).get());
     }
@@ -33,7 +33,7 @@ public class GroupRepositoryHibernateImplTest extends RepositoryTest {
 
     @Test
     public void getAll_shouldReturnAllGroups() {
-        assertEquals(testGroupList, groupRepositoryHibernate.findAll());
+        assertEquals(testGroupList, groupRepositoryHibernate.findAll(PageRequest.of(0, 10)).getContent());
     }
 
     @Test
@@ -60,7 +60,7 @@ public class GroupRepositoryHibernateImplTest extends RepositoryTest {
         for (GroupEntity group : testGroupList.subList(1, 2)) {
             groupRepositoryHibernate.assignToLesson(1, group.getId());
         }
-        assertEquals(lessonRepositoryHibernate.findAll(), lessonRepositoryHibernate.findByGroups_id(testGroupList.get(1).getId()));
+        assertEquals(lessonRepositoryHibernate.findAll(PageRequest.of(0, 10)).getContent(), lessonRepositoryHibernate.findByGroups_id(testGroupList.get(1).getId()));
     }
 
     @Test
@@ -71,7 +71,7 @@ public class GroupRepositoryHibernateImplTest extends RepositoryTest {
     @Test
     public void delete() {
         groupRepositoryHibernate.deleteById(3);
-        assertEquals(testGroupList.subList(0, 2), groupRepositoryHibernate.findAll());
+        assertEquals(testGroupList.subList(0, 2), groupRepositoryHibernate.findAll(PageRequest.of(0, 10)).getContent());
     }
 
     @Test

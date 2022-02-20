@@ -2,6 +2,8 @@ package ru.fmt.university.dao.hibernate;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import ru.fmt.university.dao.RepositoryTest;
 import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
@@ -18,14 +20,14 @@ public class CourseRepositoryHibernateImplTest extends RepositoryTest {
     @Test
     public void create() {
         courseRepositoryHibernate.save(FOR_CREATION);
-        assertNotEquals(testCourseList, courseRepositoryHibernate.findAll());
+        assertNotEquals(testCourseList, courseRepositoryHibernate.findAll(PageRequest.of(0,4, Sort.by("id"))).getContent());
         FOR_CREATION.setId(4);
         assertEquals(FOR_CREATION, courseRepositoryHibernate.findById(4).get());
     }
 
     @Test
     public void getAll_shouldReturnAllCourses() {
-        assertEquals(testCourseList, courseRepositoryHibernate.findAll());
+        assertEquals(testCourseList, courseRepositoryHibernate.findAll(PageRequest.of(0,4, Sort.by("id"))).getContent());
     }
 
     @Test
@@ -55,7 +57,7 @@ public class CourseRepositoryHibernateImplTest extends RepositoryTest {
 
         courseRepositoryHibernate.deleteById(3);
 
-        assertEquals(expected, courseRepositoryHibernate.findAll());
+        assertEquals(expected, courseRepositoryHibernate.findAll(PageRequest.of(0,4, Sort.by("id"))).getContent());
     }
 
     @Test

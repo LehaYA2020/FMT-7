@@ -3,6 +3,7 @@ package ru.fmt.university.dao.hibernate;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import ru.fmt.university.dao.RepositoryTest;
 import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
@@ -17,14 +18,14 @@ public class StudentRepositoryHibernateImplTest extends RepositoryTest {
     @Test
     public void create() {
         studentRepositoryHibernate.save(FOR_CREATION);
-        assertNotEquals(testStudentList, studentRepositoryHibernate.findAll());
+        assertNotEquals(testStudentList, studentRepositoryHibernate.findAll(PageRequest.of(0, 10)).getContent());
         FOR_CREATION.setId(5);
         assertEquals(FOR_CREATION, studentRepositoryHibernate.findById(5).get());
     }
 
     @Test
     public void create_shouldThrow_DaoException() {
-        assertEquals(4, studentRepositoryHibernate.findAll().size());
+        assertEquals(4, studentRepositoryHibernate.findAll(PageRequest.of(0, 10)).getContent().size());
         Throwable exception = assertThrows(DaoException.class,
                 () -> studentRepositoryHibernate.save(new StudentEntity(0, "", "234")));
 
@@ -33,7 +34,7 @@ public class StudentRepositoryHibernateImplTest extends RepositoryTest {
 
     @Test
     public void getAll_shouldReturnAllStudentsFromDb() {
-        assertEquals(testStudentList, studentRepositoryHibernate.findAll());
+        assertEquals(testStudentList, studentRepositoryHibernate.findAll(PageRequest.of(0, 10)).getContent());
     }
 
     @Test
@@ -52,7 +53,7 @@ public class StudentRepositoryHibernateImplTest extends RepositoryTest {
     @Test
     public void delete_shouldDeleteFromDb() {
         studentRepositoryHibernate.deleteById(1);
-        assertEquals(testStudentList.subList(1, 4), studentRepositoryHibernate.findAll());
+        assertEquals(testStudentList.subList(1, 4), studentRepositoryHibernate.findAll(PageRequest.of(0, 10)).getContent());
     }
 
     @Test

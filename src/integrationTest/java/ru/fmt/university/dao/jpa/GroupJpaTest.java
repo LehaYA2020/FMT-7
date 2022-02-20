@@ -2,6 +2,7 @@ package ru.fmt.university.dao.jpa;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
 import ru.fmt.university.dao.RepositoryTest;
 import ru.fmt.university.model.entity.GroupEntity;
 
@@ -15,14 +16,14 @@ public class GroupJpaTest extends RepositoryTest {
     @Test
     public void create() {
         groupJpa.save(FOR_CREATION);
-        assertNotEquals(testGroupList, groupJpa.findAll());
+        assertNotEquals(testGroupList, groupJpa.findAll(PageRequest.of(0, 10)).getContent());
         FOR_CREATION.setId(4);
         assertEquals(FOR_CREATION, groupJpa.findById(FOR_CREATION.getId()).get());
     }
 
     @Test
     public void getAll_shouldReturnAllGroups() {
-        assertEquals(testGroupList, groupJpa.findAll());
+        assertEquals(testGroupList, groupJpa.findAll(PageRequest.of(0, 3)).getContent());
     }
 
     @Test
@@ -41,7 +42,7 @@ public class GroupJpaTest extends RepositoryTest {
         for (GroupEntity group : testGroupList.subList(1, 2)) {
             groupJpa.assignToLesson(1, group.getId());
         }
-        assertEquals(lessonJpa.findAll(), lessonJpa.findByGroups_id(testGroupList.get(1).getId()));
+        assertEquals(lessonJpa.findAll(PageRequest.of(0, 3)).getContent(), lessonJpa.findByGroups_id(testGroupList.get(1).getId()));
     }
 
     @Test
@@ -52,7 +53,7 @@ public class GroupJpaTest extends RepositoryTest {
     @Test
     public void delete() {
         groupJpa.deleteById(3);
-        assertEquals(testGroupList.subList(0, 2), groupJpa.findAll());
+        assertEquals(testGroupList.subList(0, 2), groupJpa.findAll(PageRequest.of(0, 3)).getContent());
     }
 
     @Test

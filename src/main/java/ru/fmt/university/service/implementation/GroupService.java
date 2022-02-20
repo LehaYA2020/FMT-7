@@ -2,6 +2,8 @@ package ru.fmt.university.service.implementation;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ru.fmt.university.dao.interfaces.GroupRepository;
@@ -29,9 +31,9 @@ public class GroupService implements IGroupService {
         return groupMapper.toGroup(groupRepository.findById(id).get());
     }
 
-    public List<Group> getAll() {
+    public Page<Group> getAll(Pageable pageable) {
         log.debug("GroupService calls groupRepository.getAll().");
-        return groupMapper.toGroup(groupRepository.findAll());
+        return groupMapper.toDtoPage(groupRepository.findAll(pageable));
     }
 
     public Group update(Group forUpdate) {

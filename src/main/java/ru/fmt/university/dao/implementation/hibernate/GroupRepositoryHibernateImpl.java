@@ -2,6 +2,9 @@ package ru.fmt.university.dao.implementation.hibernate;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
@@ -47,13 +50,13 @@ public class GroupRepositoryHibernateImpl implements GroupRepository {
         return group;
     }
 
-    public List<GroupEntity> findAll() {
+    public Page<GroupEntity> findAll(Pageable pageable) {
         log.trace("getAll()");
-        List<GroupEntity> groups;
+        Page<GroupEntity> groups;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            groups = entityManager.createQuery("FROM GroupEntity", GroupEntity.class).getResultList();
+            groups = new PageImpl<>(entityManager.createQuery("FROM GroupEntity", GroupEntity.class).getResultList(), pageable, pageable.getPageSize());
             entityManager.getTransaction().commit();
             entityManager.close();
         } catch (Exception e) {

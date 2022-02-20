@@ -1,8 +1,8 @@
 package ru.fmt.university.dao.hibernate;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import ru.fmt.university.dao.RepositoryTest;
 import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
@@ -25,7 +25,7 @@ public class LessonRepositoryHibernateImplTest extends RepositoryTest {
     @Test
     public void create() {
         lessonRepositoryHibernate.save(lesson);
-        assertNotEquals(testLessonList.size(), lessonRepositoryHibernate.findAll().size());
+        assertNotEquals(testLessonList.size(), lessonRepositoryHibernate.findAll(PageRequest.of(0, 10)).getContent().size());
         LessonEntity actual = lessonRepositoryHibernate.findById(4).get();
         lesson.setId(4);
         assertEquals(lesson, actual);
@@ -33,7 +33,7 @@ public class LessonRepositoryHibernateImplTest extends RepositoryTest {
 
     @Test
     public void getAll_shouldReturnAllLessonsFromDb() {
-        assertEquals(testLessonList, lessonRepositoryHibernate.findAll());
+        assertEquals(testLessonList, lessonRepositoryHibernate.findAll(PageRequest.of(0, 10)).getContent());
     }
 
     @Test
@@ -58,7 +58,7 @@ public class LessonRepositoryHibernateImplTest extends RepositoryTest {
     @Test
     public void delete_shouldDeleteLessonFromDb() {
         lessonRepositoryHibernate.deleteById(3);
-        assertEquals(testLessonList.subList(0, 2), lessonRepositoryHibernate.findAll());
+        assertEquals(testLessonList.subList(0, 2), lessonRepositoryHibernate.findAll(PageRequest.of(0, 10)).getContent());
     }
 
     @Test

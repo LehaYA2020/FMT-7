@@ -20,14 +20,14 @@ public class StudentController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/students")
+    /*@GetMapping("/students")
     public ResponseEntity<List<Student>> getAll() {
         final List<Student> students = studentService.getAll();
 
         return students.isEmpty()
                 ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(students, HttpStatus.OK);
-    }
+    }*/
 
     @GetMapping("/students/{id}")
     public ResponseEntity<Student> getById(@PathVariable(name = "id") int id) {
