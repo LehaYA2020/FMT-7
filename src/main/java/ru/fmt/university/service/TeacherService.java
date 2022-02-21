@@ -5,7 +5,7 @@ import ru.fmt.university.model.dto.Teacher;
 
 import java.util.List;
 
-public interface ITeacherService extends IService<Teacher, Integer> {
+public interface TeacherService extends GenericService<Teacher, Integer> {
     Teacher getByLesson(Integer lessonId);
 
     List<Teacher> getByCourse(Integer courseId);

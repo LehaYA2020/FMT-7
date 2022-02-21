@@ -8,30 +8,32 @@ import org.springframework.stereotype.Service;
 import ru.fmt.university.dao.interfaces.TeacherRepository;
 import ru.fmt.university.model.dto.Lesson;
 import ru.fmt.university.model.dto.Teacher;
-import ru.fmt.university.service.ILessonService;
-import ru.fmt.university.service.ITeacherService;
+import ru.fmt.university.service.LessonService;
+import ru.fmt.university.service.exception.NotFoundException;
 import ru.fmt.university.service.util.TeacherMapper;
 
 import java.util.List;
 
 @Service
 @Log4j2
-public class TeacherService implements ITeacherService {
+public class TeacherService implements ru.fmt.university.service.TeacherService {
     @Autowired
     private TeacherMapper teacherMapper;
     @Autowired
     private TeacherRepository teacherRepository;
     @Autowired
-    private ILessonService lessonService;
+    private LessonService lessonService;
 
-    public void create(Teacher teacher) {
+    public Teacher create(Teacher teacher) {
         log.debug("TeacherService calls teacherRepository.create({}).", teacher.getId());
-        teacherRepository.save(teacherMapper.toEntity(teacher));
+        return teacherMapper.toTeacher(teacherRepository.save(teacherMapper.toEntity(teacher)));
     }
 
     public Teacher getById(Integer id) {
         log.debug("TeacherService calls teacherRepository.getById({}).", id);
-        return teacherMapper.toTeacher(teacherRepository.findById(id).get());
+        return teacherRepository.findById(id)
+                .map(teacherMapper::toTeacher)
+                .orElseThrow(() -> new NotFoundException("Course not found"));
     }
 
     public Page<Teacher> getAll(Pageable pageable) {

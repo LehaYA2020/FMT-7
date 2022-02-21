@@ -5,14 +5,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.fmt.university.model.dto.Student;
-import ru.fmt.university.service.IStudentService;
+import ru.fmt.university.service.StudentService;
 
 import java.util.List;
 
 @RestController
 public class StudentController {
     @Autowired
-    private IStudentService studentService;
+    private StudentService studentService;
 
     @PostMapping(value = "/students")
     public ResponseEntity<?> create(@RequestBody Student student) {
@@ -51,7 +51,7 @@ public class StudentController {
         final boolean deleted = studentService.deleteById(id);
 
         return deleted
-                ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+                ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 

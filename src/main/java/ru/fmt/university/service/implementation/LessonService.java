@@ -7,27 +7,29 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.fmt.university.dao.interfaces.LessonRepository;
 import ru.fmt.university.model.dto.Lesson;
-import ru.fmt.university.service.ILessonService;
+import ru.fmt.university.service.exception.NotFoundException;
 import ru.fmt.university.service.util.LessonMapper;
 
 import java.util.List;
 
 @Service
 @Log4j2
-public class LessonService implements ILessonService {
+public class LessonService implements ru.fmt.university.service.LessonService {
     @Autowired
     private LessonRepository lessonRepository;
     @Autowired
     private LessonMapper lessonMapper;
 
-    public void create(Lesson lesson) {
+    public Lesson create(Lesson lesson) {
         log.debug("LessonService calls lessonRepository.create({}).", lesson.getId());
-        lessonRepository.save(lessonMapper.toEntity(lesson));
+        return lessonMapper.toLesson(lessonRepository.save(lessonMapper.toEntity(lesson)));
     }
 
     public Lesson getById(Integer id) {
         log.debug("LessonService calls lessonRepository.getById({}).", id);
-        return lessonMapper.toLesson(lessonRepository.findById(id).get());
+        return lessonRepository.findById(id)
+                .map(lessonMapper::toLesson)
+                .orElseThrow(() -> new NotFoundException("Lesson not found"));
     }
 
     public Page<Lesson> getAll(Pageable pageable) {

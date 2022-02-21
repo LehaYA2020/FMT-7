@@ -4,31 +4,32 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ru.fmt.university.dao.interfaces.GroupRepository;
 import ru.fmt.university.model.dto.Group;
-import ru.fmt.university.service.IGroupService;
+import ru.fmt.university.service.exception.NotFoundException;
 import ru.fmt.university.service.util.GroupMapper;
 
 import java.util.List;
 
 @Service
 @Log4j2
-public class GroupService implements IGroupService {
+public class GroupService implements ru.fmt.university.service.GroupService {
     @Autowired
     private GroupRepository groupRepository;
     @Autowired
     private GroupMapper groupMapper;
 
-    public void create(Group group) {
+    public Group create(Group group) {
         log.debug("GroupService calls groupRepository.create({}).", group.getId());
-        groupRepository.save(groupMapper.toEntity(group));
+        return groupMapper.toGroup(groupRepository.save(groupMapper.toEntity(group)));
     }
 
     public Group getById(Integer id) {
         log.debug("GroupService calls groupRepository.getById({}).", id);
-        return groupMapper.toGroup(groupRepository.findById(id).get());
+        return groupRepository.findById(id)
+                .map(groupMapper::toGroup)
+                .orElseThrow(() -> new NotFoundException("Group not found"));
     }
 
     public Page<Group> getAll(Pageable pageable) {

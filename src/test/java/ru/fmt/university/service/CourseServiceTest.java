@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import ru.fmt.university.model.dto.Course;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,7 +61,7 @@ public class CourseServiceTest extends ServiceTest {
     @Test
     public void getByGroupId_shouldCallCourseRepositoryGetByGroupIdMethod() {
         when(courseRepository.findByGroups_id(1)).thenReturn(courseMapper.toEntity(expectedCourses));
-        List<Course> actualCourses = courseService.getByGroupId(1);
+        Collection<Course> actualCourses = courseService.getByGroupId(1);
 
         verify(courseRepository).findByGroups_id(1);
         assertEquals(expectedCourses, actualCourses);

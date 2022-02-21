@@ -27,7 +27,7 @@ public class CourseRepositoryHibernateImplTest extends RepositoryTest {
 
     @Test
     public void getAll_shouldReturnAllCourses() {
-        assertEquals(testCourseList, courseRepositoryHibernate.findAll(PageRequest.of(0,4, Sort.by("id"))).getContent());
+        assertEquals(testCourseList.subList(1,2), courseRepositoryHibernate.findAll(PageRequest.of(1,1, Sort.by("id"))).getContent());
     }
 
     @Test
@@ -38,10 +38,7 @@ public class CourseRepositoryHibernateImplTest extends RepositoryTest {
 
     @Test
     public void getById_shouldThrowDaoException() {
-        Throwable exception = assertThrows(DaoException.class,
-                () -> courseRepositoryHibernate.findById(10));
-
-        assertEquals(MessagesConstants.CANNOT_GET_COURSE_BY_ID, exception.getMessage());
+        assertTrue(courseRepositoryHibernate.findById(10).isEmpty());
     }
 
     @Test

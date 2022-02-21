@@ -4,7 +4,7 @@ import ru.fmt.university.model.dto.Group;
 
 import java.util.List;
 
-public interface IGroupService extends IService<Group, Integer> {
+public interface GroupService extends GenericService<Group, Integer> {
     boolean assignToCourse(Integer groupId, Integer courseId);
 
     boolean deleteFromCourse(Integer groupId, Integer courseId);

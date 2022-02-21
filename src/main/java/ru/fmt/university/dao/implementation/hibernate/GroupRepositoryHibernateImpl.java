@@ -39,7 +39,6 @@ public class GroupRepositoryHibernateImpl implements GroupRepository {
             entityManager.getTransaction().begin();
             entityManager.merge(group);
             entityManager.getTransaction().commit();
-            entityManager.close();
         } catch (RuntimeException e) {
             log.error(MessagesConstants.CANNOT_INSERT_GROUPS, e);
             throw new DaoException(MessagesConstants.CANNOT_INSERT_GROUPS, e);
@@ -55,10 +54,10 @@ public class GroupRepositoryHibernateImpl implements GroupRepository {
         Page<GroupEntity> groups;
         try {
             entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
-            groups = new PageImpl<>(entityManager.createQuery("FROM GroupEntity", GroupEntity.class).getResultList(), pageable, pageable.getPageSize());
-            entityManager.getTransaction().commit();
-            entityManager.close();
+            long total = entityManager.createQuery("SELECT COUNT(ge) from GroupEntity ge", Long.class).getSingleResult();
+            groups = new PageImpl<>(entityManager.createQuery("FROM GroupEntity", GroupEntity.class)
+                    .setMaxResults(pageable.getPageSize())
+                    .getResultList(), pageable, total);
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_GROUPS, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_GROUPS, e);
@@ -74,13 +73,7 @@ public class GroupRepositoryHibernateImpl implements GroupRepository {
         Optional<GroupEntity> group;
         try {
             entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
-            group = Optional.of(entityManager.find(GroupEntity.class, id));
-            entityManager.getTransaction().commit();
-            entityManager.close();
-            if (group == null) {
-                throw new Exception("Student is null");
-            }
+            group = Optional.ofNullable(entityManager.find(GroupEntity.class, id));
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_GROUP_BY_ID, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_GROUP_BY_ID, e);
@@ -117,7 +110,6 @@ public class GroupRepositoryHibernateImpl implements GroupRepository {
                     .setParameter(1, groupId)
                     .setParameter(2, courseId).executeUpdate();
             entityManager.getTransaction().commit();
-            entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_ASSIGN_GROUP_TO_COURSE, e);
             throw new DaoException(MessagesConstants.CANNOT_ASSIGN_GROUP_TO_COURSE, e);
@@ -136,7 +128,6 @@ public class GroupRepositoryHibernateImpl implements GroupRepository {
                     .setParameter(1, groupId)
                     .setParameter(2, courseId).executeUpdate();
             entityManager.getTransaction().commit();
-            entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_DELETE_GROUP_FROM_COURSE, e);
             throw new DaoException(MessagesConstants.CANNOT_DELETE_GROUP_FROM_COURSE, e);
@@ -151,10 +142,7 @@ public class GroupRepositoryHibernateImpl implements GroupRepository {
         List<GroupEntity> groups;
         try {
             entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
             groups = entityManager.find(LessonEntity.class, lessonId).getGroups();
-            entityManager.getTransaction().commit();
-            entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_BY_LESSON, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_BY_LESSON, e);
@@ -170,10 +158,7 @@ public class GroupRepositoryHibernateImpl implements GroupRepository {
         GroupEntity group;
         try {
             entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
             group = entityManager.find(StudentEntity.class, studentId).getGroup();
-            entityManager.getTransaction().commit();
-            entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_BY_STUDENT, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_BY_STUDENT, e);
@@ -192,7 +177,6 @@ public class GroupRepositoryHibernateImpl implements GroupRepository {
             entityManager.getTransaction().begin();
             groups = entityManager.find(CourseEntity.class, courseId).getGroups();
             entityManager.getTransaction().commit();
-            entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_BY_LESSON, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_BY_LESSON, e);
@@ -212,7 +196,6 @@ public class GroupRepositoryHibernateImpl implements GroupRepository {
                     .setParameter(1, lessonId)
                     .setParameter(2, groupId).executeUpdate();
             entityManager.getTransaction().commit();
-            entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_ASSIGN_GROUPS_TO_LESSON, e);
             throw new DaoException(MessagesConstants.CANNOT_ASSIGN_GROUPS_TO_LESSON, e);
@@ -231,13 +214,11 @@ public class GroupRepositoryHibernateImpl implements GroupRepository {
                     .setParameter(1, lessonId)
                     .setParameter(2, groupId).executeUpdate();
             entityManager.getTransaction().commit();
-            entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_DELETE_GROUP_FROM_LESSON, e);
             throw new DaoException(MessagesConstants.CANNOT_DELETE_GROUP_FROM_LESSON, e);
         } finally {
             entityManager.close();
         }
-        log.debug("Group {} deleted from lesson {})", groupId, lessonId);
     }
 }

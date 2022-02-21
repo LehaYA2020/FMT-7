@@ -5,14 +5,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.fmt.university.model.dto.Lesson;
-import ru.fmt.university.service.ILessonService;
+import ru.fmt.university.service.LessonService;
 
 import java.util.List;
 
 @RestController
 public class LessonController {
     @Autowired
-    private ILessonService lessonService;
+    private LessonService lessonService;
 
     @PostMapping(value = "/lessons")
     public ResponseEntity<?> create(@RequestBody Lesson lesson) {
@@ -51,7 +51,7 @@ public class LessonController {
         final boolean deleted = lessonService.deleteById(id);
 
         return deleted
-                ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+                ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 

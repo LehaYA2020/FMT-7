@@ -4,7 +4,7 @@ import ru.fmt.university.model.dto.Lesson;
 
 import java.util.List;
 
-public interface ILessonService extends IService<Lesson, Integer> {
+public interface LessonService extends GenericService<Lesson, Integer> {
     List<Lesson> getLessonsByStudent(Integer studentId);
 
     List<Lesson> getLessonsByCourse(Integer courseId);

@@ -51,11 +51,9 @@ public class LessonRepositoryHibernateImpl implements LessonRepository {
         Page<LessonEntity> lessons;
         try {
             entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+            long total = entityManager.createQuery("SELECT COUNT(le) from LessonEntity le", Long.class).getSingleResult();
             lessons = new PageImpl<>(entityManager.createQuery("FROM LessonEntity", LessonEntity.class)
-                    .getResultList(),pageable, pageable.getPageSize());
-            entityManager.getTransaction().commit();
-            entityManager.close();
+                    .getResultList(), pageable, total);
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_ALL_LESSONS, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_ALL_LESSONS, e);
@@ -72,20 +70,13 @@ public class LessonRepositoryHibernateImpl implements LessonRepository {
         Optional<LessonEntity> lesson;
         try {
             entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
-            lesson = Optional.of(entityManager.find(LessonEntity.class, id));
-            entityManager.getTransaction().commit();
-            entityManager.close();
-            if (lesson == null) {
-                throw new Exception("lesson is null");
-            }
+            lesson = Optional.ofNullable(entityManager.find(LessonEntity.class, id));
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_LESSON_BY_ID, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_LESSON_BY_ID, e);
         } finally {
             entityManager.close();
         }
-        log.debug("Found {}.", lesson.get().getId());
 
         return lesson;
     }
@@ -98,7 +89,6 @@ public class LessonRepositoryHibernateImpl implements LessonRepository {
             entityManager.createNativeQuery("delete from lessons where id=?")
                     .setParameter(1, id).executeUpdate();
             entityManager.getTransaction().commit();
-            entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_DELETE_LESSON_BY_ID, e);
             throw new DaoException(MessagesConstants.CANNOT_DELETE_LESSON_BY_ID, e);
@@ -113,10 +103,7 @@ public class LessonRepositoryHibernateImpl implements LessonRepository {
         List<LessonEntity> lessons;
         try {
             entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
             lessons = entityManager.find(StudentEntity.class, studentId).getGroup().getLessons();
-            entityManager.getTransaction().commit();
-            entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_LESSON_BY_STUDENT, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_LESSON_BY_STUDENT, e);
@@ -133,10 +120,7 @@ public class LessonRepositoryHibernateImpl implements LessonRepository {
         List<LessonEntity> lessons;
         try {
             entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
             lessons = entityManager.find(TeacherEntity.class, teacherId).getLessons();
-            entityManager.getTransaction().commit();
-            entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_LESSON_BY_TEACHER, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_LESSON_BY_TEACHER, e);
@@ -155,7 +139,6 @@ public class LessonRepositoryHibernateImpl implements LessonRepository {
         try {
             entityManager = entityManagerFactory.createEntityManager();
             lessons = entityManager.find(GroupEntity.class, groupId).getLessons();
-            entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_LESSON_BY_GROUP, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_LESSON_BY_GROUP, e);
@@ -174,7 +157,6 @@ public class LessonRepositoryHibernateImpl implements LessonRepository {
         try {
             entityManager = entityManagerFactory.createEntityManager();
             lessons = entityManager.find(CourseEntity.class, courseId).getLessons();
-            entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_LESSON_BY_COURSE, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_LESSON_BY_COURSE, e);

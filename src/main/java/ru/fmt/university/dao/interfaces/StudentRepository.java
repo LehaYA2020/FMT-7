@@ -1,11 +1,11 @@
 package ru.fmt.university.dao.interfaces;
 
-import ru.fmt.university.dao.IRepository;
+import ru.fmt.university.dao.GenericRepository;
 import ru.fmt.university.model.entity.StudentEntity;
 
 import java.util.List;
 
-public interface StudentRepository extends IRepository<StudentEntity, Integer> {
+public interface StudentRepository extends GenericRepository<StudentEntity, Integer> {
     void assignToGroup(Integer studentId, Integer groupId);
 
     void updateGroupAssignment(Integer studentId, Integer groupId);

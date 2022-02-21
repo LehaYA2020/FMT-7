@@ -1,19 +1,24 @@
 package ru.fmt.university.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.fmt.university.model.dto.Course;
-import ru.fmt.university.service.ICourseService;
+import ru.fmt.university.service.CourseService;
 
+import java.util.Collection;
 import java.util.List;
 
 @RestController
 public class CourseController {
     @Autowired
-    private ICourseService courseService;
+    private CourseService courseService;
 
     @PostMapping(value = "/courses/{course}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -22,14 +27,14 @@ public class CourseController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    /*@GetMapping("/courses")
-    public ResponseEntity<List<Course>> getAll() {
-        final List<Course> courses = courseService.getAll();
+    @GetMapping("/courses")
+    public ResponseEntity<Page<Course>> getAll(@PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable) {
+        final Page<Course> courses = courseService.getAll(pageable);
 
         return courses.isEmpty()
                 ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(courses, HttpStatus.OK);
-    }*/
+    }
 
     @GetMapping(value = "/courses/{id}")
     public ResponseEntity<Course> getById(@PathVariable(name = "id") int id) {
@@ -41,8 +46,8 @@ public class CourseController {
     }
 
     @GetMapping(value = "/courses", params = {"{groupId}"})
-    public ResponseEntity<List<Course>> getByGroupId(@RequestParam(value = "groupId") int groupId) {
-        final List<Course> courses = courseService.getByGroupId(groupId);
+    public ResponseEntity<Collection<Course>> getByGroupId(@RequestParam(value = "groupId") int groupId) {
+        final Collection<Course> courses = courseService.getByGroupId(groupId);
 
         return !courses.isEmpty()
                 ? new ResponseEntity<>(courses, HttpStatus.OK)
@@ -62,7 +67,7 @@ public class CourseController {
         final boolean deleted = courseService.deleteById(id);
 
         return deleted
-                ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+                ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 }

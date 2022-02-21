@@ -42,11 +42,8 @@ public class LessonRepositoryHibernateImplTest extends RepositoryTest {
     }
 
     @Test
-    public void getById_shouldThrowDaoException() {
-        Throwable exception = assertThrows(DaoException.class,
-                () -> lessonRepositoryHibernate.findById(10));
-
-        assertEquals(MessagesConstants.CANNOT_GET_LESSON_BY_ID, exception.getMessage());
+    public void getById_shouldReturnEmptyOptional() {
+        assertTrue(lessonRepositoryHibernate.findById(10).isEmpty());
     }
 
     @Test

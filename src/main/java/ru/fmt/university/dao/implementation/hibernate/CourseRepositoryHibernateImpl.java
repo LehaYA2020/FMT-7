@@ -34,9 +34,7 @@ public class CourseRepositoryHibernateImpl implements CourseRepository {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             entityManager.merge(course);
-            entityManager.flush();
             entityManager.getTransaction().commit();
-            entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_INSERT_COURSE, e);
             throw new DaoException(MessagesConstants.CANNOT_INSERT_COURSE, e);
@@ -52,12 +50,11 @@ public class CourseRepositoryHibernateImpl implements CourseRepository {
         Page<CourseEntity> courses;
         try {
             entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+            long total = entityManager.createQuery("SELECT COUNT(ce) from CourseEntity ce", Long.class).getSingleResult();
             courses = new PageImpl<>(entityManager.createQuery("FROM CourseEntity", CourseEntity.class)
-                    .getResultList(),pageable, pageable.getPageSize());
-            entityManager.flush();
-            entityManager.getTransaction().commit();
-            entityManager.close();
+                    .setFirstResult((pageable.getPageNumber()) * (pageable.getPageSize() - (pageable.getPageSize() - 1)))
+                    .setMaxResults(pageable.getPageSize())
+                    .getResultList(), pageable, total);
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_COURSES, e);
             throw new DaoException(MessagesConstants.CANNOT_GET_COURSES, e);
@@ -73,21 +70,14 @@ public class CourseRepositoryHibernateImpl implements CourseRepository {
         Optional<CourseEntity> course;
         try {
             entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
-            course = Optional.of(entityManager.find(CourseEntity.class, id));
-            entityManager.flush();
-            entityManager.getTransaction().commit();
-            entityManager.close();
-            if (course == null) {
-                throw new Exception("Student is null");
-            }
+            course = Optional.ofNullable(entityManager.find(CourseEntity.class, id));
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_GET_COURSE_BY_ID, e);
+            entityManager.getTransaction().rollback();
             throw new DaoException(MessagesConstants.CANNOT_GET_COURSE_BY_ID, e);
         } finally {
             entityManager.close();
         }
-        log.debug("Found {}.", course.get().getName());
         return course;
     }
 
@@ -97,11 +87,10 @@ public class CourseRepositoryHibernateImpl implements CourseRepository {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             entityManager.remove(entityManager.find(CourseEntity.class, id));
-            entityManager.flush();
             entityManager.getTransaction().commit();
-            entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_DELETE_COURSE, e);
+            entityManager.getTransaction().rollback();
             throw new DaoException(MessagesConstants.CANNOT_DELETE_COURSE, e);
         } finally {
             entityManager.close();
@@ -114,11 +103,7 @@ public class CourseRepositoryHibernateImpl implements CourseRepository {
         log.trace("getByGroupIa({}).", groupId);
         try {
             entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
             courses = entityManager.find(GroupEntity.class, groupId).getCourses();
-            entityManager.flush();
-            entityManager.getTransaction().commit();
-            entityManager.close();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_DELETE_COURSE, e);
             throw new DaoException(MessagesConstants.CANNOT_DELETE_COURSE, e);

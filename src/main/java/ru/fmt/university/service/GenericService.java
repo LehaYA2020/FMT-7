@@ -5,8 +5,8 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public interface IService<T, I> {
-    void create(T toCreate);
+public interface GenericService<T, I> {
+    T create(T toCreate);
 
     Page<T> getAll(Pageable pageable);
 

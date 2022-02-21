@@ -5,7 +5,7 @@ import ru.fmt.university.model.dto.Student;
 
 import java.util.List;
 
-public interface IStudentService extends IService<Student, Integer> {
+public interface StudentService extends GenericService<Student, Integer> {
     boolean assignStudentToGroup(Integer studentId, Integer groupId);
 
     boolean updateGroupAssignment(Integer studentId, Integer groupId);

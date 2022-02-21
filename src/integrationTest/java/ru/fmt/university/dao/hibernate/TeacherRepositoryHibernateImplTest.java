@@ -33,7 +33,7 @@ public class TeacherRepositoryHibernateImplTest extends RepositoryTest {
 
     @Test
     public void getAll() {
-        assertEquals(testTeacherList, teacherRepositoryHibernate.findAll(PageRequest.of(0, 10)).getContent());
+        assertEquals(3, teacherRepositoryHibernate.findAll(PageRequest.of(0, 1)).getTotalPages());
     }
 
     @Test
@@ -66,10 +66,7 @@ public class TeacherRepositoryHibernateImplTest extends RepositoryTest {
 
     @Test
     public void getById_shouldThrowDaoException() {
-        Throwable exception = assertThrows(DaoException.class,
-                () -> teacherRepositoryHibernate.findById(10));
-
-        assertEquals("Can't get teacher by id: ", exception.getMessage());
+        assertTrue(teacherRepositoryHibernate.findById(10).isEmpty());
     }
 
     @Test

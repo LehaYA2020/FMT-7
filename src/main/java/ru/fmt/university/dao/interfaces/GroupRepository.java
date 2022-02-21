@@ -1,13 +1,12 @@
 package ru.fmt.university.dao.interfaces;
 
-import org.springframework.stereotype.Repository;
-import ru.fmt.university.dao.IRepository;
+import ru.fmt.university.dao.GenericRepository;
 import ru.fmt.university.model.entity.GroupEntity;
 
 import java.util.List;
 
-@Repository
-public interface GroupRepository extends IRepository<GroupEntity, Integer> {
+@org.springframework.stereotype.Repository
+public interface GroupRepository extends GenericRepository<GroupEntity, Integer> {
     void assignToCourse(Integer groupId, Integer courseId);
 
     void deleteFromCourse(Integer groupId, Integer courseId);

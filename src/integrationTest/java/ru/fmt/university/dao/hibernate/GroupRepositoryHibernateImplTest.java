@@ -42,11 +42,8 @@ public class GroupRepositoryHibernateImplTest extends RepositoryTest {
     }
 
     @Test
-    public void getById_shouldThrowDaoException() {
-        Throwable exception = assertThrows(DaoException.class,
-                () -> groupRepositoryHibernate.findById(10));
-
-        assertEquals(MessagesConstants.CANNOT_GET_GROUP_BY_ID, exception.getMessage());
+    public void getById_shouldReturnEmptyOptional() {
+        assertTrue(groupRepositoryHibernate.findById(10).isEmpty());
     }
 
     @Test

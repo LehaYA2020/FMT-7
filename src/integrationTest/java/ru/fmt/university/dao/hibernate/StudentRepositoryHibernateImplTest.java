@@ -18,7 +18,7 @@ public class StudentRepositoryHibernateImplTest extends RepositoryTest {
     @Test
     public void create() {
         studentRepositoryHibernate.save(FOR_CREATION);
-        assertNotEquals(testStudentList, studentRepositoryHibernate.findAll(PageRequest.of(0, 10)).getContent());
+        assertNotEquals(testStudentList, studentRepositoryHibernate.findAll(PageRequest.of(0, 5)).getContent());
         FOR_CREATION.setId(5);
         assertEquals(FOR_CREATION, studentRepositoryHibernate.findById(5).get());
     }
@@ -44,10 +44,7 @@ public class StudentRepositoryHibernateImplTest extends RepositoryTest {
 
     @Test
     public void getById_shouldThrowDaoException() {
-        Throwable exception = assertThrows(DaoException.class,
-                () -> studentRepositoryHibernate.findById(10));
-
-        assertEquals(MessagesConstants.CANNOT_GET_STUDENT_BY_ID, exception.getMessage());
+        assertTrue(studentRepositoryHibernate.findById(10).isEmpty());
     }
 
     @Test

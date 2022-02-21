@@ -6,14 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.fmt.university.model.dto.Lesson;
 import ru.fmt.university.model.dto.Teacher;
-import ru.fmt.university.service.ITeacherService;
+import ru.fmt.university.service.TeacherService;
 
 import java.util.List;
 
 @RestController
 public class TeacherController {
     @Autowired
-    private ITeacherService teacherService;
+    private TeacherService teacherService;
 
     @PostMapping(value = "/teachers")
     public ResponseEntity<?> create(@RequestBody Teacher teacher) {
@@ -52,7 +52,7 @@ public class TeacherController {
         final boolean deleted = teacherService.deleteById(id);
 
         return deleted
-                ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+                ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
