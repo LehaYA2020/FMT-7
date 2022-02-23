@@ -1,11 +1,14 @@
 package ru.fmt.university.model.dto;
 
+import lombok.*;
 import ru.fmt.university.model.LessonType;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.Objects;
 
+@Getter
+@Setter
 public class Lesson {
     private int id;
     private int courseId;
@@ -37,63 +40,6 @@ public class Lesson {
         this.startTime = startTime;
         this.type = type;
     }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(int courseId) {
-        this.courseId = courseId;
-    }
-
-    public int getTeacherId() {
-        return teacherId;
-    }
-
-    public void setTeacherId(int teacherId) {
-        this.teacherId = teacherId;
-    }
-
-    public int getClassRoom() {
-        return classRoom;
-    }
-
-    public void setClassRoom(int classRoom) {
-        this.classRoom = classRoom;
-    }
-
-    public DayOfWeek getDay() {
-        return dayOfWeek;
-    }
-
-    public void setDay(DayOfWeek dayOfWeek) {
-        this.dayOfWeek = dayOfWeek;
-    }
-
-    public LocalTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public LessonType getType() {
-        return type;
-    }
-
-    public void setType(LessonType type) {
-        this.type = type;
-    }
-
 
     @Override
     public int hashCode() {

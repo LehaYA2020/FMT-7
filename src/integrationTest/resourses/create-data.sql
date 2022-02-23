@@ -3,7 +3,7 @@ insert into courses (name, description) values ('Course-1', 'forTest'), ('Course
 insert into groups (name) values ('Group-1'), ('Group-2'), ('Group-3');
 
 insert into students (first_name, last_name, group_id) values ('S-01', 'Student', 1), ('S-02', 'Student', 1), ('S-03', 'Student', 2);
- insert into students (first_name, last_name) values('S-04', 'Student');
+insert into students (first_name, last_name) values('S-04', 'Student');
 
 insert into teachers (first_name, last_name, course_id) values ('T-1', 'Teacher', 1), ('T-2', 'Teacher', 1), ('T-3', 'Teacher', 2);
 

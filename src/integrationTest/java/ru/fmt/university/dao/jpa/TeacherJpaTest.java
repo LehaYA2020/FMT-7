@@ -6,6 +6,8 @@ import org.springframework.data.domain.PageRequest;
 import ru.fmt.university.dao.RepositoryTest;
 import ru.fmt.university.model.entity.TeacherEntity;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
@@ -18,7 +20,7 @@ public class TeacherJpaTest extends RepositoryTest {
         teacherJpa.save(FOR_CREATION);
         assertNotEquals(testTeacherList, teacherJpa.findAll(PageRequest.of(0, 10)).getContent());
         FOR_CREATION.setId(4);
-        assertEquals(FOR_CREATION, teacherJpa.findById(FOR_CREATION.getId()).get());
+        assertEquals(Optional.of(FOR_CREATION), teacherJpa.findById(FOR_CREATION.getId()));
     }
 
     @Test
@@ -28,7 +30,7 @@ public class TeacherJpaTest extends RepositoryTest {
 
     @Test
     public void getById() {
-        assertEquals(testTeacherList.get(0), teacherJpa.findById(1).get());
+        assertEquals(Optional.of(testTeacherList.get(0)), teacherJpa.findById(1));
     }
 
     @Test
@@ -41,7 +43,7 @@ public class TeacherJpaTest extends RepositoryTest {
     public void update() {
         TeacherEntity teacher = new TeacherEntity(2, "T-" + 2, "updated", testCourseList.get(1));
         teacherJpa.save(teacher);
-        assertEquals(teacher, teacherJpa.findById(2).get());
+        assertEquals(Optional.of(teacher), teacherJpa.findById(2));
     }
 
     @Test

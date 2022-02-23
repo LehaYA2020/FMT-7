@@ -1,11 +1,12 @@
 package ru.fmt.university.dao.interfaces;
 
+import org.springframework.stereotype.Repository;
 import ru.fmt.university.dao.GenericRepository;
 import ru.fmt.university.model.entity.GroupEntity;
 
 import java.util.List;
 
-@org.springframework.stereotype.Repository
+@Repository
 public interface GroupRepository extends GenericRepository<GroupEntity, Integer> {
     void assignToCourse(Integer groupId, Integer courseId);
 

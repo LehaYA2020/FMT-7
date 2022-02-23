@@ -11,7 +11,6 @@ import ru.fmt.university.service.exception.NotFoundException;
 import ru.fmt.university.service.util.CourseMapper;
 
 import java.util.Collection;
-import java.util.List;
 
 @Service
 @Log4j2

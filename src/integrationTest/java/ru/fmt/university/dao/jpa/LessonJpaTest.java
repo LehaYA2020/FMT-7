@@ -9,6 +9,7 @@ import ru.fmt.university.model.entity.LessonEntity;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -24,33 +25,33 @@ public class LessonJpaTest extends RepositoryTest {
     @Test
     public void create() {
         lessonJpa.save(lesson);
-        assertNotEquals(testLessonList.size(), lessonJpa.findAll(PageRequest.of(0,3)).getContent());
-        LessonEntity actual = lessonJpa.findById(4).get();
+        assertNotEquals(testLessonList, lessonJpa.findAll(PageRequest.of(0, 10)).getContent());
+        Optional<LessonEntity> actual = lessonJpa.findById(4);
         lesson.setId(4);
-        assertEquals(lesson, actual);
+        assertEquals(Optional.of(lesson), actual);
     }
 
     @Test
     public void getAll_shouldReturnAllLessonsFromDb() {
-        assertEquals(testLessonList, lessonJpa.findAll(PageRequest.of(0,3)).getContent());
+        assertEquals(testLessonList, lessonJpa.findAll(PageRequest.of(0, 3)).getContent());
     }
 
     @Test
     public void getById() {
-        assertEquals(testLessonList.get(0), lessonJpa.findById(1).get());
+        assertEquals(Optional.of(testLessonList.get(0)), lessonJpa.findById(1));
     }
 
     @Test
     public void update_shouldUpdateLessonInDb() {
         lessonJpa.save(FOR_UPDATE);
-        assertEquals(FOR_UPDATE, lessonJpa.findById(2).get());
+        assertEquals(Optional.of(FOR_UPDATE), lessonJpa.findById(2));
     }
 
     @Test
     public void delete_shouldDeleteLessonFromDb() {
         lessonJpa.deleteById(3);
-        assertEquals(testLessonList.subList(0, 2), lessonJpa.findAll(PageRequest.of(0,3)).getContent());
-        assertEquals(testTeacherList, teacherJpa.findAll(PageRequest.of(0,3)).getContent());
+        assertEquals(testLessonList.subList(0, 2), lessonJpa.findAll(PageRequest.of(0, 3)).getContent());
+        assertEquals(testTeacherList, teacherJpa.findAll(PageRequest.of(0, 3)).getContent());
     }
 
     @Test

@@ -25,6 +25,7 @@ public class CourseMapper implements RowMapper<Course> {
     public CourseEntity toEntity(Course course) {
         return new CourseEntity(course.getId(), course.getName(), course.getDescription());
     }
+
     public CourseEntity toEntityForCreation(Course course) {
         return new CourseEntity(course.getName(), course.getDescription());
     }

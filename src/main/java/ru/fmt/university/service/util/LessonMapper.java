@@ -29,12 +29,13 @@ public class LessonMapper implements RowMapper<Lesson> {
     public LessonEntity toEntity(Lesson lesson) {
         return new LessonEntity(lesson.getId(), new CourseEntity(lesson.getCourseId())
                 , new TeacherEntity(lesson.getTeacherId()), lesson.getClassRoom()
-                , lesson.getDay(), lesson.getStartTime(), lesson.getType());
+                , lesson.getDayOfWeek(), lesson.getStartTime(), lesson.getType());
     }
+
     public LessonEntity toEntityForCreation(Lesson lesson) {
         return new LessonEntity(new CourseEntity(lesson.getCourseId())
                 , new TeacherEntity(lesson.getTeacherId()), lesson.getClassRoom()
-                , lesson.getDay(), lesson.getStartTime(), lesson.getType());
+                , lesson.getDayOfWeek(), lesson.getStartTime(), lesson.getType());
     }
 
     public List<LessonEntity> toEntity(List<Lesson> lessons) {

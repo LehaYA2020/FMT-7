@@ -5,11 +5,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import ru.fmt.university.dao.RepositoryTest;
-import ru.fmt.university.dao.exceptions.DaoException;
-import ru.fmt.university.dao.exceptions.MessagesConstants;
 import ru.fmt.university.model.entity.CourseEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,20 +19,20 @@ public class CourseRepositoryHibernateImplTest extends RepositoryTest {
     @Test
     public void create() {
         courseRepositoryHibernate.save(FOR_CREATION);
-        assertNotEquals(testCourseList, courseRepositoryHibernate.findAll(PageRequest.of(0,4, Sort.by("id"))).getContent());
+        assertNotEquals(testCourseList, courseRepositoryHibernate.findAll(PageRequest.of(0, 4, Sort.by("id"))).getContent());
         FOR_CREATION.setId(4);
-        assertEquals(FOR_CREATION, courseRepositoryHibernate.findById(4).get());
+        assertEquals(Optional.of(FOR_CREATION), courseRepositoryHibernate.findById(4));
     }
 
     @Test
     public void getAll_shouldReturnAllCourses() {
-        assertEquals(testCourseList.subList(1,2), courseRepositoryHibernate.findAll(PageRequest.of(1,1, Sort.by("id"))).getContent());
+        assertEquals(testCourseList.subList(1, 2), courseRepositoryHibernate.findAll(PageRequest.of(1, 1, Sort.by("id"))).getContent());
     }
 
     @Test
     public void getById_shouldReturnCourseById() {
         CourseEntity expected = testCourseList.get(0);
-        assertEquals(expected, courseRepositoryHibernate.findById(1).get());
+        assertEquals(Optional.of(expected), courseRepositoryHibernate.findById(1));
     }
 
     @Test
@@ -45,7 +44,7 @@ public class CourseRepositoryHibernateImplTest extends RepositoryTest {
     public void update_shouldUpdateCourse() {
         CourseEntity expected = new CourseEntity(1, "Course-" + 1, "updated");
         courseRepositoryHibernate.save(expected);
-        assertEquals(expected.getDescription(), courseRepositoryHibernate.findById(1).get().getDescription());
+        assertEquals(Optional.of(expected), courseRepositoryHibernate.findById(1));
     }
 
     @Test
@@ -54,7 +53,7 @@ public class CourseRepositoryHibernateImplTest extends RepositoryTest {
 
         courseRepositoryHibernate.deleteById(3);
 
-        assertEquals(expected, courseRepositoryHibernate.findAll(PageRequest.of(0,4, Sort.by("id"))).getContent());
+        assertEquals(expected, courseRepositoryHibernate.findAll(PageRequest.of(0, 4, Sort.by("id"))).getContent());
     }
 
     @Test

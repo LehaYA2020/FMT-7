@@ -4,12 +4,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
 import ru.fmt.university.dao.RepositoryTest;
-import ru.fmt.university.dao.exceptions.DaoException;
-import ru.fmt.university.dao.exceptions.MessagesConstants;
 import ru.fmt.university.model.entity.StudentEntity;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 @DataJpaTest(properties = {"daoImpl=jpa"})
 public class StudentJpaTest extends RepositoryTest {
@@ -20,7 +20,7 @@ public class StudentJpaTest extends RepositoryTest {
         studentJpa.save(FOR_CREATION);
         assertNotEquals(testStudentList, studentJpa.findAll(PageRequest.of(0, 10)).getContent());
         FOR_CREATION.setId(5);
-        assertEquals(FOR_CREATION, studentJpa.findById(5).get());
+        assertEquals(Optional.of(FOR_CREATION), studentJpa.findById(5));
     }
 
     @Test
@@ -30,7 +30,7 @@ public class StudentJpaTest extends RepositoryTest {
 
     @Test
     public void getByID_shouldReturnStudentByIdFromDb() {
-        assertEquals(testStudentList.get(0), studentJpa.findById(1).get());
+        assertEquals(Optional.of(testStudentList.get(0)), studentJpa.findById(1));
     }
 
     @Test
@@ -43,7 +43,7 @@ public class StudentJpaTest extends RepositoryTest {
     public void update_shouldUpdateStudent() {
         StudentEntity forUpdate = new StudentEntity(1, "S-01", "UPDATED", testGroupList.get(0));
         studentJpa.save(forUpdate);
-        assertEquals(forUpdate, studentJpa.findById(1).get());
+        assertEquals(Optional.of(forUpdate), studentJpa.findById(1));
     }
 
     @Test

@@ -6,6 +6,8 @@ import org.springframework.data.domain.PageRequest;
 import ru.fmt.university.dao.RepositoryTest;
 import ru.fmt.university.model.entity.GroupEntity;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
@@ -18,7 +20,7 @@ public class GroupJpaTest extends RepositoryTest {
         groupJpa.save(FOR_CREATION);
         assertNotEquals(testGroupList, groupJpa.findAll(PageRequest.of(0, 10)).getContent());
         FOR_CREATION.setId(4);
-        assertEquals(FOR_CREATION, groupJpa.findById(FOR_CREATION.getId()).get());
+        assertEquals(Optional.of(FOR_CREATION), groupJpa.findById(FOR_CREATION.getId()));
     }
 
     @Test
@@ -28,7 +30,7 @@ public class GroupJpaTest extends RepositoryTest {
 
     @Test
     public void getById() {
-        assertEquals(testGroupList.get(0), groupJpa.findById(1).get());
+        assertEquals(Optional.of(testGroupList.get(0)), groupJpa.findById(1));
     }
 
     @Test
@@ -61,7 +63,7 @@ public class GroupJpaTest extends RepositoryTest {
         GroupEntity expected = new GroupEntity(1, "updated");
         groupJpa.save(expected);
 
-        assertEquals(expected, groupJpa.findById(1).get());
+        assertEquals(Optional.of(expected), groupJpa.findById(1));
     }
 
     @Test

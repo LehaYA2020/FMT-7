@@ -4,13 +4,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import ru.fmt.university.dao.RepositoryTest;
-import ru.fmt.university.dao.exceptions.DaoException;
-import ru.fmt.university.dao.exceptions.MessagesConstants;
 import ru.fmt.university.model.LessonType;
 import ru.fmt.university.model.entity.LessonEntity;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,9 +25,9 @@ public class LessonRepositoryHibernateImplTest extends RepositoryTest {
     public void create() {
         lessonRepositoryHibernate.save(lesson);
         assertNotEquals(testLessonList.size(), lessonRepositoryHibernate.findAll(PageRequest.of(0, 10)).getContent().size());
-        LessonEntity actual = lessonRepositoryHibernate.findById(4).get();
+        Optional<LessonEntity> actual = lessonRepositoryHibernate.findById(4);
         lesson.setId(4);
-        assertEquals(lesson, actual);
+        assertEquals(Optional.of(lesson), actual);
     }
 
     @Test
@@ -38,7 +37,7 @@ public class LessonRepositoryHibernateImplTest extends RepositoryTest {
 
     @Test
     public void getById() {
-        assertEquals(testLessonList.get(0).getTeacher(), lessonRepositoryHibernate.findById(1).get().getTeacher());
+        assertEquals(Optional.of(testLessonList.get(0)), lessonRepositoryHibernate.findById(1));
     }
 
     @Test
@@ -49,7 +48,7 @@ public class LessonRepositoryHibernateImplTest extends RepositoryTest {
     @Test
     public void update_shouldUpdateLessonInDb() {
         lessonRepositoryHibernate.save(FOR_UPDATE);
-        assertEquals(FOR_UPDATE, lessonRepositoryHibernate.findById(2).get());
+        assertEquals(Optional.of(FOR_UPDATE), lessonRepositoryHibernate.findById(2));
     }
 
     @Test

@@ -3,11 +3,12 @@ package ru.fmt.university.dao.hibernate;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.transaction.annotation.Transactional;
 import ru.fmt.university.dao.RepositoryTest;
 import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
 import ru.fmt.university.model.entity.TeacherEntity;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,7 +21,7 @@ public class TeacherRepositoryHibernateImplTest extends RepositoryTest {
         teacherRepositoryHibernate.save(FOR_CREATION);
         assertNotEquals(testTeacherList, teacherRepositoryHibernate.findAll(PageRequest.of(0, 10)).getContent());
         FOR_CREATION.setId(4);
-        assertEquals(FOR_CREATION, teacherRepositoryHibernate.findById(FOR_CREATION.getId()).get());
+        assertEquals(Optional.of(FOR_CREATION), teacherRepositoryHibernate.findById(FOR_CREATION.getId()));
     }
 
     @Test
@@ -38,7 +39,7 @@ public class TeacherRepositoryHibernateImplTest extends RepositoryTest {
 
     @Test
     public void getById() {
-        assertEquals(testTeacherList.get(0), teacherRepositoryHibernate.findById(1).get());
+        assertEquals(Optional.of(testTeacherList.get(0)), teacherRepositoryHibernate.findById(1));
     }
 
     @Test
@@ -51,7 +52,7 @@ public class TeacherRepositoryHibernateImplTest extends RepositoryTest {
     public void update() {
         TeacherEntity teacher = new TeacherEntity(2, "T-" + 2, "updated", testCourseList.get(1));
         teacherRepositoryHibernate.save(teacher);
-        assertEquals(teacher, teacherRepositoryHibernate.findById(2).get());
+        assertEquals(Optional.of(teacher), teacherRepositoryHibernate.findById(2));
     }
 
     @Test

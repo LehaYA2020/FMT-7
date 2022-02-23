@@ -1,10 +1,15 @@
 package ru.fmt.university.model.entity;
 
+import lombok.*;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "courses")
 public class CourseEntity {
     @OneToMany(mappedBy = "course")
@@ -34,57 +39,6 @@ public class CourseEntity {
 
     public CourseEntity(int id) {
         this.id = id;
-    }
-
-    public CourseEntity() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<GroupEntity> getGroups() {
-        return groups;
-    }
-
-    public void setGroups(List<GroupEntity> groupEntities) {
-        this.groups = groupEntities;
-    }
-
-    public List<LessonEntity> getLessons() {
-        return lessons;
-    }
-
-    public void setLessons(List<LessonEntity> lessonEntities) {
-        this.lessons = lessonEntities;
-    }
-
-    public List<TeacherEntity> getTeachers() {
-        return teachers;
-    }
-
-    public void setTeachers(List<TeacherEntity> teachers) {
-        this.teachers = teachers;
     }
 
 

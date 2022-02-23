@@ -8,6 +8,7 @@ import ru.fmt.university.dao.RepositoryTest;
 import ru.fmt.university.model.entity.CourseEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -21,7 +22,7 @@ public class CourseJpaTest extends RepositoryTest {
         courseJpa.save(FOR_CREATION);
         assertNotEquals(testCourseList, courseJpa.findAll(PageRequest.of(0,4, Sort.by("id"))).getContent());
         FOR_CREATION.setId(4);
-        assertEquals(FOR_CREATION, courseJpa.findById(4).get());
+        assertEquals(Optional.of(FOR_CREATION), courseJpa.findById(4));
     }
 
     @Test
@@ -32,14 +33,14 @@ public class CourseJpaTest extends RepositoryTest {
     @Test
     public void getById_shouldReturnCourseById() {
         CourseEntity expected = testCourseList.get(1);
-        assertEquals(expected, courseJpa.findById(2).get());
+        assertEquals(Optional.of(expected), courseJpa.findById(2));
     }
 
     @Test
     public void update_shouldUpdateCourse() {
         CourseEntity expected = new CourseEntity(1, "Course-" + 1, "updated");
         courseJpa.save(expected);
-        assertEquals(expected.getDescription(), courseJpa.findById(1).get().getDescription());
+        assertEquals(Optional.of(expected), courseJpa.findById(1));
     }
 
     @Test

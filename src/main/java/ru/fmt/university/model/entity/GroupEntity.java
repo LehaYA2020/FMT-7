@@ -1,13 +1,15 @@
 package ru.fmt.university.model.entity;
 
-import org.hibernate.annotations.OnDelete;
+import lombok.*;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "groups")
 public class GroupEntity {
     @Id
@@ -28,9 +30,6 @@ public class GroupEntity {
 
     @OneToMany(mappedBy = "group")
     private List<StudentEntity> students;
-
-    public GroupEntity() {
-    }
 
     public GroupEntity(int id, String name) {
         this.id = id;

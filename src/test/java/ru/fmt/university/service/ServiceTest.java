@@ -6,7 +6,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.fmt.university.dao.interfaces.*;
 import ru.fmt.university.model.LessonType;
 import ru.fmt.university.model.dto.*;
-import ru.fmt.university.service.implementation.*;
 import ru.fmt.university.service.util.*;
 
 import java.time.DayOfWeek;
