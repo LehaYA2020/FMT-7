@@ -1,6 +1,10 @@
 package ru.fmt.university.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,14 +24,14 @@ public class StudentController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    /*@GetMapping("/students")
-    public ResponseEntity<List<Student>> getAll() {
-        final List<Student> students = studentService.getAll();
+    @GetMapping("/students")
+    public ResponseEntity<Page<Student>> getAll(@PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable) {
+        final Page<Student> students = studentService.getAll(pageable);
 
         return students.isEmpty()
                 ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(students, HttpStatus.OK);
-    }*/
+    }
 
     @GetMapping("/students/{id}")
     public ResponseEntity<Student> getById(@PathVariable(name = "id") int id) {

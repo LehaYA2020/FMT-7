@@ -1,6 +1,10 @@
 package ru.fmt.university.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,14 +24,14 @@ public class    GroupController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    /*@GetMapping("/groups")
-    public ResponseEntity<List<Group>> getAll() {
-        final List<Group> groups = groupService.getAll();
+    @GetMapping("/groups")
+    public ResponseEntity<Page<Group>> getAll(@PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable) {
+        final Page<Group> groups = groupService.getAll(pageable);
 
         return groups.isEmpty()
                 ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(groups, HttpStatus.OK);
-    }*/
+    }
 
     @GetMapping(value = "/groups/{id}")
     public ResponseEntity<Group> getById(@PathVariable(name = "id") int id) {

@@ -19,9 +19,9 @@ public class GroupServiceTest extends ServiceTest {
 
     @Test
     public void create_shouldCallGroupRepositoryCreateMethod() {
-        when(groupRepository.save(groupMapper.toEntity(expectedGroup))).thenReturn(groupMapper.toEntity(expectedGroup));
+        when(groupRepository.save(groupMapper.toEntityForCreation(expectedGroup))).thenReturn(groupMapper.toEntity(expectedGroup));
         groupService.create(expectedGroup);
-        verify(groupRepository).save(groupMapper.toEntity(expectedGroup));
+        verify(groupRepository).save(groupMapper.toEntityForCreation(expectedGroup));
     }
 
     @Test

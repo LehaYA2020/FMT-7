@@ -6,29 +6,26 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.fmt.university.model.dto.Course;
 import ru.fmt.university.service.CourseService;
 
 import java.util.Collection;
-import java.util.List;
 
 @RestController
 public class CourseController {
     @Autowired
     private CourseService courseService;
 
-    @PostMapping(value = "/courses/{course}", consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> create(@RequestBody Course course) {
-        courseService.create(course);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    @PostMapping(value = "/courses/{course}")
+    public ResponseEntity<Course> create(@RequestBody Course course) {
+        Course created = courseService.create(course);
+        return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     @GetMapping("/courses")
-    public ResponseEntity<Page<Course>> getAll(@PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable) {
+    public ResponseEntity<Page<Course>> getAll(@PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable) {
         final Page<Course> courses = courseService.getAll(pageable);
 
         return courses.isEmpty()

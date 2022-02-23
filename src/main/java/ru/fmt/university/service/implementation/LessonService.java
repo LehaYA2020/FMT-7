@@ -22,7 +22,7 @@ public class LessonService implements ru.fmt.university.service.LessonService {
 
     public Lesson create(Lesson lesson) {
         log.debug("LessonService calls lessonRepository.create({}).", lesson.getId());
-        return lessonMapper.toLesson(lessonRepository.save(lessonMapper.toEntity(lesson)));
+        return lessonMapper.toLesson(lessonRepository.save(lessonMapper.toEntityForCreation(lesson)));
     }
 
     public Lesson getById(Integer id) {

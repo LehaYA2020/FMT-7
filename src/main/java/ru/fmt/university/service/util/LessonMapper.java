@@ -31,6 +31,11 @@ public class LessonMapper implements RowMapper<Lesson> {
                 , new TeacherEntity(lesson.getTeacherId()), lesson.getClassRoom()
                 , lesson.getDay(), lesson.getStartTime(), lesson.getType());
     }
+    public LessonEntity toEntityForCreation(Lesson lesson) {
+        return new LessonEntity(new CourseEntity(lesson.getCourseId())
+                , new TeacherEntity(lesson.getTeacherId()), lesson.getClassRoom()
+                , lesson.getDay(), lesson.getStartTime(), lesson.getType());
+    }
 
     public List<LessonEntity> toEntity(List<Lesson> lessons) {
         return lessons.stream().map(this::toEntity).toList();

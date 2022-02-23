@@ -9,7 +9,6 @@ import ru.fmt.university.model.entity.GroupEntity;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,6 +24,10 @@ public class GroupMapper implements RowMapper<Group> {
 
     public GroupEntity toEntity(Group group) {
         return new GroupEntity(group.getId(), group.getName());
+    }
+
+    public GroupEntity toEntityForCreation(Group group) {
+        return new GroupEntity(group.getName());
     }
 
     public List<GroupEntity> toEntity(List<Group> groups) {

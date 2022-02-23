@@ -30,10 +30,11 @@ public class CourseRepositoryHibernateImpl implements CourseRepository {
 
     public CourseEntity save(CourseEntity course) {
         log.trace("create({}).", course);
+        CourseEntity created;
         try {
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            entityManager.merge(course);
+            created = entityManager.merge(course);
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             log.error(MessagesConstants.CANNOT_INSERT_COURSE, e);
@@ -42,7 +43,7 @@ public class CourseRepositoryHibernateImpl implements CourseRepository {
             entityManager.close();
         }
         log.debug("{} created", course);
-        return course;
+        return created;
     }
 
     public Page<CourseEntity> findAll(Pageable pageable) {

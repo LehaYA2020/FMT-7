@@ -26,7 +26,7 @@ public class StudentService implements ru.fmt.university.service.StudentService 
 
     public Student create(Student student) {
         log.debug("StudentService calls studentRepository.create({}).", student.getId());
-        return studentMapper.toStudent(studentRepository.save(studentMapper.toEntity(student)));
+        return studentMapper.toStudent(studentRepository.save(studentMapper.toEntityForCreation(student)));
     }
 
     public Page<Student> getAll(Pageable pageable) {

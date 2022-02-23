@@ -18,9 +18,9 @@ public class LessonServiceTest extends ServiceTest {
 
     @Test
     public void create_shouldCallLessonRepositoryCreateMethod() {
-        when(lessonRepository.save(lessonMapper.toEntity(expectedLesson))).thenReturn(lessonMapper.toEntity(expectedLesson));
+        when(lessonRepository.save(lessonMapper.toEntityForCreation(expectedLesson))).thenReturn(lessonMapper.toEntity(expectedLesson));
         lessonService.create(expectedLesson);
-        verify(lessonRepository).save(lessonMapper.toEntity(expectedLesson));
+        verify(lessonRepository).save(lessonMapper.toEntityForCreation(expectedLesson));
     }
 
     @Test

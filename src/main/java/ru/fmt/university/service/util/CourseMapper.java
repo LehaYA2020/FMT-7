@@ -9,7 +9,6 @@ import ru.fmt.university.model.entity.CourseEntity;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,19 +21,24 @@ public class CourseMapper implements RowMapper<Course> {
     public Course toCourse(CourseEntity entity) {
         return new Course(entity.getId(), entity.getName(), entity.getDescription());
     }
+
     public CourseEntity toEntity(Course course) {
         return new CourseEntity(course.getId(), course.getName(), course.getDescription());
     }
-    public List<CourseEntity> toEntity(List<Course> courses) {
-        return courses.stream().map(e->toEntity(e)).toList();
+    public CourseEntity toEntityForCreation(Course course) {
+        return new CourseEntity(course.getName(), course.getDescription());
     }
+
+    public List<CourseEntity> toEntity(List<Course> courses) {
+        return courses.stream().map(this::toEntity).toList();
+    }
+
     public Page<Course> toDtoPage(Page<CourseEntity> entities) {
-        List<CourseEntity> entityList = entities.getContent();
-        List<Course> dtoList = entities.getContent().stream().map(e->toCourse(e)).toList();
+        List<Course> dtoList = entities.getContent().stream().map(this::toCourse).toList();
         return new PageImpl<>(dtoList, entities.getPageable(), entities.getTotalElements());
     }
 
     public List<Course> toCourse(List<CourseEntity> entities) {
-        return entities.stream().map(e->toCourse(e)).toList();
+        return entities.stream().map(this::toCourse).toList();
     }
 }

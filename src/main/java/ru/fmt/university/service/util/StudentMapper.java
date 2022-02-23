@@ -36,6 +36,10 @@ public class StudentMapper implements RowMapper<Student> {
         return new StudentEntity(student.getId(), student.getFirstName(), student.getLastName(), new GroupEntity(student.getGroupId()));
     }
 
+    public StudentEntity toEntityForCreation(Student student) {
+        return new StudentEntity(student.getFirstName(), student.getLastName(), new GroupEntity(student.getGroupId()));
+    }
+
     public List<StudentEntity> toEntity(List<Student> students) {
         return students.stream().map(this::toEntity).toList();
     }

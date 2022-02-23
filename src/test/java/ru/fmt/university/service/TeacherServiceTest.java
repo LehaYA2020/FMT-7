@@ -23,9 +23,9 @@ public class TeacherServiceTest extends ServiceTest {
 
     @Test
     public void create_shouldCallTeacherRepositoryCreateMethod() {
-        when(teacherRepository.save(teacherMapper.toEntity(expectedTeacher))).thenReturn(teacherMapper.toEntity(expectedTeacher));
+        when(teacherRepository.save(teacherMapper.toEntityForCreation(expectedTeacher))).thenReturn(teacherMapper.toEntity(expectedTeacher));
         teacherService.create(expectedTeacher);
-        verify(teacherRepository).save(teacherMapper.toEntity(expectedTeacher));
+        verify(teacherRepository).save(teacherMapper.toEntityForCreation(expectedTeacher));
     }
 
     @Test

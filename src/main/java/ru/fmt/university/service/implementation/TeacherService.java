@@ -26,7 +26,7 @@ public class TeacherService implements ru.fmt.university.service.TeacherService 
 
     public Teacher create(Teacher teacher) {
         log.debug("TeacherService calls teacherRepository.create({}).", teacher.getId());
-        return teacherMapper.toTeacher(teacherRepository.save(teacherMapper.toEntity(teacher)));
+        return teacherMapper.toTeacher(teacherRepository.save(teacherMapper.toEntityForCreation(teacher)));
     }
 
     public Teacher getById(Integer id) {

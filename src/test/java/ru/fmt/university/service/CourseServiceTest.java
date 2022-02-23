@@ -18,9 +18,9 @@ import static org.mockito.Mockito.*;
 public class CourseServiceTest extends ServiceTest {
     @Test
     public void create_shouldCallCourseRepositoryCreateMethod() {
-        when(courseRepository.save(courseMapper.toEntity(expectedCourse))).thenReturn(courseMapper.toEntity(expectedCourse));
+        when(courseRepository.save(courseMapper.toEntityForCreation(expectedCourse))).thenReturn(courseMapper.toEntity(expectedCourse));
         courseService.create(expectedCourse);
-        verify(courseRepository).save(courseMapper.toEntity(expectedCourse));
+        verify(courseRepository).save(courseMapper.toEntityForCreation(expectedCourse));
     }
 
     @Test

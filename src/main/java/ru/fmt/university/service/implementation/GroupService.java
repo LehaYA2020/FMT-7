@@ -22,7 +22,7 @@ public class GroupService implements ru.fmt.university.service.GroupService {
 
     public Group create(Group group) {
         log.debug("GroupService calls groupRepository.create({}).", group.getId());
-        return groupMapper.toGroup(groupRepository.save(groupMapper.toEntity(group)));
+        return groupMapper.toGroup(groupRepository.save(groupMapper.toEntityForCreation(group)));
     }
 
     public Group getById(Integer id) {

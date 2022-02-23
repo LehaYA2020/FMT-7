@@ -23,10 +23,10 @@ public class StudentServiceTest extends ServiceTest {
 
     @Test
     public void create_shouldCallStudentRepositoryCreatedMethod() {
-        when(studentRepository.save(studentMapper.toEntity(expectedStudent)))
+        when(studentRepository.save(studentMapper.toEntityForCreation(expectedStudent)))
                 .thenReturn(studentMapper.toEntity(expectedStudent));
         studentService.create(expectedStudent);
-        verify(studentRepository).save(studentMapper.toEntity(expectedStudent));
+        verify(studentRepository).save(studentMapper.toEntityForCreation(expectedStudent));
     }
 
     @Test

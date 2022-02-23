@@ -24,7 +24,7 @@ public class CourseService implements ru.fmt.university.service.CourseService {
 
     public Course create(Course course) {
         log.debug("CourseService calls courseRepository.create({}).", course.getId());
-        return courseMapper.toCourse(courseRepository.save(courseMapper.toEntity(course)));
+        return courseMapper.toCourse(courseRepository.save(courseMapper.toEntityForCreation(course)));
     }
 
     public Page<Course> getAll(Pageable pageable) {

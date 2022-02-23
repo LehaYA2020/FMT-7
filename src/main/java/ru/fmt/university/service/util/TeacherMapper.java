@@ -4,10 +4,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
-import ru.fmt.university.model.dto.Lesson;
 import ru.fmt.university.model.dto.Teacher;
 import ru.fmt.university.model.entity.CourseEntity;
-import ru.fmt.university.model.entity.LessonEntity;
 import ru.fmt.university.model.entity.TeacherEntity;
 
 import java.sql.ResultSet;
@@ -30,11 +28,17 @@ public class TeacherMapper implements RowMapper<Teacher> {
         return entities.stream().map(this::toTeacher).toList();
     }
 
-    public TeacherEntity toEntity (Teacher teacher) {
-        return new TeacherEntity(teacher.getId(), teacher.getFirstName(), teacher.getLastName(), new CourseEntity(teacher.getCourseId()));
+    public TeacherEntity toEntity(Teacher teacher) {
+        return new TeacherEntity(teacher.getId(), teacher.getFirstName(),
+                teacher.getLastName(), new CourseEntity(teacher.getCourseId()));
     }
 
-    public List<TeacherEntity> toEntity (List<Teacher> teachers) {
+    public TeacherEntity toEntityForCreation(Teacher teacher) {
+        return new TeacherEntity(teacher.getId(), teacher.getFirstName(), teacher.getLastName(),
+                new CourseEntity(teacher.getCourseId()));
+    }
+
+    public List<TeacherEntity> toEntity(List<Teacher> teachers) {
         return teachers.stream().map(this::toEntity).toList();
     }
 
