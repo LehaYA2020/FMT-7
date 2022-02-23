@@ -1,18 +1,22 @@
 package ru.fmt.university.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.fmt.university.model.dto.Group;
-import ru.fmt.university.service.IGroupService;
+import ru.fmt.university.service.GroupService;
 
 import java.util.List;
 
 @RestController
-public class GroupController {
+public class    GroupController {
     @Autowired
-    private IGroupService groupService;
+    private GroupService groupService;
 
     @PostMapping(value = "/groups")
     public ResponseEntity<?> create(@RequestBody Group group) {
@@ -21,8 +25,8 @@ public class GroupController {
     }
 
     @GetMapping("/groups")
-    public ResponseEntity<List<Group>> getAll() {
-        final List<Group> groups = groupService.getAll();
+    public ResponseEntity<Page<Group>> getAll(@PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable) {
+        final Page<Group> groups = groupService.getAll(pageable);
 
         return groups.isEmpty()
                 ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
@@ -48,10 +52,10 @@ public class GroupController {
 
     @DeleteMapping(value = "/groups/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") int id) {
-        final boolean deleted = groupService.delete(id);
+        final boolean deleted = groupService.deleteById(id);
 
         return deleted
-                ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+                ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 

@@ -1,10 +1,14 @@
 package ru.fmt.university.model.entity;
 
 import javax.persistence.*;
+import lombok.*;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "teachers")
 public class TeacherEntity {
     @Id
@@ -38,49 +42,6 @@ public class TeacherEntity {
         this.firstName = firstName;
         this.lastName = lastName;
         this.course = course;
-    }
-
-    public TeacherEntity() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public CourseEntity getCourse() {
-        return course;
-    }
-
-    public void setCourse(CourseEntity course) {
-        this.course = course;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public List<LessonEntity> getLessons() {
-        return lessons;
-    }
-
-    public void setLessons(List<LessonEntity> lessons) {
-        this.lessons = lessons;
     }
 
     @Override

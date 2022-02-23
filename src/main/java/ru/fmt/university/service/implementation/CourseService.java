@@ -2,46 +2,55 @@ package ru.fmt.university.service.implementation;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import ru.fmt.university.dao.interfaces.ICourseRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import ru.fmt.university.dao.interfaces.CourseRepository;
 import ru.fmt.university.model.dto.Course;
-import ru.fmt.university.service.ICourseService;
+import ru.fmt.university.service.exception.NotFoundException;
+import ru.fmt.university.service.util.CourseMapper;
 
-import java.util.List;
+import java.util.Collection;
 
-@Component
+@Service
 @Log4j2
-public class CourseService implements ICourseService {
-    @Autowired
-    private ICourseRepository courseRepository;
 
-    public void create(Course course) {
+public class CourseService implements ru.fmt.university.service.CourseService {
+    @Autowired
+    private CourseRepository courseRepository;
+    @Autowired
+    private CourseMapper courseMapper;
+
+    public Course create(Course course) {
         log.debug("CourseService calls courseRepository.create({}).", course.getId());
-        courseRepository.create(course);
+        return courseMapper.toCourse(courseRepository.save(courseMapper.toEntityForCreation(course)));
     }
 
-    public List<Course> getAll() {
+    public Page<Course> getAll(Pageable pageable) {
         log.debug("CourseService calls courseRepository.getAll().");
-        return courseRepository.getAll();
+        return courseMapper.toDtoPage(courseRepository.findAll(pageable));
     }
 
     public Course getById(Integer id) {
         log.debug("CourseService calls courseRepository.getById({}).", id);
-        return courseRepository.getById(id);
+        return courseRepository.findById(id)
+                .map(courseMapper::toCourse)
+                .orElseThrow(() -> new NotFoundException("Course not found"));
     }
 
     public Course update(Course forUpdate) {
         log.debug("CourseService calls courseRepository.update({}).", forUpdate.getId());
-        return courseRepository.update(forUpdate);
+        return courseMapper.toCourse(courseRepository.save(courseMapper.toEntity(forUpdate)));
     }
 
-    public boolean delete(Integer id) {
+    public boolean deleteById(Integer id) {
         log.debug("CourseService calls courseRepository.delete({}).", id);
-        return courseRepository.delete(id);
+        courseRepository.deleteById(id);
+        return true;
     }
 
-    public List<Course> getByGroupId(Integer id) {
+    public Collection<Course> getByGroupId(Integer id) {
         log.debug("CourseService calls courseRepository.getByGroupId({}).", id);
-        return courseRepository.getByGroupId(id);
+        return courseMapper.toCourse(courseRepository.findByGroups_id(id));
     }
 }

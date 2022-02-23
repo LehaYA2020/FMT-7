@@ -1,18 +1,22 @@
 package ru.fmt.university.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.fmt.university.model.dto.Student;
-import ru.fmt.university.service.IStudentService;
+import ru.fmt.university.service.StudentService;
 
 import java.util.List;
 
 @RestController
 public class StudentController {
     @Autowired
-    private IStudentService studentService;
+    private StudentService studentService;
 
     @PostMapping(value = "/students")
     public ResponseEntity<?> create(@RequestBody Student student) {
@@ -21,8 +25,8 @@ public class StudentController {
     }
 
     @GetMapping("/students")
-    public ResponseEntity<List<Student>> getAll() {
-        final List<Student> students = studentService.getAll();
+    public ResponseEntity<Page<Student>> getAll(@PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable) {
+        final Page<Student> students = studentService.getAll(pageable);
 
         return students.isEmpty()
                 ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
@@ -48,10 +52,10 @@ public class StudentController {
 
     @DeleteMapping(value = "/students/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") int id) {
-        final boolean deleted = studentService.delete(id);
+        final boolean deleted = studentService.deleteById(id);
 
         return deleted
-                ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+                ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 

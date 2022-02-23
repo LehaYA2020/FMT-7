@@ -1,10 +1,15 @@
 package ru.fmt.university.model.entity;
 
+import lombok.*;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "groups")
 public class GroupEntity {
     @Id
@@ -12,22 +17,19 @@ public class GroupEntity {
     private int id;
     @Column(name = "name")
     private String name;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "groups_courses",
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "course_id"))
     private List<CourseEntity> courses;
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "lessons_groups",
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "lesson_id"))
     private List<LessonEntity> lessons;
 
     @OneToMany(mappedBy = "group")
-    List<StudentEntity> students;
-
-    public GroupEntity() {
-    }
+    private List<StudentEntity> students;
 
     public GroupEntity(int id, String name) {
         this.id = id;
@@ -40,6 +42,13 @@ public class GroupEntity {
 
     public GroupEntity(int id) {
         this.id = id;
+    }
+
+    public GroupEntity(String name, List<CourseEntity> courses, List<LessonEntity> lessons, List<StudentEntity> students) {
+        this.name = name;
+        this.courses = courses;
+        this.lessons = lessons;
+        this.students = students;
     }
 
     public int getId() {
@@ -93,5 +102,16 @@ public class GroupEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, name);
+    }
+
+    @Override
+    public String toString() {
+        return "GroupEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", courses=" + courses +
+                ", lessons=" + lessons +
+                ", students=" + students +
+                '}';
     }
 }

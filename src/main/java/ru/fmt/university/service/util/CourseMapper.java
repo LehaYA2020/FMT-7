@@ -1,0 +1,45 @@
+package ru.fmt.university.service.util;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Service;
+import ru.fmt.university.model.dto.Course;
+import ru.fmt.university.model.entity.CourseEntity;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+@Service
+public class CourseMapper implements RowMapper<Course> {
+    @Override
+    public Course mapRow(ResultSet rs, int rowNum) throws SQLException {
+        return new Course(rs.getInt("id"), rs.getString("name"), rs.getString("description"));
+    }
+
+    public Course toCourse(CourseEntity entity) {
+        return new Course(entity.getId(), entity.getName(), entity.getDescription());
+    }
+
+    public CourseEntity toEntity(Course course) {
+        return new CourseEntity(course.getId(), course.getName(), course.getDescription());
+    }
+
+    public CourseEntity toEntityForCreation(Course course) {
+        return new CourseEntity(course.getName(), course.getDescription());
+    }
+
+    public List<CourseEntity> toEntity(List<Course> courses) {
+        return courses.stream().map(this::toEntity).toList();
+    }
+
+    public Page<Course> toDtoPage(Page<CourseEntity> entities) {
+        List<Course> dtoList = entities.getContent().stream().map(this::toCourse).toList();
+        return new PageImpl<>(dtoList, entities.getPageable(), entities.getTotalElements());
+    }
+
+    public List<Course> toCourse(List<CourseEntity> entities) {
+        return entities.stream().map(this::toCourse).toList();
+    }
+}

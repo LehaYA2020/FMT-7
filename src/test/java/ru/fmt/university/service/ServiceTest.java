@@ -6,7 +6,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.fmt.university.dao.interfaces.*;
 import ru.fmt.university.model.LessonType;
 import ru.fmt.university.model.dto.*;
-import ru.fmt.university.service.implementation.*;
+import ru.fmt.university.service.util.*;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -21,8 +21,8 @@ public abstract class ServiceTest {
     protected static Group expectedGroup = new Group(1, "Test");
     protected static Student expectedStudent = new Student(1, "fName", "lName");
     protected static Teacher expectedTeacher = new Teacher(1, "TestT", "lName", expectedCourse.getId());
-    protected static Lesson expectedLesson = new Lesson(1, expectedCourse.getId(), expectedTeacher.getId(), 10, DayOfWeek.MONDAY,
-            LocalTime.of(9, 30, 0), LessonType.LECTURE);
+    protected static Lesson expectedLesson = new Lesson(1, expectedCourse.getId(), expectedTeacher.getId(), 10
+            , DayOfWeek.MONDAY, LocalTime.of(9, 30, 0), LessonType.LECTURE);
     protected static List<Lesson> expectedLessons = singletonList(expectedLesson);
     protected static List<Teacher> expectedTeachers = singletonList(expectedTeacher);
     protected static List<Course> expectedCourses = singletonList(expectedCourse);
@@ -40,14 +40,25 @@ public abstract class ServiceTest {
     @Autowired
     protected TeacherService teacherService;
 
+    @Autowired
+    protected CourseMapper courseMapper;
+    @Autowired
+    protected GroupMapper groupMapper;
+    @Autowired
+    protected LessonMapper lessonMapper;
+    @Autowired
+    protected StudentMapper studentMapper;
+    @Autowired
+    protected TeacherMapper teacherMapper;
+
     @MockBean
-    protected ICourseRepository courseRepository;
+    protected CourseRepository courseRepository;
     @MockBean
-    protected IGroupRepository groupRepository;
+    protected GroupRepository groupRepository;
     @MockBean
-    protected ILessonRepository lessonRepository;
+    protected LessonRepository lessonRepository;
     @MockBean
-    protected IStudentRepository studentRepository;
+    protected StudentRepository studentRepository;
     @MockBean
-    protected ITeacherRepository teacherRepository;
+    protected TeacherRepository teacherRepository;
 }

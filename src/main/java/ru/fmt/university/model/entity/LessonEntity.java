@@ -3,12 +3,16 @@ package ru.fmt.university.model.entity;
 import ru.fmt.university.model.LessonType;
 
 import javax.persistence.*;
+import lombok.*;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "lessons")
 public class LessonEntity {
     @Id
@@ -31,7 +35,7 @@ public class LessonEntity {
     @Enumerated(EnumType.STRING)
     private LessonType type;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "lessons_groups",
             joinColumns = @JoinColumn(name = "lesson_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id"))
@@ -39,9 +43,6 @@ public class LessonEntity {
 
     public LessonEntity(int id) {
         this.id = id;
-    }
-
-    public LessonEntity() {
     }
 
     public LessonEntity(int id, CourseEntity course, TeacherEntity teacher, int classRoom, DayOfWeek dayOfWeek, LocalTime startTime, LessonType type) {
@@ -61,70 +62,6 @@ public class LessonEntity {
         this.dayOfWeek = dayOfWeek;
         this.startTime = startTime;
         this.type = type;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public CourseEntity getCourse() {
-        return course;
-    }
-
-    public void setCourse(CourseEntity course) {
-        this.course = course;
-    }
-
-    public TeacherEntity getTeacher() {
-        return teacher;
-    }
-
-    public void setTeacher(TeacherEntity teacher) {
-        this.teacher = teacher;
-    }
-
-    public int getClassRoom() {
-        return classRoom;
-    }
-
-    public void setClassRoom(int classRoom) {
-        this.classRoom = classRoom;
-    }
-
-    public DayOfWeek getDayOfWeek() {
-        return dayOfWeek;
-    }
-
-    public void setDayOfWeek(DayOfWeek dayOfWeek) {
-        this.dayOfWeek = dayOfWeek;
-    }
-
-    public LocalTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public LessonType getType() {
-        return type;
-    }
-
-    public void setType(LessonType type) {
-        this.type = type;
-    }
-
-    public List<GroupEntity> getGroups() {
-        return groups;
-    }
-
-    public void setGroups(List<GroupEntity> groups) {
-        this.groups = groups;
     }
 
     @Override

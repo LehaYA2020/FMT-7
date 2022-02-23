@@ -2,78 +2,78 @@ package ru.fmt.university.dao.hibernate;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import ru.fmt.university.dao.RepositoryTest;
 import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
-import ru.fmt.university.model.dto.Teacher;
+import ru.fmt.university.model.entity.TeacherEntity;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(properties = {"daoImpl=hibernate"})
 public class TeacherRepositoryHibernateImplTest extends RepositoryTest {
-    private static final Teacher FOR_CREATION = new Teacher("T-4", "Teacher", testCourseList.get(1).getId());
+    private static final TeacherEntity FOR_CREATION = new TeacherEntity("T-4", "Teacher", testCourseList.get(1));
 
     @Test
     public void create() {
-        teacherRepositoryHibernate.create(FOR_CREATION);
-        assertNotEquals(testTeacherList, teacherRepositoryHibernate.getAll());
+        teacherRepositoryHibernate.save(FOR_CREATION);
+        assertNotEquals(testTeacherList, teacherRepositoryHibernate.findAll(PageRequest.of(0, 10)).getContent());
         FOR_CREATION.setId(4);
-        assertEquals(FOR_CREATION, teacherRepositoryHibernate.getById(FOR_CREATION.getId()));
+        assertEquals(Optional.of(FOR_CREATION), teacherRepositoryHibernate.findById(FOR_CREATION.getId()));
     }
 
     @Test
     public void create_shouldThrow_DaoException() {
         Throwable exception = assertThrows(DaoException.class,
-                () -> teacherRepositoryHibernate.create(new Teacher(0, "", "", testCourseList.get(0).getId())));
+                () -> teacherRepositoryHibernate.save(new TeacherEntity(0, "", "", testCourseList.get(0))));
 
         assertEquals(MessagesConstants.CANNOT_INSERT_TEACHERS_LIST, exception.getMessage());
     }
 
     @Test
     public void getAll() {
-        assertEquals(testTeacherList, teacherRepositoryHibernate.getAll());
+        assertEquals(3, teacherRepositoryHibernate.findAll(PageRequest.of(0, 1)).getTotalPages());
     }
 
     @Test
     public void getById() {
-        assertEquals(testTeacherList.get(0), teacherRepositoryHibernate.getById(1));
+        assertEquals(Optional.of(testTeacherList.get(0)), teacherRepositoryHibernate.findById(1));
     }
 
     @Test
     public void delete() {
-        teacherRepositoryHibernate.delete(3);
-        assertEquals(testTeacherList.subList(0, 2), teacherRepositoryHibernate.getAll());
+        teacherRepositoryHibernate.deleteById(3);
+        assertEquals(testTeacherList.subList(0, 2), teacherRepositoryHibernate.findAll(PageRequest.of(0, 10)).getContent());
     }
 
     @Test
     public void update() {
-        Teacher teacher = new Teacher(2, "T-" + 2, "updated", testCourseList.get(1).getId());
-        teacherRepositoryHibernate.update(teacher);
-        assertEquals(teacher, teacherRepositoryHibernate.getById(2));
+        TeacherEntity teacher = new TeacherEntity(2, "T-" + 2, "updated", testCourseList.get(1));
+        teacherRepositoryHibernate.save(teacher);
+        assertEquals(Optional.of(teacher), teacherRepositoryHibernate.findById(2));
     }
 
     @Test
     public void getByCourse() {
-        assertEquals(testTeacherList.subList(0, 2), teacherRepositoryHibernate.getByCourse(1));
+        assertEquals(testTeacherList.subList(0, 2), teacherRepositoryHibernate.findByCourse_id(1));
     }
 
     @Test
     public void getByLesson() {
-        assertEquals(testTeacherList.get(0), teacherRepositoryHibernate.getByLesson(1));
+        assertEquals(testTeacherList.get(0), teacherRepositoryHibernate.findByLessons_id(1));
     }
 
     @Test
     public void getById_shouldThrowDaoException() {
-        Throwable exception = assertThrows(DaoException.class,
-                () -> teacherRepositoryHibernate.getById(10));
-
-        assertEquals("Can't get teacher by id: ", exception.getMessage());
+        assertTrue(teacherRepositoryHibernate.findById(10).isEmpty());
     }
 
     @Test
     public void delete_shouldThrowDaoException() {
         Throwable exception = assertThrows(DaoException.class,
-                () -> teacherRepositoryHibernate.delete(1));
+                () -> teacherRepositoryHibernate.deleteById(1));
 
         assertEquals(MessagesConstants.CANNOT_DELETE_TEACHER, exception.getMessage());
     }

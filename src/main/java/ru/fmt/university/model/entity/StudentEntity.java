@@ -1,9 +1,13 @@
 package ru.fmt.university.model.entity;
 
 import javax.persistence.*;
+import lombok.*;
 import java.util.Objects;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "students")
 public class StudentEntity {
     @Id
@@ -38,41 +42,6 @@ public class StudentEntity {
 
     public StudentEntity(int id) {
         this.id = id;
-    }
-
-    public StudentEntity() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public GroupEntity getGroup() {
-        return group;
-    }
-
-    public void setGroup(GroupEntity group) {
-        this.group = group;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     @Override

@@ -2,65 +2,63 @@ package ru.fmt.university.dao.hibernate;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import ru.fmt.university.dao.RepositoryTest;
-import ru.fmt.university.dao.exceptions.DaoException;
-import ru.fmt.university.dao.exceptions.MessagesConstants;
-import ru.fmt.university.model.dto.Course;
+import ru.fmt.university.model.entity.CourseEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(properties = {"daoImpl=hibernate"})
 public class CourseRepositoryHibernateImplTest extends RepositoryTest {
-    private static final Course FOR_CREATION = new Course("Course-" + 4, "forTest");
+    private static final CourseEntity FOR_CREATION = new CourseEntity("Course-" + 4, "forTest");
 
     @Test
     public void create() {
-        courseRepositoryHibernate.create(FOR_CREATION);
-        assertNotEquals(testCourseList, courseRepositoryHibernate.getAll());
+        courseRepositoryHibernate.save(FOR_CREATION);
+        assertNotEquals(testCourseList, courseRepositoryHibernate.findAll(PageRequest.of(0, 4, Sort.by("id"))).getContent());
         FOR_CREATION.setId(4);
-        assertEquals(FOR_CREATION, courseRepositoryHibernate.getById(4));
+        assertEquals(Optional.of(FOR_CREATION), courseRepositoryHibernate.findById(4));
     }
 
     @Test
     public void getAll_shouldReturnAllCourses() {
-        assertEquals(testCourseList, courseRepositoryHibernate.getAll());
+        assertEquals(testCourseList.subList(1, 2), courseRepositoryHibernate.findAll(PageRequest.of(1, 1, Sort.by("id"))).getContent());
     }
 
     @Test
     public void getById_shouldReturnCourseById() {
-        Course expected = testCourseList.get(0);
-        assertEquals(expected, courseRepositoryHibernate.getById(1));
+        CourseEntity expected = testCourseList.get(0);
+        assertEquals(Optional.of(expected), courseRepositoryHibernate.findById(1));
     }
 
     @Test
     public void getById_shouldThrowDaoException() {
-        Throwable exception = assertThrows(DaoException.class,
-                () -> courseRepositoryHibernate.getById(10));
-
-        assertEquals(MessagesConstants.CANNOT_GET_COURSE_BY_ID, exception.getMessage());
+        assertTrue(courseRepositoryHibernate.findById(10).isEmpty());
     }
 
     @Test
     public void update_shouldUpdateCourse() {
-        Course expected = new Course(1, "Course-" + 1, "updated");
-        courseRepositoryHibernate.update(expected);
-        assertEquals(expected.getDescription(), courseRepositoryHibernate.getById(1).getDescription());
+        CourseEntity expected = new CourseEntity(1, "Course-" + 1, "updated");
+        courseRepositoryHibernate.save(expected);
+        assertEquals(Optional.of(expected), courseRepositoryHibernate.findById(1));
     }
 
     @Test
     public void delete_shouldDeleteCourse() {
-        List<Course> expected = testCourseList.subList(0, 2);
+        List<CourseEntity> expected = testCourseList.subList(0, 2);
 
-        courseRepositoryHibernate.delete(3);
+        courseRepositoryHibernate.deleteById(3);
 
-        assertEquals(expected, courseRepositoryHibernate.getAll());
+        assertEquals(expected, courseRepositoryHibernate.findAll(PageRequest.of(0, 4, Sort.by("id"))).getContent());
     }
 
     @Test
     public void getByGroupId() {
-        List<Course> expected = testCourseList.subList(0, 2);
-        assertEquals(expected, courseRepositoryHibernate.getByGroupId(1));
+        List<CourseEntity> expected = testCourseList.subList(0, 2);
+        assertEquals(expected, courseRepositoryHibernate.findByGroups_id(1));
     }
 }

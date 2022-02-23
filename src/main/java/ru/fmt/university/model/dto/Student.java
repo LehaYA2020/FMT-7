@@ -1,7 +1,11 @@
 package ru.fmt.university.model.dto;
 
+import lombok.*;
+
 import java.util.Objects;
 
+@Getter
+@Setter
 public class Student {
     private int id;
     private String firstName;
@@ -29,38 +33,6 @@ public class Student {
 
     public Student(int id) {
         this.id = id;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public int getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(int groupId) {
-        this.groupId = groupId;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     @Override
