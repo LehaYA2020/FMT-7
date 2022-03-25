@@ -1,4 +1,4 @@
-package ru.fmt.university.controller;
+package ru.fmt.university.rest.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -7,9 +7,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.fmt.university.model.dto.Lesson;
 import ru.fmt.university.model.dto.Teacher;
+import ru.fmt.university.rest.scenario.Create;
+import ru.fmt.university.rest.scenario.Update;
 import ru.fmt.university.service.TeacherService;
 
 import java.util.List;
@@ -20,7 +23,7 @@ public class TeacherController {
     private TeacherService teacherService;
 
     @PostMapping(value = "/teachers")
-    public ResponseEntity<?> create(@RequestBody Teacher teacher) {
+    public ResponseEntity<?> create(@Validated(Create.class) @RequestBody Teacher teacher) {
         teacherService.create(teacher);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -44,7 +47,7 @@ public class TeacherController {
     }
 
     @PutMapping(value = "/teachers/{id}")
-    public ResponseEntity<?> update(@RequestBody Teacher teacher) {
+    public ResponseEntity<?> update(@Validated(Update.class) @RequestBody Teacher teacher) {
         final Teacher updated = teacherService.update(teacher);
         return updated != null
                 ? new ResponseEntity<>(HttpStatus.OK)

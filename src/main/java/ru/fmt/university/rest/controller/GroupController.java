@@ -1,4 +1,4 @@
-package ru.fmt.university.controller;
+package ru.fmt.university.rest.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -7,10 +7,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.fmt.university.model.dto.Group;
+import ru.fmt.university.rest.scenario.Create;
+import ru.fmt.university.rest.scenario.Update;
 import ru.fmt.university.service.GroupService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -19,9 +24,13 @@ public class    GroupController {
     private GroupService groupService;
 
     @PostMapping(value = "/groups")
-    public ResponseEntity<?> create(@RequestBody Group group) {
-        groupService.create(group);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<Group> create(@Validated(Create.class) @RequestBody Group group, BindingResult bindingResult) {
+        Group created = groupService.create(group);
+
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     @GetMapping("/groups")
@@ -43,7 +52,7 @@ public class    GroupController {
     }
 
     @PutMapping(value = "/groups/{id}")
-    public ResponseEntity<?> update(@RequestBody Group group) {
+    public ResponseEntity<?> update(@Validated(Update.class) @RequestBody Group group) {
         final Group updated = groupService.update(group);
         return updated != null
                 ? new ResponseEntity<>(HttpStatus.OK)

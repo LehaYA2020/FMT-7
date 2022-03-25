@@ -10,8 +10,7 @@ import ru.fmt.university.model.entity.CourseEntity;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest(properties = {"daoImpl=jpa"})
 public class CourseJpaTest extends RepositoryTest {

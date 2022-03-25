@@ -1,15 +1,26 @@
 package ru.fmt.university.model.dto;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import ru.fmt.university.rest.scenario.Create;
+import ru.fmt.university.rest.scenario.Update;
 
+import javax.validation.constraints.*;
 import java.util.Objects;
 
 @Getter
 @Setter
 public class Teacher {
+    @NotNull(groups = Update.class)
+    @Null(groups = Create.class)
     private int id;
+    @NotEmpty(message = "First name shouldn't be empty!")
+    @Size(min = 2, max = 15, message = "First name should be between 2 and 15 characters!")
     private String firstName;
+    @NotEmpty(message = "Last name shouldn't be empty!")
+    @Size(min = 2, max = 25, message = "Last name should be between 2 and 25 characters!")
     private String lastName;
+    @Min(value = 0, message = "CourseId should be greater then 0!")
     private int courseId;
 
     public Teacher(int id, String firstName, String lastName, int courseId) {
