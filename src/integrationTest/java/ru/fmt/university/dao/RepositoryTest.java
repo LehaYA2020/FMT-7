@@ -3,6 +3,7 @@ package ru.fmt.university.dao;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import ru.fmt.university.dao.implementation.hibernate.*;
 import ru.fmt.university.dao.implementation.jpa.*;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 
+@SpringBootTest(classes = RepositoryTestConfig.class)
 @Sql(scripts = {"/createTables.sql", "/create-data.sql"})
 @Sql(scripts = "/cleanup-data.sql", executionPhase = AFTER_TEST_METHOD)
 public abstract class RepositoryTest {
@@ -24,7 +26,7 @@ public abstract class RepositoryTest {
     protected static final List<StudentEntity> testStudentList = new LinkedList<>();
     protected static final List<TeacherEntity> testTeacherList = new LinkedList<>();
     protected static final List<LessonEntity> testLessonList = new LinkedList<>();
-    
+
     @Autowired(required = false)
     protected CourseRepositoryHibernateImpl courseRepositoryHibernate;
     @Autowired(required = false)

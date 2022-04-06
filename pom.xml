@@ -18,13 +18,13 @@
         <maven.compiler.source>16</maven.compiler.source>
         <maven.compiler.target>16</maven.compiler.target>
 
-        <postgres.version>42.3.2</postgres.version>
-        <spring.version>5.3.15</spring.version>
+        <postgres.version>42.3.3</postgres.version>
+        <spring.version>5.3.17</spring.version>
         <h2.version>1.4.200 </h2.version>
         <ibatis.version>3.5.7</ibatis.version>
-        <log4j2.version>2.17.0</log4j2.version>
+        <log4j2.version>2.17.1</log4j2.version>
         <hibernate.version>5.6.3.Final</hibernate.version>
-        <spring.boot.version>2.6.3</spring.boot.version>
+        <spring.boot.version>2.6.5</spring.boot.version>
     </properties>
 
     <dependencies>

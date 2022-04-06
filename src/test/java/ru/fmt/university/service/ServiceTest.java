@@ -6,6 +6,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.fmt.university.dao.interfaces.*;
 import ru.fmt.university.model.LessonType;
 import ru.fmt.university.model.dto.*;
+import ru.fmt.university.service.implementation.CourseService;
+import ru.fmt.university.service.implementation.GroupService;
+import ru.fmt.university.service.implementation.LessonService;
+import ru.fmt.university.service.implementation.StudentService;
+import ru.fmt.university.service.implementation.TeacherService;
 import ru.fmt.university.service.util.*;
 
 import java.time.DayOfWeek;
@@ -14,7 +19,7 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 
-@SpringBootTest
+@SpringBootTest(classes = ServiceTestConfig.class)
 public abstract class ServiceTest {
 
     protected static Course expectedCourse = new Course(1, "Test", "Course");
