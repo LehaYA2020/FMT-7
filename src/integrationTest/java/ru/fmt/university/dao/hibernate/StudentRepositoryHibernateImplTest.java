@@ -8,6 +8,7 @@ import ru.fmt.university.dao.exceptions.DaoException;
 import ru.fmt.university.dao.exceptions.MessagesConstants;
 import ru.fmt.university.model.entity.StudentEntity;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -73,7 +74,7 @@ public class StudentRepositoryHibernateImplTest extends RepositoryTest {
     public void updateGroupAssignment_shouldUpdateGroupAssignment() {
         studentRepositoryHibernate.updateGroupAssignment(2, 2);
         testStudentList.get(1).setGroup(testGroupList.get(1));
-        assertEquals(testStudentList.subList(1, 3), studentRepositoryHibernate.findByGroup_Id(2));
+        assertEquals(Optional.of(testStudentList.get(1)), studentRepositoryHibernate.findById(2));
         testStudentList.get(1).setGroup(testGroupList.get(0));
     }
 

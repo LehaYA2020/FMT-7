@@ -1,8 +1,8 @@
 package ru.fmt.university.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ContextConfiguration;
 import ru.fmt.university.dao.interfaces.*;
 import ru.fmt.university.model.LessonType;
 import ru.fmt.university.model.dto.*;
@@ -19,7 +19,7 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 
-@SpringBootTest(classes = ServiceTestConfig.class)
+@ContextConfiguration(classes = {ServiceTestConfig.class})
 public abstract class ServiceTest {
 
     protected static Course expectedCourse = new Course(1, "Test", "Course");

@@ -59,7 +59,7 @@ public class GroupRepositoryHibernateImplTest extends RepositoryTest {
         for (GroupEntity group : testGroupList.subList(1, 2)) {
             groupRepositoryHibernate.assignToLesson(1, group.getId());
         }
-        assertEquals(lessonRepositoryHibernate.findAll(PageRequest.of(0, 10)).getContent(), lessonRepositoryHibernate.findByGroups_id(testGroupList.get(1).getId()));
+        assertEquals(testGroupList.subList(0, 2), groupRepositoryHibernate.findByLessons_Id(1  ));
     }
 
     @Test
