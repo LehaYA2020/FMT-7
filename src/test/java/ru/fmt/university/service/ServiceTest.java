@@ -1,11 +1,17 @@
 package ru.fmt.university.service;
 
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.fmt.university.dao.interfaces.*;
 import ru.fmt.university.model.LessonType;
 import ru.fmt.university.model.dto.*;
+import ru.fmt.university.service.implementation.CourseService;
+import ru.fmt.university.service.implementation.GroupService;
+import ru.fmt.university.service.implementation.LessonService;
+import ru.fmt.university.service.implementation.StudentService;
+import ru.fmt.university.service.implementation.TeacherService;
 import ru.fmt.university.service.util.*;
 
 import java.time.DayOfWeek;
@@ -14,7 +20,7 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 
-@SpringBootTest
+@SpringBootTest(classes = ServiceTestConfig.class)
 public abstract class ServiceTest {
 
     protected static Course expectedCourse = new Course(1, "Test", "Course");
@@ -29,6 +35,7 @@ public abstract class ServiceTest {
     protected static List<Group> expectedGroups = singletonList(expectedGroup);
     protected static List<Student> expectedStudents = singletonList(expectedStudent);
 
+    @InjectMocks
     @Autowired
     protected CourseService courseService;
     @Autowired

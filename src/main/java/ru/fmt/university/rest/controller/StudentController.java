@@ -1,4 +1,4 @@
-package ru.fmt.university.controller;
+package ru.fmt.university.rest.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -7,8 +7,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.fmt.university.model.dto.Student;
+import ru.fmt.university.rest.scenario.Create;
+import ru.fmt.university.rest.scenario.Update;
 import ru.fmt.university.service.StudentService;
 
 import java.util.List;
@@ -19,7 +22,7 @@ public class StudentController {
     private StudentService studentService;
 
     @PostMapping(value = "/students")
-    public ResponseEntity<?> create(@RequestBody Student student) {
+    public ResponseEntity<?> create(@Validated(Create.class) @RequestBody Student student) {
         studentService.create(student);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -43,7 +46,7 @@ public class StudentController {
     }
 
     @PutMapping(value = "/students/{id}")
-    public ResponseEntity<?> update(@RequestBody Student student) {
+    public ResponseEntity<?> update(@Validated(Update.class) @RequestBody Student student) {
         final Student updated = studentService.update(student);
         return updated != null
                 ? new ResponseEntity<>(HttpStatus.OK)
